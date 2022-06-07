@@ -1,0 +1,13 @@
+anyio==3.6.1
+asyncpg==0.25.0
+databases==0.6.0
+fastapi==0.78.0
+greenlet==1.1.2
+idna==3.3
+pydantic==1.9.1
+sniffio==1.2.0
+SQLAlchemy==1.4.37
+starlette==0.19.1
+typing_extensions==4.2.0
+databases[postgresql]
+psycopg2-binary==2.9.3
