@@ -1,6 +1,18 @@
 from sqlalchemy import Column, String, Integer, Date, JSON, Boolean, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
+from sqlalchemy.orm import relationship
+from db.database import Base
+
+class Users(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True)
+    mail = Column(String, unique=True)
+    password_hash = Column(String)
+    is_superuser = Column(Boolean, nullable=True)
+    organization = Column(String)
+    limit = Column(Integer)
+    organization_url = Column(String, nullable=True)
 
 class Reports(Base):
     __tablename__ = "reports"
@@ -12,14 +24,4 @@ class Reports(Base):
     data = Column(JSON)
     active = Column(Boolean)
 
-class Users(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True)
-    mail = Column(String, unique=True)
-    password_hash = Column(String)
-    is_sureruser = Column(Boolean, nullable=True)
-    organization = Column(String)
-    limit = Column(Integer)
-    organization_url = Column(String, nullable=True)
+    user = relationship('Users', backref='reports')

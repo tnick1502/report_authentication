@@ -4,7 +4,7 @@ from sys import platform
 
 class Configs(BaseSettings):
     server_host: str = "0.0.0.0"
-    server_port: int = 8000
+    server_port: int = 9000
     database_url: str = "postgresql+asyncpg://root:root@localhost:32700/reports"
 
     jwt_secret: str = "OOIOIPSJFBSFBSBGBBSB"

@@ -4,7 +4,6 @@ from typing import Optional
 
 
 class ReportBase(BaseModel):
-    user_id: int
     date: date
     object_number: str
     data: dict
@@ -12,12 +11,14 @@ class ReportBase(BaseModel):
 
 class Report(ReportBase):
     id: str
+    user_id: str
     class Config:
         orm_mode = True
 
 
 class ReportCreate(ReportBase):
-    id: Optional[str] = ""
-    laboratory_number: Optional[str] = ""
-    test_type: Optional[str] = ""
+    pass
+
+class ReportUpdate(ReportBase):
+    pass
 

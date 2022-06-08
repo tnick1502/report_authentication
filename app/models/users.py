@@ -11,8 +11,17 @@ class BaseUser(BaseModel):
 class UserCreate(BaseUser):
     password: str
 
+class UserUpdate(BaseUser):
+    username: str
+    mail: str
+    password: str
+    organization: str
+    limit: int
+    organization_url: str
+
 class User(BaseUser):
     id: int
+    password_hash: str
 
     class Config:
         orm_mode = True
