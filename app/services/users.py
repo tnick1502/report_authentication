@@ -196,6 +196,7 @@ class UsersService:
 
     async def update(self, id: int, user_data: UserUpdate, user: User) -> tables.Reports:
         if user.is_superuser == True:
+
             q = update(tables.Users).where(tables.Users.id == id).values(
                 username=user_data.username,
                 mail=user_data.mail,
@@ -203,6 +204,7 @@ class UsersService:
                 organization=user_data.organization,
                 limit=user_data.limit,
                 phone=user_data.phone,
+                is_superuser=user_data.is_superuser,
                 organization_url=user_data.organization_url,
                 password_hash=bcrypt.hash(user_data.password))
 

@@ -32,7 +32,7 @@ class ReportsService:
         report = await self._get(id)
         return report
 
-    async def get_object(self, user_id: str, object_number: str, limit: int, skip: int) -> List[tables.Reports]:
+    async def get_object(self, user_id: str, object_number: str) -> List[tables.Reports]:
         reports = await self.session.execute(
             select(tables.Reports).
             filter_by(user_id=user_id).
@@ -63,34 +63,61 @@ class ReportsService:
             "count": len(reports)
         }
 
-    async def update(self, id: str, report_data: ReportUpdate) -> tables.Reports:
-        q = update(tables.Reports).where(tables.Reports.id == id).values(object_number=report_data.object_number,
-                                                                         data=report_data.data)
+    async def update(self, id: str, user_id, report_data: ReportUpdate) -> Report:
+
+        report = await self.session.execute(
+            select(tables.Reports)
+            .filter_by(id=id)
+        )
+
+        report = report.scalars().first()
+
+        if not report:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="No this report id",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        q = update(tables.Reports).where(tables.Reports.id == id).values(
+            object_number=report_data.object_number,
+            data=report_data.data
+        )
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
+        await self.session.commit()
+        return Report(
+            id=id,
+            user_id=user_id,
+            date=datetime.date.today(),
+            **report_data.dict()
+        )
 
     async def delete(self, id: str):
         q = delete(tables.Reports).where(tables.Reports.id == id)
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
+        await self.session.commit()
 
-    async def create(self, user_id: str, laboratory_number: str, test_type: str, report_data: ReportCreate) -> tables.Reports:
+    async def create(self, user_id: str, report_id: str, report_data: ReportCreate) -> tables.Reports:
+        report = await self.session.execute(
+            select(tables.Reports)
+            .filter_by(id=report_id)
+        )
 
-        id = hashlib.sha1(f"{report_data.object_number} {laboratory_number} {test_type} {user_id}".encode("utf-8")).hexdigest()
+        report = report.scalars().first()
 
-        try:
-            await self._get(id)
-        except HTTPException:
-            report = tables.Reports(
-                **report_data.dict(),
-                id=id,
-                date=datetime.date.today(),
-                user_id=user_id)
-            self.session.add(report)
-            await self.session.commit()
-            return report
-        else:
-            return await self.update(id, report_data)
+        if report:
+            return await self.update(id=report_id, user_id=user_id, report_data=report_data)
+
+        report = tables.Reports(
+            **report_data.dict(),
+            id=report_id,
+            date=datetime.date.today(),
+            user_id=user_id)
+        self.session.add(report)
+        await self.session.commit()
+        return report
 
     async def create_qr(self, user_id: str, laboratory_number: str, test_type: str,
                      report_data: ReportCreate):
@@ -103,6 +130,30 @@ class ReportsService:
 
         return gen_qr_code(text, path_to_download)
 
+    async def activate_deactivate_object(self, user_id: str, object_number: str, activate: bool = True):
+        reports = await self.session.execute(
+            select(tables.Reports)
+            .filter_by(object_number=object_number)
+            .filter_by(user_id=user_id)
+        )
+        reports = reports.scalars().all()
+
+        if not reports:
+            raise HTTPException(
+                status_code=status.HTTP_204_NO_CONTENT,
+                detail="No reports for this object",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        for report in reports:
+            report_data = ReportUpdate(
+                object_number=report.object_number,
+                data=report.data,
+                active=activate
+            )
+            await self.update(report.id, user_id=user_id, report_data=report_data)
+        self.session.commit()
+        return f"Object {object_number} is {'activate' if activate else 'deactivate'}"
 
 
 
