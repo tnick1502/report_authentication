@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, Response, status, HTTPException
+from fastapi.responses import JSONResponse
 from typing import Optional, List
 import hashlib
 
-from models.reports import Report, ReportCreate
+from models.reports import Report, ReportCreate, ReportUpdate
 from models.users import User
 from services.users import get_current_user
 from services.reports import ReportsService
@@ -63,11 +64,25 @@ async def get_object(object_number: str,
                       user: User = Depends(get_current_user),
                       service: ReportsService = Depends(get_report_service)):
     """Просмотр отчетов по объекту"""
-    return await service.get_object(user_id=user.id, object_number=object_number)
+    return await service.get_object(user_id=user.id, object_number=object_number, is_superuser=user.is_superuser)
+
+
+@router.get("/objects/", response_model=List)
+async def get_objects(user: User = Depends(get_current_user),
+                      service: ReportsService = Depends(get_report_service)):
+    """Просмотр всех объектов пользователя"""
+    return await service.get_objects(user_id=user.id)
+
 
 @router.post("/objects/{object_number}/{activate}")
-async def activate_deactivate_object(object_number: str, activate: bool,
+async def activate_deactivate_object(object_number: str, active: bool,
                      user: User = Depends(get_current_user),
                      service: ReportsService = Depends(get_report_service)):
     """Активация и деактивация объекта"""
-    return await service.activate_deactivate_object(user_id=user.id, object_number=object_number, activate=activate)
+    reports = await service.get_object(user_id=user.id, object_number=object_number, is_superuser=user.is_superuser)
+    if reports:
+        for report in reports:
+            report.active = active
+
+        await service.update_many(id=report.id, reports=reports)
+    return {"massage": f"{len(reports)} reports from object {object_number} is {'activate' if active else 'deactivate'}"}

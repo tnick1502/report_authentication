@@ -32,6 +32,21 @@ class ReportsService:
         report = await self._get(id)
         return report
 
+    async def get_objects(self, user_id) -> tables.Reports:
+        reports = await self.session.execute(
+            select(tables.Reports).
+            filter_by(user_id=user_id)
+        )
+        reports = reports.scalars().all()
+
+        objects = []
+
+        for report in reports:
+            if report.object_number not in objects:
+                objects.append(report.object_number)
+
+        return objects
+
     async def get_object(self, user_id: str, object_number: str, is_superuser: bool = False) -> List[tables.Reports]:
         if is_superuser:
             reports = await self.session.execute(
@@ -45,7 +60,7 @@ class ReportsService:
                 filter_by(object_number=object_number)
             )
 
-            reports = reports.scalars().all()
+        reports = reports.scalars().all()
 
         return reports
 
@@ -87,7 +102,8 @@ class ReportsService:
 
         q = update(tables.Reports).where(tables.Reports.id == id).values(
             object_number=report_data.object_number,
-            data=report_data.data
+            data=report_data.data,
+            active=report_data.active
         )
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
@@ -98,6 +114,25 @@ class ReportsService:
             date=datetime.date.today(),
             **report_data.dict()
         )
+
+    async def update_many(self, id: str, reports) -> Report:
+
+        for report in reports:
+            report_data = ReportUpdate(
+                object_number=report.object_number,
+                data=report.data,
+                active=report.active,
+            )
+
+            q = update(tables.Reports).where(tables.Reports.id == id).values(
+                object_number=report_data.object_number,
+                data=report_data.data,
+                active=report_data.active
+            )
+            q.execution_options(synchronize_session="fetch")
+            await self.session.execute(q)
+        return await self.session.commit()
+
 
     async def delete(self, id: str):
         q = delete(tables.Reports).where(tables.Reports.id == id)
@@ -135,31 +170,4 @@ class ReportsService:
         path_to_download = os.path.join("static/images", "digitrock_qr.png")  # Путь до фона qr кода
 
         return gen_qr_code(text, path_to_download)
-
-    async def activate_deactivate_object(self, user_id: str, object_number: str, activate: bool = True):
-        reports = await self.session.execute(
-            select(tables.Reports)
-            .filter_by(object_number=object_number)
-            .filter_by(user_id=user_id)
-        )
-        reports = reports.scalars().all()
-
-        if not reports:
-            raise HTTPException(
-                status_code=status.HTTP_204_NO_CONTENT,
-                detail="No reports for this object",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-
-        for report in reports:
-            report_data = ReportUpdate(
-                object_number=report.object_number,
-                data=report.data,
-                active=activate
-            )
-            await self.update(report.id, user_id=user_id, report_data=report_data)
-        self.session.commit()
-        return f"Object {object_number} is {'activate' if activate else 'deactivate'}"
-
-
 
