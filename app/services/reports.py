@@ -32,14 +32,20 @@ class ReportsService:
         report = await self._get(id)
         return report
 
-    async def get_object(self, user_id: str, object_number: str) -> List[tables.Reports]:
-        reports = await self.session.execute(
-            select(tables.Reports).
-            filter_by(user_id=user_id).
-            filter_by(object_number=object_number)
-        )
+    async def get_object(self, user_id: str, object_number: str, is_superuser: bool = False) -> List[tables.Reports]:
+        if is_superuser:
+            reports = await self.session.execute(
+                select(tables.Reports).
+                filter_by(object_number=object_number)
+            )
+        else:
+            reports = await self.session.execute(
+                select(tables.Reports).
+                filter_by(user_id=user_id).
+                filter_by(object_number=object_number)
+            )
 
-        reports = reports.scalars().all()
+            reports = reports.scalars().all()
 
         return reports
 
