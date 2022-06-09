@@ -139,6 +139,7 @@ class UsersService:
 
             user = tables.Users(
                 username=user_data.username,
+                active=user_data.active,
                 password_hash=self.hash_password(user_data.password),
                 mail=user_data.mail,
                 organization=user_data.organization,
@@ -154,7 +155,7 @@ class UsersService:
         else:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                etail="You don't have enough rights to perform this operation",
+                detail="You don't have enough rights to perform this operation",
                 headers={'Authenticate': 'Bearer'})
 
     async def authenticate_user(self, username: str, password: str) -> Token:
@@ -198,6 +199,7 @@ class UsersService:
             q = update(tables.Users).where(tables.Users.id == id).values(
                 username=user_data.username,
                 mail=user_data.mail,
+                active=user_data.active,
                 organization=user_data.organization,
                 limit=user_data.limit,
                 phone=user_data.phone,
@@ -207,6 +209,7 @@ class UsersService:
             q.execution_options(synchronize_session="fetch")
             await self.session.execute(q)
             await self.session.commit()
+            return user_data
         else:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,

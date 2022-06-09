@@ -1,4 +1,6 @@
 import os.path
+import hashlib
+import datetime
 from typing import List, Optional
 from datetime import date
 from sqlalchemy.future import select
@@ -16,7 +18,6 @@ class ReportsService:
         self.session = session
 
     async def _get(self, id: str) -> Optional[tables.Reports]:
-
         report = await self.session.execute(
             select(tables.Reports).
             filter_by(id=id)
@@ -57,27 +58,25 @@ class ReportsService:
         reports = await self.get_mounth_reports(user_id, year, month)
 
         return {
-            "user_id": user_id,
             "year": year,
             "month": month,
             "count": len(reports)
         }
 
     async def update(self, id: str, report_data: ReportUpdate) -> tables.Reports:
-        q = update(tables.Reports).where(tables.Reports.id == id).values(date=report_data.date,
-                                                                         object_number=report_data.object_number,
+        q = update(tables.Reports).where(tables.Reports.id == id).values(object_number=report_data.object_number,
                                                                          data=report_data.data)
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
 
-    async def delete(self, date: date):
+    async def delete(self, id: str):
         q = delete(tables.Reports).where(tables.Reports.id == id)
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
 
     async def create(self, user_id: str, laboratory_number: str, test_type: str, report_data: ReportCreate) -> tables.Reports:
 
-        id = hash(f"{report_data.object_number} {laboratory_number} {test_type} {user_id}")
+        id = hashlib.sha1(f"{report_data.object_number} {laboratory_number} {test_type} {user_id}".encode("utf-8")).hexdigest()
 
         try:
             await self._get(id)
@@ -85,6 +84,7 @@ class ReportsService:
             report = tables.Reports(
                 **report_data.dict(),
                 id=id,
+                date=datetime.date.today(),
                 user_id=user_id)
             self.session.add(report)
             await self.session.commit()

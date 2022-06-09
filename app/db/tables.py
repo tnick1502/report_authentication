@@ -10,6 +10,7 @@ class Users(Base):
     mail = Column(String, unique=True)
     phone = Column(BigInteger, unique=True)
     password_hash = Column(String)
+    active = Column(Boolean)
     is_superuser = Column(Boolean, nullable=True)
     organization = Column(String)
     limit = Column(Integer)

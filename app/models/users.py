@@ -7,6 +7,7 @@ class BaseUser(BaseModel):
     organization: str
     limit: int
     phone: int
+    active: bool
     organization_url: str
 
 class UserCreate(BaseUser):

@@ -6,5 +6,6 @@
   "organization_url": "https://mdgt.ru/",
   "phone": 79096562200,
   "limit": 1000000,
-  "is_superuser": true
+  "is_superuser": true,
+  "active": true
 }

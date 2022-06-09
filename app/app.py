@@ -60,7 +60,8 @@ async def startup_event():
                             organization_url=superuser_data["organization_url"],
                             phone=superuser_data["phone"],
                             limit=superuser_data["limit"],
-                            is_superuser=superuser_data["is_superuser"]
+                            is_superuser=superuser_data["is_superuser"],
+                            active=superuser_data["active"]
                         )
 
                         session.add(user)
