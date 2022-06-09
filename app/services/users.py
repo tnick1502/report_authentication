@@ -116,12 +116,24 @@ class UsersService:
                 filter_by(username=user_data.username)
             )
 
-            user_names = user_names.scalars().first()
+            mails = await self.session.execute(
+                select(tables.Users).
+                filter_by(mail=user_data.mail)
+            )
 
-            if user_names:
+            phones = await self.session.execute(
+                select(tables.Users).
+                filter_by(phone=user_data.phone)
+            )
+
+            user_names = user_names.scalars().first()
+            mails = mails.scalars().first()
+            phones = phones.scalars().first()
+
+            if user_names or mails or phones:
                 raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEND,
-                    detail="This name is already exist",
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="This name or mail or phone is already exist",
                     headers={"WWW-Authenticate": "Bearer"},
                 )
 
@@ -130,13 +142,14 @@ class UsersService:
                 password_hash=self.hash_password(user_data.password),
                 mail=user_data.mail,
                 organization=user_data.organization,
+                phone=user_data.phone,
                 organization_url=user_data.organization_url,
                 limit=user_data.limit,
                 is_superuser=user_data.is_superuser
             )
 
             self.session.add(user)
-            await self.session.flush()
+            await self.session.commit()
             return user
         else:
             raise HTTPException(
@@ -177,28 +190,30 @@ class UsersService:
         else:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                etail="You don't have enough rights to perform this operation",
+                detail="You don't have enough rights to perform this operation",
                 headers={'Authenticate': 'Bearer'})
 
-    async def update(self, id: str, user_data: UserUpdate, user: User) -> tables.Reports:
+    async def update(self, id: int, user_data: UserUpdate, user: User) -> tables.Reports:
         if user.is_superuser == True:
             q = update(tables.Users).where(tables.Users.id == id).values(
                 username=user_data.username,
                 mail=user_data.mail,
                 organization=user_data.organization,
                 limit=user_data.limit,
+                phone=user_data.phone,
                 organization_url=user_data.organization_url,
                 password_hash=bcrypt.hash(user_data.password))
 
             q.execution_options(synchronize_session="fetch")
             await self.session.execute(q)
+            await self.session.commit()
         else:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="You don't have enough rights to perform this operation",
                 headers={'Authenticate': 'Bearer'})
 
-    async def delete(self, id: str, user: User):
+    async def delete(self, id: int, user: User):
 
         if user.is_superuser == True:
             q = delete(tables.Users).where(tables.Users.id == id)
@@ -207,5 +222,5 @@ class UsersService:
         else:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                etail="You don't have enough rights to perform this operation",
+                detail="You don't have enough rights to perform this operation",
                 headers={'Authenticate': 'Bearer'})

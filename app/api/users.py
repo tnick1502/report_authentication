@@ -43,13 +43,13 @@ async def sign_out_and_remove_cookie(current_user: User = Depends(get_current_us
     return response
 
 @router.delete('/', status_code=status.HTTP_204_NO_CONTENT)
-async def delete_user(id: str, auth_service: UsersService = Depends(get_users_service), current_user: User = Depends(get_current_user)):
+async def delete_user(id: int, auth_service: UsersService = Depends(get_users_service), current_user: User = Depends(get_current_user)):
     """Удаление пользователя"""
     await auth_service.delete(id=id, user=current_user)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 @router.put('/', status_code=status.HTTP_204_NO_CONTENT)
-async def update_user(id: str, user_data: UserUpdate,auth_service: UsersService = Depends(get_users_service), current_user: User = Depends(get_current_user)):
+async def update_user(id: int, user_data: UserUpdate,auth_service: UsersService = Depends(get_users_service), current_user: User = Depends(get_current_user)):
     """Обновление данных пользователя"""
     return await auth_service.update(id=id, user_data=user_data, user=current_user)
 

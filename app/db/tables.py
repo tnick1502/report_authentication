@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Date, JSON, Boolean, ForeignKey
+from sqlalchemy import Column, String, Integer, Date, JSON, Boolean, ForeignKey, BigInteger
 from sqlalchemy.orm import relationship
 from db.database import Base
 
@@ -8,6 +8,7 @@ class Users(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True)
     mail = Column(String, unique=True)
+    phone = Column(BigInteger, unique=True)
     password_hash = Column(String)
     is_superuser = Column(Boolean, nullable=True)
     organization = Column(String)

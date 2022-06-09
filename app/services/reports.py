@@ -87,7 +87,7 @@ class ReportsService:
                 id=id,
                 user_id=user_id)
             self.session.add(report)
-            await self.session.flush()
+            await self.session.commit()
             return report
         else:
             return await self.update(id, report_data)

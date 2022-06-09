@@ -4,6 +4,7 @@ from db.database import async_session
 from db import tables
 from passlib.hash import bcrypt
 from sqlalchemy.future import select
+import json
 
 from db.database import Base, engine
 from api import router
@@ -46,18 +47,26 @@ async def startup_event():
                 user_names = user_names.scalars().first()
 
                 if not user_names:
-                    user = tables.Users(
-                        username="mdgt_admin",
-                        password_hash=bcrypt.hash("mdgt_admin"),
-                        mail="mostdorgeotrest@mail.ru",
-                        organization="МОСТДОРГЕОТРЕСТ",
-                        organization_url="https://mdgt.ru/",
-                        limit=1000000,
-                        is_superuser=True
-                    )
 
-                    session.add(user)
-                    await session.flush()
+                    try:
+                        with open("superuser.json") as file:
+                            superuser_data = json.load(file)
+
+                        user = tables.Users(
+                            username=superuser_data["username"],
+                            password_hash=bcrypt.hash(superuser_data["password_hash"]),
+                            mail=superuser_data["mail"],
+                            organization=superuser_data["organization"],
+                            organization_url=superuser_data["organization_url"],
+                            phone=superuser_data["phone"],
+                            limit=superuser_data["limit"],
+                            is_superuser=superuser_data["is_superuser"]
+                        )
+
+                        session.add(user)
+                        await session.commit()
+                    except Exception as err:
+                        print("Ошибка создания суперпользователя ", str(err))
     await create_surer()
 
 

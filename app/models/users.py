@@ -6,18 +6,14 @@ class BaseUser(BaseModel):
     is_superuser: bool
     organization: str
     limit: int
+    phone: int
     organization_url: str
 
 class UserCreate(BaseUser):
     password: str
 
-class UserUpdate(BaseUser):
-    username: str
-    mail: str
-    password: str
-    organization: str
-    limit: int
-    organization_url: str
+class UserUpdate(UserCreate):
+    pass
 
 class User(BaseUser):
     id: int
