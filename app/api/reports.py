@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, Response, status, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from typing import Optional, List
 import hashlib
+import os
+from services.qr_generator import gen_qr_code
 
 from models.reports import Report, ReportCreate, ReportUpdate
 from models.users import User
@@ -35,6 +37,25 @@ async def create_report(laboratory_number: str, test_type: str, report_data: Rep
         f"{report_data.object_number} {laboratory_number} {test_type} {user.id}".encode("utf-8")).hexdigest()
 
     return await service.create(report_id=id, user_id=user.id, report_data=report_data)
+
+
+@router.post("/qr")
+def create_qr(id: str,
+              user: User = Depends(get_current_user)):
+    """Создание qr"""
+    if not user.active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User is not active",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    text = f"https://georeport.ru/report/?id={id}"
+
+    path_to_download = os.path.join("static/images", "digitrock_qr.png")  # Путь до фона qr кода
+
+    file = gen_qr_code(text, path_to_download)
+    return StreamingResponse(file, media_type="image/png")
+    #return FileResponse(file)
 
 
 @router.put("/", response_model=Report)

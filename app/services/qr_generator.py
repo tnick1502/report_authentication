@@ -115,6 +115,6 @@ def gen_qr_code(text: str, path_to_download: Path, path_to_save: Path = None):
         path_to_download = path_to_save
 
     path = BytesIO()
+    background.save(path, "PNG")
     path.seek(0)
-    background.save(path_to_download)
     return path
