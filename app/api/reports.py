@@ -40,8 +40,7 @@ async def create_report(laboratory_number: str, test_type: str, report_data: Rep
 
 
 @router.post("/qr")
-def create_qr(id: str,
-              user: User = Depends(get_current_user)):
+def create_qr(id: str, user: User = Depends(get_current_user)):
     """Создание qr"""
     if not user.active:
         raise HTTPException(

@@ -1,3 +1,5 @@
+import datetime
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from db.database import async_session
@@ -33,7 +35,7 @@ app.include_router(router)
 @app.on_event("startup")
 async def startup_event():
     async with engine.begin() as conn:
-        #await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
     async def create_surer():
@@ -65,6 +67,19 @@ async def startup_event():
                         )
 
                         session.add(user)
+
+                        with open("superreport.json") as file:
+                            superreport_data = json.load(file)
+
+                        report = tables.Reports(
+                            id=superreport_data["id"],
+                            user_id=superreport_data["user_id"],
+                            date=superreport_data["date"],
+                            object_number=superreport_data["object_number"],
+                            data=superreport_data["data"],
+                            active=superreport_data["active"],
+                        )
+                        session.add(report)
                         await session.commit()
                     except Exception as err:
                         print("Ошибка создания суперпользователя ", str(err))
