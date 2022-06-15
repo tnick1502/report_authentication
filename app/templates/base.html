@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!-- ===================== ICONS ===================== -->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', path='css/bootstrap.min.css') }}" />
+	<link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" />
+	<link rel="stylesheet" б href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css" />
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', path='css/style.css') }}" />
+
+	<title>{% block title %} {% endblock %}</title>
+</head>
+
+<body class="body" id="body">
+	<div class="wrapper">
+		<header class="navbar-mdgt">
+			<nav class="container-fluid-mdgt container-mdgt">
+				<a href="{{ url_for('index') }}" class="navbar-brand">
+					<img class="navbar-brand__icon" src="/static/images/logo.png" />
+					<!-- <div class="navbar-brand__line"></div>
+						<div class="navbar-brand__title">
+							GEOREPORT
+							<div class="navbar-brand__title-sub">
+								by mdgt
+							</div>
+						</div> -->
+				</a>
+
+				<div class="navbar-collapse-wrapper" id="navbar-collapse-wrapper">
+					<div class="navbar-collapse" id="navbar-collapse">
+						<ul class="navbar-nav">
+							<li class="nav-item">
+								<a class="nav-link" data-goto="home" href="/">Главная</a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" href="#" data-goto="contact">Контакты</a>
+							</li>
+						</ul>
+
+						<div class="nav__close" id="nav-close">
+							<i class="ri-close-line"></i>
+						</div>
+					</div>
+				</div>
+
+				<div class="nav__toggle" id="nav-toggle">
+					<i class="ri-menu-line"></i>
+				</div>
+			</nav>
+		</header>
+
+		<div class="content__container container-mdgt">
+			<h2 class="container__title">
+				{% block content_title %} {% endblock %}
+			</h2>
+			{% block content %} {% endblock %}
+		</div>
+
+		<footer class="footer__container">
+			<container id="contact">
+				<div class="container-mdgt">
+					<div class="row">
+						<div class="col-md-3 col-sm-6">
+							<h3 class="contacts__header">
+								<i class="bi bi-house"></i> Адрес:
+							</h3>
+							<div class="contacts__description">
+								г.&#160;Москва, ул. Искры, д. 31, корп. 1, этаж 4.
+							</div>
+							<div class="itd_play" data-bs-toggle="modal" data-bs-target="#exampleModal">
+								<p class="contacts__link_map">
+									<i class="bi bi-geo-alt"></i> На карте
+								</p>
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6">
+							<div class="contacts__double-contact">
+								<div class="">
+									<h3 class="contacts__header">
+										<i class="bi bi-phone"></i> Телефон:
+									</h3>
+									<div class="contacts__description">
+										<a href="tel:+74956566910" target="_blank" class="contacts__link_tel">8 (495)
+											656-69-10</a>
+									</div>
+								</div>
+								<div class="">
+									<h3 class="contacts__header">
+										<i class="bi bi-envelope"></i> Почта:
+									</h3>
+									<div class="contacts__description">
+										<a href="mailto:mostdorgeotrest@mail.ru" target="_blank"
+											class="contacts__link">mostdorgeotrest@mail.ru</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-3 col-sm-6">
+							<h3 class="contacts__header">
+								<i class="bi bi-clock"></i> Режим работы:
+							</h3>
+							<div class="contacts__description">Пн-Пт 10:00-18:00</div>
+						</div>
+
+						<div class="col-md-3 col-sm-6">
+							<h3 class="contacts__header">
+								<i class="bi bi-globe"></i> Веб-сайт:
+							</h3>
+							<div class="contacts__description">
+								<a href="https://mdgt.ru" target="_blank" class="contacts__link">mdgt.ru</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</container>
+
+			<div class="footer__logo">
+				<a href="https://mdgt.ru/" target="_blank"
+					class="mb-3 me-2 mb-md-0 text-muted_mdgt text-decoration-none lh-1">
+					<img class="footer__img" src="/static/images/mdgt.png" />
+				</a>
+				<span class="text-muted_mdgt">&copy; Мостдоргеотрест 2022</span>
+			</div>
+		</footer>
+	</div>
+
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">На карте</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="normalMap" id="mapId">
+						<iframe class="iframe__map"
+							src="https://yandex.ru/map-widget/v1/?um=constructor%3Ad43c51d3924974f12eb12264bfd44fab8bd8d71d9473f6a758434bea4fd21a7c&amp;source=constructor"
+							frameborder="0"></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="{{ url_for('static', path='js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ url_for('static', path='js/app.js') }}"></script>
+</body>
+
+</html>

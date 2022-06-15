@@ -1,15 +1,34 @@
 import datetime
-
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from db.database import async_session
-from db import tables
 from passlib.hash import bcrypt
 from sqlalchemy.future import select
 import json
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+import http.client
+from services.depends import get_report_service
+from services.reports import ReportsService
+from pathlib import Path
 
+from db.database import async_session
+from db import tables
 from db.database import Base, engine
 from api import router
+
+
+def get_self_public_ip():
+    conn = http.client.HTTPConnection("ifconfig.me")
+    conn.request("GET", "/ip")
+    return conn.getresponse().read().decode()
+
+def create_ip_ports_array(ip: str, *ports):
+    array = []
+    for port in ports:
+        array.append(f"{ip}:{str(port)}")
+    return array
+
 
 app = FastAPI(
     title="Georeport MDGT",
@@ -19,9 +38,9 @@ app = FastAPI(
 
 origins = [
     "http://localhost:3000",
-    "http://localhost:8080",
-    "localhost:3000"]
+    "http://localhost:8080"]
 
+origins += create_ip_ports_array(get_self_public_ip(), 3000, 8000, 80)
 
 app.add_middleware(
     CORSMiddleware,
@@ -30,7 +49,35 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"])
 
+
 app.include_router(router)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
+
+
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", context={"request": request})
+
+
+@app.get("/{id}", response_class=HTMLResponse)
+async def show_report(id: str, request: Request, service: ReportsService = Depends(get_report_service)):
+    """Просмотр данных отчета по id"""
+    data = await service.get(id)
+
+    data = data.__dict__
+
+    context = {
+        "request": request,
+        "title": 'МОСТДОГЕОТРЕСТ',
+        "link": {'link': 'https://mdgt.ru', 'name': 'mdgt.ru'},
+        "res": data["data"]
+    }
+
+    return templates.TemplateResponse("show_report.html", context=context)
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -74,7 +121,7 @@ async def startup_event():
                         report = tables.Reports(
                             id=superreport_data["id"],
                             user_id=superreport_data["user_id"],
-                            date=superreport_data["date"],
+                            date=datetime.datetime.strptime(superreport_data["date"], '%Y-%m-%d').date(),
                             object_number=superreport_data["object_number"],
                             data=superreport_data["data"],
                             active=superreport_data["active"],

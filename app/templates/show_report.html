@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Просмотр тчета
+{% endblock %}
+
+{% block content %}
+    <div class="report-wrapper">
+        <div class="table__container">
+            <div class="table-header">
+                <svg class="table-header__logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M14 9V4H5v16h6.056c.328.417.724.785 1.18 1.085l1.39.915H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8v1h-7zm-2 2h9v5.949c0 .99-.501 1.916-1.336 2.465L16.5 21.498l-3.164-2.084A2.953 2.953 0 0 1 12 16.95V11zm2 5.949c0 .316.162.614.436.795l2.064 1.36 2.064-1.36a.954.954 0 0 0 .436-.795V13h-5v3.949z"/></svg>
+                <div class="table-header__wrapper">
+                    <div class="table-header__title-wrapper">
+                        <div class="table-header__title_main">{{title}}</div>
+                    </div>
+                    <a href={{link['link']}} target="_blank" class="table-header__url">{{link['name']}}</a>
+                </div>
+            </div>
+            <table class="table__table">
+                <tbody class="table__tbody">
+                  {% for key, value in res.items() %}
+                   <tr class="table__tr">
+                       <td class="table__td"> {{ key }} </td>
+                       <td class="table__td"> {{ value }} </td>
+                   </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </tbody>
+</table>
+
+{% endblock %}
