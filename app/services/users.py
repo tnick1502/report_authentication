@@ -109,6 +109,14 @@ class UsersService:
     def __init__(self, session: Session):
         self.session = session
 
+    async def get(self, id: int) -> tables.Users:
+        users = await self.session.execute(
+            select(tables.Users).
+            filter_by(id=id)
+        )
+        user = users.scalars().first()
+        return user
+
     async def register_new_user(self, user_data: UserCreate, user: User) -> Token:
         if user.is_superuser:
             user_names = await self.session.execute(

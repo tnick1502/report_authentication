@@ -11,10 +11,10 @@ class Users(Base):
     phone = Column(BigInteger, unique=True)
     password_hash = Column(String)
     active = Column(Boolean)
-    is_superuser = Column(Boolean, nullable=True)
+    is_superuser = Column(Boolean)
     organization = Column(String)
     limit = Column(Integer)
-    organization_url = Column(String, nullable=True)
+    organization_url = Column(String)
 
 class Reports(Base):
     __tablename__ = "reports"

@@ -8,9 +8,9 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import http.client
-from services.depends import get_report_service
+from services.depends import get_report_service, get_users_service
 from services.reports import ReportsService
-from pathlib import Path
+from services.users import UsersService
 
 from db.database import async_session
 from db import tables
@@ -63,16 +63,22 @@ async def index(request: Request):
 
 
 @app.get("/{id}", response_class=HTMLResponse)
-async def show_report(id: str, request: Request, service: ReportsService = Depends(get_report_service)):
+async def show_report(id: str, request: Request,
+                      service: ReportsService = Depends(get_report_service),
+                      users: UsersService = Depends(get_users_service)):
     """Просмотр данных отчета по id"""
     data = await service.get(id)
-
     data = data.__dict__
+
+    user_data = await users.get(data["user_id"])
+    user_data = user_data.__dict__
 
     context = {
         "request": request,
-        "title": 'МОСТДОГЕОТРЕСТ',
-        "link": {'link': 'https://mdgt.ru', 'name': 'mdgt.ru'},
+        "title": user_data["organization"],
+        "link": {'link': user_data["organization_url"],
+                 'name': user_data["organization_url"][user_data["organization_url"].index("//") + 2:].replace("/",
+                                                                                                               "")},
         "res": data["data"]
     }
 
