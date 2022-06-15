@@ -12,7 +12,14 @@ block content_title %} Проект GEOREPORT {% endblock %} {% block content %}
 			тем самым создавая дополнительную степень защиты.
 		</p>
 	</div>
-	<img class="qr" src="/static/images/qr_index.png" />
+	<div class="home-img"  id="homeImg">
+		<img class="home-img__image" src="/static/images/mainimg.png"></img>
+		<div class="home-img__hover">
+			<div class="home-img__link_wrapper">
+				<a href={{template_report_link}} class="home-img__hover_link"><img src="/static/images/qr_index.png" /></a>
+			</div>
+		</div>
+	</div>
 </div>
 
 {% endblock %}

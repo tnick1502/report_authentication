@@ -50,13 +50,13 @@ def create_qr(id: str, user: User = Depends(get_current_user)):
         )
     text = f"https://georeport.ru/report/?id={id}"
 
-    path_to_download = os.path.join("static/images", "digitrock_qr.png")  # Путь до фона qr кода
+    path_to_download = os.path.join("services", "digitrock_qr.png")  # Путь до фона qr кода
 
     file = gen_qr_code(text, path_to_download)
     return StreamingResponse(file, media_type="image/png")
 
 
-@router.put("/", response_model=Report)
+@router.put("/{id}", response_model=Report)
 async def update_report(id: str, report_data: ReportUpdate,
                         user: User = Depends(get_current_user),
                         service: ReportsService = Depends(get_report_service)):
