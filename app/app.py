@@ -59,7 +59,13 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    return templates.TemplateResponse("index.html", context={"request": request})
+    return templates.TemplateResponse(
+        "index.html",
+        context={
+            "request": request,
+            "template_report_link": 'https://georeport.ru/report/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
+        }
+    )
 
 
 @app.get("/{id}", response_class=HTMLResponse)
