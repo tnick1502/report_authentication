@@ -80,12 +80,21 @@ isMobile = {
 
 const homeImgLink = document.getElementById('homeImg')
 const screenWidth = window.innerWidth
-let clickCount = 0
-if (isMobile.any() && homeImgLink && screenWidth <= 769) {
+
+if (isMobile.any() && homeImgLink) {
 	homeImgLink.addEventListener('click', (event) => {
-		if (clickCount === 0) {
-			event.preventDefault()
-			clickCount = 1
+		homeImgLink.classList.add('onscroll')
+	})
+}
+
+if (isMobile.any() && homeImgLink) {
+	const sectionTop =
+		homeImgLink.offsetTop - (1 * document.documentElement.clientHeight) / 3
+	window.addEventListener('scroll', () => {
+		if (this.scrollY > sectionTop) {
+			homeImgLink.classList.add('onscroll')
+		} else {
+			homeImgLink.classList.remove('onscroll')
 		}
 	})
 }

@@ -7,7 +7,7 @@ load_dotenv(dotenv_path=os.path.normpath(os.path.join("/".join(os.getcwd().split
 
 class Configs(BaseSettings):
     server_host: str = "0.0.0.0"
-    server_port: int = 9000
+    server_port: int = 8555
     database_url: str = os.getenv('DATABASE_URI')
     jwt_secret: str = os.getenv('JWT_SECRET')
     jwt_algorithm: str = os.getenv('JWT_ALGORITHM')
