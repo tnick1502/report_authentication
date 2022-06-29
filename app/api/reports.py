@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, Response, status, HTTPException
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi import APIRouter, Depends, Response, status, HTTPException, Request
+from fastapi.responses import StreamingResponse, HTMLResponse
 from typing import Optional, List
 import hashlib
 import os
@@ -8,18 +8,43 @@ from services.qr_generator import gen_qr_code
 from models.reports import Report, ReportCreate, ReportUpdate
 from models.users import User
 from services.users import get_current_user
+from app import templates
+from services.depends import get_report_service, get_users_service
 from services.reports import ReportsService
-from services.depends import get_report_service
+from services.users import UsersService
 
 router = APIRouter(
     prefix="/reports",
     tags=['reports'])
 
 
-@router.get("/{id}", response_model=Report)
-async def get_report(id: str, service: ReportsService = Depends(get_report_service)):
+#@router.get("/{id}", response_model=Report)
+#async def get_report(id: str, service: ReportsService = Depends(get_report_service)):
+    #"""Просмотр данных отчета по id"""
+    #return await service.get(id)
+
+
+@app.get("/{id}", response_class=HTMLResponse)
+async def show_report(id: str, request: Request,
+                      service: ReportsService = Depends(get_report_service),
+                      users: UsersService = Depends(get_users_service)):
     """Просмотр данных отчета по id"""
-    return await service.get(id)
+    data = await service.get(id)
+    data = data.__dict__
+
+    user_data = await users.get(data["user_id"])
+    user_data = user_data.__dict__
+
+    context = {
+        "request": request,
+        "title": user_data["organization"],
+        "link": {'link': user_data["organization_url"],
+                 'name': user_data["organization_url"][user_data["organization_url"].index("//") + 2:].replace("/",
+                                                                                                               "")},
+        "res": data["data"]
+    }
+
+    return templates.TemplateResponse("show_report.html", context=context)
 
 
 @router.post("/", response_model=Report)

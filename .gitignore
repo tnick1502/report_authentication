@@ -1,5 +1,6 @@
 venv
 app/.env
+.env
 **/.idea
 **/__pycache__
 superreport.json

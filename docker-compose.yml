@@ -1,37 +1,48 @@
-version: '3'
+version: '3.5'
 
 services:
   postgres:
-    image:  postgres:11
-    ports:
-      - ${POSTGRES_PORT}:5432
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
     volumes:
-      - ./data:/var/lib/postgresql/data
+       - postgres:/data/postgres
+    ports:
+      - "5432:5432"
     networks:
       - postgres
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
-      DB_USER: ${DB_USER}
-      DB_PASS: ${DB_PASS}
-      DB_NAME: reports
-      POSTGRES_DB: reports
+    restart: unless-stopped
 
   pgadmin:
-    container_name: pgadmin
+    container_name: pgadmin_container
     image: dpage/pgadmin4
     environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD:-admin}
-      - PGADMIN_LISTEN_PORT=5454
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+
     ports:
-      - ${PGADMIN_OUT_PORT}:80/tcp
+      - "${PGADMIN_PORT:-5050}:80"
     networks:
       - postgres
-    depends_on:
-      - postgres
+    restart: unless-stopped
+  web:
+    build: ./
+    container_name: web
+    ports:
+      - 8555:8555
+    restart: always
 
 
 networks:
   postgres:
     driver: bridge
+
+volumes:
+    postgres:
+    pgadmin:

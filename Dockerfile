@@ -1,6 +1,9 @@
-cFROM python:3.9
+FROM python:3.9
 
 WORKDIR /code/app
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 EXPOSE 8555
 
@@ -11,3 +14,12 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 COPY ./app /code/app
 COPY ./superreport.json /code/app/superreport.json
 COPY ./superuser.json /code/app/superuser.json
+COPY ./app/.env /code/app/.env
+
+
+RUN apt-get update
+RUN apt-get install -y libzbar-dev
+RUN dpkg -L libzbar-dev; ls -l /usr/include/zbar.h
+
+RUN chmod -R 777 ./
+CMD ["python", "main.py"]
