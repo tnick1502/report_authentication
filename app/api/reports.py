@@ -57,6 +57,36 @@ def create_qr(id: str, user: User = Depends(get_current_user)):
     return StreamingResponse(file, media_type="image/png")
 
 
+@router.post("/report_and_qr")
+async def create_report_and_qr(laboratory_number: str, test_type: str, report_data: ReportCreate,
+                        user: User = Depends(get_current_user), service: ReportsService = Depends(get_report_service)):
+    """Создание отчета"""
+    if not user.active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User is not active",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    id = hashlib.sha1(
+        f"{report_data.object_number} {laboratory_number} {test_type} {user.id}".encode("utf-8")).hexdigest()
+
+    await service.create(report_id=id, user_id=user.id, report_data=report_data)
+
+    if not user.active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User is not active",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    text = f"https://georeport.ru/report/?id={id}"
+
+    path_to_download = os.path.join("services", "digitrock_qr.png")  # Путь до фона qr кода
+
+    file = gen_qr_code(text, path_to_download)
+    return StreamingResponse(file, media_type="image/png")
+
+
 @router.put("/{id}", response_model=Report)
 async def update_report(id: str, report_data: ReportUpdate,
                         user: User = Depends(get_current_user),
