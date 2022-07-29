@@ -1,12 +1,7 @@
 import uvicorn
 from config import configs
-
-import datetime
 from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from passlib.hash import bcrypt
-from sqlalchemy.future import select
-import json
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
@@ -55,7 +50,7 @@ async def index(request: Request):
         "index.html",
         context={
             "request": request,
-            "template_report_link": 'https://georeport.ru/report/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
+            "template_report_link": ' http://0.0.0.0:8555/reports/'
         }
     )
 
