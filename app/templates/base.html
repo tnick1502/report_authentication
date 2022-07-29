@@ -197,6 +197,22 @@
 			</div>
 		</div>
 
+		<div class="fixed-bottom p-4">
+			<div class="toast text-white w-100 mw-100" id="toast" role="alert" data-bs-autohide="false" style="background-color:var(--text-color) !important">
+				<div class="toast-body p-4 d-flex flex-column">
+					<h4>Мы используем файлы cookie.</h4>
+					<p>
+					Мы используем cookie для обеспечения функционирования веб-сайта и улучшения качества обслуживания. Если Вы не хотите, чтобы эти данные обрабатывались, отключите cookie в настройках браузера.
+					</p>
+					<div class="ms-auto">
+						<button type="button" class="btn btn-light" id="btnAccept">
+							Принять
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<script src="{{ url_for('static', path='js/bootstrap.bundle.min.js') }}"></script>
 		<script src="{{ url_for('static', path='js/app.js') }}"></script>
 	</body>
