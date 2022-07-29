@@ -97,7 +97,7 @@ class UsersService:
             'nbf': now,
             'exp': now + timedelta(seconds=configs.jwt_expiration),
             'sub': str(user_data.id),
-            'user': user_data.dict(),
+            'user': user_data.да,
         }
         token = jwt.encode(
             payload,
