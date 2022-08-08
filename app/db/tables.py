@@ -16,6 +16,19 @@ class Users(Base):
     limit = Column(Integer)
     organization_url = Column(String)
 
+    license = relationship("Licenses", backref="license", uselist=False)
+    reports = relationship("Reports", backref="report")
+
+class Licenses(Base):
+    __tablename__ = "licenses"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), index=True)
+    license_level = Column(String)
+    license_end_date = Column(Date)
+    license_update_date = Column(Date)
+    limit = Column(Integer)
+
 class Reports(Base):
     __tablename__ = "reports"
 
