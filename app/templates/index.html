@@ -20,6 +20,109 @@ block content_title %} Проект GEOREPORT {% endblock %} {% block content %}
 			</div>
 		</div>
 	</div>
+	<div class="index_content">
+		<hr id="about">
+		<div class="content__container container-mdgt">
+				<h2 class="container__title">
+					Описание проекта
+				</h2>
+			</div>
+
+		<p>Данный проект позволяет дублировать данные протоколов испытаний на
+			специальном серевере исключая ручные изменений в протоколе вне лаборатории.</p>
+
+		<br>
+
+		<p>Суть работы:</p>
+
+		<ul>
+			<li>
+				<p>При выдаче протокола испытания результаты заносятся на сервер приложения,
+					также сервер выдает специальные QR-код с доступом к этим данным.</p>
+			</li>
+			<li>
+				<p>QR-код помещается обратно на протокол испытания, тем самым связывая данные на сервере с протоколом.
+					В случае иеменения протокола редоктором, данные на сервере останутся без изменений.</p>
+			</li>
+			<li>
+				<p>Для проверки подлинности данных наведите камеру телефона на QR-код, перейдите по
+					зашифрованной в нем ссылке и сверьте полученные данные с данными в протоколе испытания.</p>
+			</li>
+		</ul>
+	</div>
+
+	<div class="index_content">
+		<hr id="license">
+		<div class="content__container container-mdgt">
+				<h2 class="container__title">
+					Кататог лицензий
+				</h2>
+			</div>
+
+		<p>Подключайте свою лабораторию к нам! для подключения выберите подходящий тип лицензии, и свяжитесь с нами.
+			После покупки Вым станет доступен личный кабинет, через который вы сможете аутентифицировать свои протоколы.</p>
+
+		<br>
+
+
+		<div class="card-group">
+
+			<div class="card text-center shadow ">
+				<div class="card-body">
+					<h4 class="card-title">Начальный</h4>
+					<h6 class="card-subtitle mb-2 text-muted">5 000 руб/год</h6>
+					<p class="card-text">
+					<ul>
+					<li>
+						<p>До 1000 протоколов в год</p>
+					</li>
+					<li>
+						<p>Доступ к выдачи через личный кабинет</p>
+					</li>
+				</ul>
+					</p>
+					<a class="btn btn-primary w-100 w-lg-50 align-center" href="mailto:tnick1502@mail.ru">Приобрести</a>
+				</div>
+			</div>
+
+			<div class="card text-center shadow">
+				<div class="card-body">
+					<h4 class="card-title">Средний</h4>
+					<h6 class="card-subtitle mb-2 text-muted">10 000 руб/год</h6>
+					<p class="card-text">
+						<ul>
+					<li>
+						<p>До 10 000 протоколов в год</p>
+					</li>
+					<li>
+						<p>Доступ к выдачи через личный кабинет</p>
+					</li>
+				</ul>
+					</p>
+					<a class="btn btn-primary w-100 w-lg-50 align-center" href="mailto:tnick1502@mail.ru">Приобрести</a>
+				</div>
+			</div>
+
+			<div class="card text-center shadow">
+				<div class="card-body">
+					<h4 class="card-title">Продвинутый</h4>
+					<h6 class="card-subtitle mb-2 text-muted">30 000 руб/год</h6>
+					<p class="card-text">
+					<ul>
+					<li>
+						<p>До 100 000 протоколов в год</p>
+					</li>
+					<li>
+						<p>Доступ к выдачи через личный кабинет и api</p>
+					</li>
+				</ul>
+					</p>
+					<a class="btn btn-primary w-100 w-lg-50 align-center" href="mailto:tnick1502@mail.ru">Приобрести</a>
+				</div>
+			</div>
+
+		</div>
+	</div>
 </div>
 
 {% endblock %}
