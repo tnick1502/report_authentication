@@ -153,7 +153,6 @@ class UsersService:
                 organization=user_data.organization,
                 phone=user_data.phone,
                 organization_url=user_data.organization_url,
-                limit=user_data.limit,
                 is_superuser=user_data.is_superuser
             )
 
@@ -210,7 +209,6 @@ class UsersService:
                 mail=user_data.mail,
                 active=user_data.active,
                 organization=user_data.organization,
-                limit=user_data.limit,
                 phone=user_data.phone,
                 is_superuser=user_data.is_superuser,
                 organization_url=user_data.organization_url,

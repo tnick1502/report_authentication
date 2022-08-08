@@ -1,7 +1,6 @@
 venv
 .git
 .cache
-.env
 data
 app/superuser.json
 **/.idea

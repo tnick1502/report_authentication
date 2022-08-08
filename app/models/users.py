@@ -5,7 +5,6 @@ class BaseUser(BaseModel):
     mail: str
     is_superuser: bool
     organization: str
-    limit: int
     phone: int
     active: bool
     organization_url: str

@@ -13,7 +13,6 @@ class Users(Base):
     active = Column(Boolean)
     is_superuser = Column(Boolean)
     organization = Column(String)
-    limit = Column(Integer)
     organization_url = Column(String)
 
     license = relationship("Licenses", backref="license", uselist=False)
@@ -38,5 +37,3 @@ class Reports(Base):
     object_number = Column(String)
     data = Column(JSON)
     active = Column(Boolean)
-
-    user = relationship('Users', backref='reports')

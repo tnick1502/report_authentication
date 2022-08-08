@@ -29,7 +29,6 @@ async def sign_up(user_data: UserCreate, auth_service: UsersService = Depends(ge
 @router.post('/sign-in/')
 async def sign_in(auth_data: OAuth2PasswordRequestForm = Depends(), auth_service: UsersService = Depends(get_users_service)):
     """Получение токена (токен зранится в куки)"""
-    print(auth_data)
     token = await auth_service.authenticate_user(auth_data.username, auth_data.password)
     content = {"message": "True"}
     response = JSONResponse(content=content)
