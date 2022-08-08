@@ -16,6 +16,7 @@ from api import router
 from services.depends import get_report_service, get_users_service
 from services.reports import ReportsService
 from services.users import UsersService
+from config import configs
 
 
 def get_self_public_ip():
@@ -109,38 +110,50 @@ async def startup_event():
                 if not user_names:
 
                     try:
-                        with open("superuser.json") as file:
-                            superuser_data = json.load(file)
-
                         user = tables.Users(
-                            username=superuser_data["username"],
-                            password_hash=bcrypt.hash(superuser_data["password_hash"]),
-                            mail=superuser_data["mail"],
-                            organization=superuser_data["organization"],
-                            organization_url=superuser_data["organization_url"],
-                            phone=superuser_data["phone"],
-                            limit=superuser_data["limit"],
-                            is_superuser=superuser_data["is_superuser"],
-                            active=superuser_data["active"]
+                            username=configs.superuser_name,
+                            password_hash=bcrypt.hash(configs.superuser_password),
+                            mail="tnick1502@mail.ru",
+                            organization="МОСТДОРГЕОТРЕСТ",
+                            organization_url="https://mdgt.ru/",
+                            phone=74956566910,
+                            is_superuser=True,
+                            active=True
                         )
 
                         session.add(user)
 
-                        with open("superreport.json") as file:
-                            superreport_data = json.load(file)
 
                         report = tables.Reports(
-                            id=superreport_data["id"],
-                            user_id=superreport_data["user_id"],
-                            date=datetime.datetime.strptime(superreport_data["date"], '%Y-%m-%d').date(),
-                            object_number=superreport_data["object_number"],
-                            data=superreport_data["data"],
-                            active=superreport_data["active"],
+                            id="95465771a6f399bf52cd57db2cf640f8624fd868",
+                            user_id=1,
+                            date=datetime.date.today(),
+                            object_number="1",
+                            data={
+                                "Лабораторный номер": "Э1-1/-/ТС",
+                                "Объект": "-",
+                                "Даты выдачи протокола": "2022-04-26",
+                                "Модуль деформации E50, МПа": 11.9,
+                                "Коэффициент поперечной деформации ν, д.е.:": 0.27
+                            },
+                            active=True,
                         )
                         session.add(report)
+
+                        license = tables.Licenses(
+                            id=1,
+                            user_id=1,
+                            license_level="pro",
+                            license_end_date=datetime.date(year=2030, month=12, day=31),
+                            license_update_date=datetime.date.today(),
+                            limit=1000000000
+                        )
+                        session.add(license)
+
                         await session.commit()
                     except Exception as err:
                         print("Ошибка создания суперпользователя ", str(err))
+
     await create_surer()
 
 

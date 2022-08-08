@@ -12,9 +12,7 @@ COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY ./app /code/app
-COPY ./superreport.json /code/app/superreport.json
-COPY ./superuser.json /code/app/superuser.json
-COPY ./app/.env /code/app/.env
+COPY ./.env /code/app/.env
 
 
 RUN apt-get update

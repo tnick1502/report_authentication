@@ -97,7 +97,7 @@ class UsersService:
             'nbf': now,
             'exp': now + timedelta(seconds=configs.jwt_expiration),
             'sub': str(user_data.id),
-            'user': user_data.да,
+            'user': user_data.dict(),
         }
         token = jwt.encode(
             payload,
@@ -201,7 +201,7 @@ class UsersService:
                 detail="You don't have enough rights to perform this operation",
                 headers={'Authenticate': 'Bearer'})
 
-    async def update(self, id: int, user_data: UserUpdate, user: User) -> tables.Reports:
+    async def update(self, id: int, user_data: UserUpdate, user: User) -> tables.Users:
         if user.is_superuser == True:
 
             q = update(tables.Users).where(tables.Users.id == id).values(

@@ -4,7 +4,6 @@ from app import app
 
 if __name__ == "__main__":
 
-
     uvicorn.run(
         app,
         host=configs.server_host,
