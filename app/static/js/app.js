@@ -17,6 +17,9 @@ if (navItems.length > 0) {
 				top: gotoBlockValue,
 				behavior: 'smooth',
 			})
+
+			closeNav()
+
 			event.preventDefault()
 		}
 	}

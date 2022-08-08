@@ -2,7 +2,15 @@
 <html lang="ru">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=0" />
+		<meta name="theme-color" content="#ffffff" />
+
+		<meta
+			name="Геотехническая лаборатория МОСТДОРГЕОТРЕСТ"
+			content="Геотехническая лаборатория МОСТДОРГЕОТРЕСТ"
+		/>
+		<link rel="icon" href="{{ url_for('static', path='images/logo-2.png') }}" />
+		<link rel="apple-touch-icon" href="{{ url_for('static', path='images/logo-2.png') }}" />
 		<!-- ===================== ICONS ===================== -->
 		<link
 			rel="stylesheet"
@@ -29,7 +37,8 @@
 			href="{{ url_for('static', path='css/style.css') }}"
 		/>
 
-		<title>{% block title %} {% endblock %}</title>
+		<title>GEOREPORT</title>
+
 	</head>
 	<body class="body" id="body">
 		<div class="wrapper">
