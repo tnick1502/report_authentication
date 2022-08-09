@@ -1,21 +1,24 @@
 import datetime
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, HTTPException, status, Body
 from fastapi.middleware.cors import CORSMiddleware
 from passlib.hash import bcrypt
 from sqlalchemy.future import select
-import json
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import http.client
 
 from db.database import async_session
+from fastapi.security.utils import get_authorization_scheme_param
+from services.users import get_current_user
 from db import tables
 from db.database import Base, engine
 from api import router
-from services.depends import get_report_service, get_users_service
+from models.users import User
+from services.depends import get_report_service, get_users_service, get_licenses_service
 from services.reports import ReportsService
 from services.users import UsersService
+from services.license import LicensesService
 from config import configs
 
 
@@ -67,6 +70,59 @@ async def index(request: Request):
             "template_report_link": 'https://georeport.ru/report/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
         }
     )
+
+
+@app.get("/login/", response_class=HTMLResponse)
+async def login(
+        request: Request,
+        license_service: LicensesService = Depends(get_licenses_service),
+        report_service: ReportsService = Depends(get_report_service)
+):
+    try:
+        authorization: str = request.cookies.get("Authorization")
+        scheme, token = get_authorization_scheme_param(authorization)
+        if token:
+            user = get_current_user(token)
+            license = await license_service.get(user.id)
+            count = await report_service.get_reports_count(user_id=user.id, license=license)
+            return templates.TemplateResponse(
+                "personal.html",
+                context={
+                    "request": request,
+                    "username": user.username,
+                    "license_level": license.license_level,
+                    "license_end_date": license.license_end_date,
+                    "limit": license.limit,
+                    "count": count["count"]
+                }
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail='Could not validate credentials',
+                headers={'Authenticate': 'Bearer'},
+        )
+
+    except HTTPException:
+        return templates.TemplateResponse(
+            "login.html",
+            context={
+                "request": request,
+            }
+        )
+
+@app.get("/sign-out/")
+async def sign_out_and_remove_cookie(
+        request: Request,
+        current_user: User = Depends(get_current_user)):
+    response = templates.TemplateResponse(
+        "login.html",
+        context={
+            "request": request
+        }
+        )
+    response.delete_cookie("Authorization")
+    return response
 
 @app.get("/reports/{id}", response_class=HTMLResponse)
 async def show_report(id: str, request: Request,

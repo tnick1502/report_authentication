@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import extract
 
 from models.reports import Report, ReportCreate, ReportUpdate
+from models.license import License
 from services.qr_generator import gen_qr_code
 import db.tables as tables
 
@@ -63,6 +64,15 @@ class ReportsService:
         reports = reports.scalars().all()
 
         return reports
+
+    async def get_reports_count(self, user_id: int, license: License) -> dict:
+        reports = await self.session.execute(
+            select(tables.Reports)
+            .filter_by(user_id=user_id)
+            .filter(tables.Reports.date >= license.license_update_date)
+        )
+        reports = reports.scalars().all()
+        return {"count": len(reports)}
 
     async def get_mounth_reports(self, user_id, year: int, month: int) -> List[tables.Reports]:
         reports = await self.session.execute(

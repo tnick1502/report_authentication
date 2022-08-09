@@ -54,6 +54,16 @@ async def index(request: Request):
         }
     )
 
+@app.get("/login", response_class=HTMLResponse)
+async def index(request: Request):
+
+    return templates.TemplateResponse(
+        "login.html",
+        context={
+            "request": request,
+        }
+    )
+
 @app.get("/reports/", response_class=HTMLResponse)
 async def show_report(request: Request):
     """Просмотр данных отчета по id"""

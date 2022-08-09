@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Личный кабинет
+{% endblock %}
+
+{% block content %}
+    <table class="table">
+      <tbody>
+        <tr>
+            <td>Имя пользователя</td>
+            <td>{{ username }}</td>
+        </tr>
+
+        <tr>
+            <td>Уровень лицензии</td>
+            <td>{{ license_level }}</td>
+        </tr>
+
+        <tr>
+            <td>Дата окончания лицензии</td>
+            <td>{{ license_end_date }}</td>
+        </tr>
+
+        <tr>
+            <td>Лимит</td>
+            <td>{{ limit }}</td>
+        </tr>
+
+      <tr>
+            <td>Выдано</td>
+            <td>{{ count }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <a class="btn btn-outline-success btn-lg w-100 w-lg-50 align-center" href="/sign-out/">Выйти</a>
+
+{% endblock %}

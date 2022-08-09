@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Личный кабинет
+{% endblock %}
+
+{% block content %}
+    <form>
+      <div class="form-group">
+        <label for="username">Имя пользователя:</label>
+        <input class="form-control" id="username" placeholder="Введите имя">
+      </div>
+      <div class="form-group">
+        <label for="password">Пароль:</label>
+        <input type="password" class="form-control" id="password" placeholder="Введите пароль">
+      </div>
+      <br>
+      <button type="submit" class="btn btn-success align-center" id="post-btn">Войти</button>
+    </form>
+
+{% endblock %}
