@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import http.client
+from typing import Optional
 
 from db.database import async_session
 from fastapi.security.utils import get_authorization_scheme_param
@@ -75,6 +76,8 @@ async def index(request: Request):
 @app.get("/login/", response_class=HTMLResponse)
 async def login(
         request: Request,
+        page: Optional[int] = 1,
+        object_number: Optional[str] = None,
         license_service: LicensesService = Depends(get_licenses_service),
         report_service: ReportsService = Depends(get_report_service)
 ):
@@ -82,9 +85,17 @@ async def login(
         authorization: str = request.cookies.get("Authorization")
         scheme, token = get_authorization_scheme_param(authorization)
         if token:
+
+            limit = 5
+
             user = get_current_user(token)
             license = await license_service.get(user.id)
             count = await report_service.get_reports_count(user_id=user.id, license=license)
+            reports = await report_service.get_all(user_id=user.id, limit=limit, offset=(page - 1) * limit,
+                                                   object_number=object_number)
+            objects, objects_count = await report_service.get_objects(user_id=user.id, limit=None, offset=0)
+            pages = int(count["count"] / limit) + 1
+
             return templates.TemplateResponse(
                 "personal.html",
                 context={
@@ -93,7 +104,10 @@ async def login(
                     "license_level": license.license_level,
                     "license_end_date": license.license_end_date,
                     "limit": license.limit,
-                    "count": count["count"]
+                    "count": count["count"],
+                    "reports": reports,
+                    "objects": objects,
+                    "pages_reports": pages,
                 }
             )
         else:
@@ -150,7 +164,7 @@ async def show_report(id: str, request: Request,
 @app.on_event("startup")
 async def startup_event():
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
+        #await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
     async def create_surer():

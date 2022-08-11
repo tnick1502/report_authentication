@@ -34,6 +34,69 @@
       </tbody>
     </table>
 
+    <br>
+
     <a class="btn btn-outline-success btn-lg w-100 w-lg-50 align-center" href="/sign-out/">Выйти</a>
+
+
+    <br>
+
+
+    <h2 class="container__title">
+					Выданные протоколы
+				</h2>
+
+    <div class="dropdown">
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Выбор объекта
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <a class="dropdown-item" href="/login/">Без сортировки</a>
+            {% for object in objects %}
+                <a class="dropdown-item" href="/login/?object_number={{ object }}">{{ object }}</a>
+            {% endfor %}
+        </ul>
+    </div>
+
+
+    <table class="table">
+                <tbody>
+                <thead>
+                    <tr>
+                        <th scope="col">Дата выдачи</th>
+                        <th scope="col">Объект</th>
+                        <th scope="col">id</th>
+                        <th scope="col">Информация</th>
+                    </tr>
+              </thead>
+                  {% for key, value in reports.items() %}
+                   <tr>
+                       <td class="table__td"> {{ value["date"] }} </td>
+                       <td class="table__td"> {{ value["object_number"] }} </td>
+                       <td class="table__td"> {{ key}} </td>
+                       <td class="table__td">
+                           {% for key, value in value["data"].items() %}
+                           <div>
+                               {{ key }}: {{ value }}
+                           </div>
+                           {% endfor %}
+                       </td>
+                   </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+
+    <div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% for i in range(pages_reports) %}
+                <li class="page-item"><a class="page-link" href="/login/?page={{ i + 1 }}">{{ i + 1 }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+
+    <br>
+
 
 {% endblock %}

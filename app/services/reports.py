@@ -33,10 +33,43 @@ class ReportsService:
         report = await self._get(id)
         return report
 
-    async def get_objects(self, user_id) -> tables.Reports:
+    async def get_all(self, user_id: str, limit: Optional[int] = None, offset: Optional[int] = None,
+                      object_number: Optional[str] = None) -> dict:
+        if object_number:
+            reports = await self.session.execute(
+                select(tables.Reports).
+                filter_by(user_id=user_id).
+                filter_by(object_number=object_number).
+                order_by(tables.Reports.date).
+                offset(offset).
+                limit(limit)
+            )
+        else:
+            reports = await self.session.execute(
+                select(tables.Reports).
+                filter_by(user_id=user_id).
+                order_by(tables.Reports.date).
+                offset(offset).
+                limit(limit)
+            )
+
+        reports = reports.scalars().all()
+        res = {}
+
+        for report in reports:
+            res[report.id] = {
+                "object_number": report.object_number,
+                "date": report.date,
+                "data": report.data
+            }
+        return res
+
+    async def get_objects(self, user_id, limit: Optional[int] = None, offset: Optional[int] = None) -> list:
         reports = await self.session.execute(
             select(tables.Reports).
-            filter_by(user_id=user_id)
+            filter_by(user_id=user_id).
+            offset(offset).
+            limit(limit)
         )
         reports = reports.scalars().all()
 
@@ -46,7 +79,10 @@ class ReportsService:
             if report.object_number not in objects:
                 objects.append(report.object_number)
 
-        return objects
+        if not limit or not (offset + limit < len(reports)):
+            return objects[offset:len(reports)], len(objects)
+        else:
+            return objects[offset:offset + limit], len(objects)
 
     async def get_object(self, user_id: str, object_number: str, is_superuser: bool = False) -> List[tables.Reports]:
         if is_superuser:
