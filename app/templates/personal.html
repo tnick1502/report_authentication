@@ -67,6 +67,7 @@
                         <th scope="col">Объект</th>
                         <th scope="col">id</th>
                         <th scope="col">Информация</th>
+                        <th scope="col">Действия</th>
                     </tr>
               </thead>
                   {% for key, value in reports.items() %}
@@ -80,6 +81,12 @@
                                {{ key }}: {{ value }}
                            </div>
                            {% endfor %}
+                       </td>
+                       <td class="table__td">
+                           <div>
+                               <a href="#"><img src="/static/images/update.png" class="img-fluid" width="30" height="30"></a>
+                               <a href="#"><img src="/static/images/trash.png" class="img-fluid" width="30" height="30"></a>
+                           </div>
                        </td>
                    </tr>
                   {% endfor %}
