@@ -95,7 +95,7 @@ async def login(
             reports = await report_service.get_all(user_id=user.id, limit=limit, offset=(page - 1) * limit,
                                                    object_number=object_number)
             objects, objects_count = await report_service.get_objects(user_id=user.id, limit=None, offset=0)
-            pages = int(len(reports) / limit) + 1
+            pages = int(count["count"] / limit) + 1
 
             return templates.TemplateResponse(
                 "personal.html",

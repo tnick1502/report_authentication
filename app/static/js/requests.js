@@ -1,7 +1,22 @@
+
+function checkForm() {
+    if (document.getElementById('username')).value == '' or document.getElementById('password').value == '') {
+        alert ('Заполните все поля');
+        return false;
+        }
+    else {
+        return true
+        }
+    }
+
+
+
 let button = document.getElementById('post-btn');
 
 button.addEventListener('click', async _ => {
-    les username = document.getElementById('username').value;
+
+    if checkForm(): {
+        les username = document.getElementById('username').value;
     let password = document.getElementById('password').value;
     try {
     let response = await fetch('/authorization/sign_in', {
@@ -29,5 +44,11 @@ button.addEventListener('click', async _ => {
     console.error(`Error: ${err}`);
     }
 
-    location.reload();
+    window.location.href = '/';
+    }
+    else
+    {
+        alert ('Заполните все поля');
+    }
+
 });
