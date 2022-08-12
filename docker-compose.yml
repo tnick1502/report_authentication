@@ -17,6 +17,14 @@ services:
       - postgres
     restart: unless-stopped
 
+
+  redis:
+    image: "redis:7.0.4"
+    container_name: redis
+    ports:
+      - "6315:6379"
+
+
 networks:
   postgres:
     driver: bridge

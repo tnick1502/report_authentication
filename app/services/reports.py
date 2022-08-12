@@ -8,11 +8,16 @@ from sqlalchemy import update, delete
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import extract
+import redis
+import pickle
 
 from models.reports import Report, ReportCreate, ReportUpdate
 from models.license import License
 from services.qr_generator import gen_qr_code
 import db.tables as tables
+
+
+rds = redis.Redis()
 
 class ReportsService:
     def __init__(self, session: Session):
@@ -30,6 +35,10 @@ class ReportsService:
         return report
 
     async def get(self, id: str) -> tables.Reports:
+        report = rds.get(id)
+        if report:
+            return pickle.loads(report)
+
         report = await self._get(id)
         return report
 
@@ -204,6 +213,10 @@ class ReportsService:
             user_id=user_id)
         self.session.add(report)
         await self.session.commit()
+
+        rds.set(report_id, pickle.dumps(report, protocol=pickle.HIGHEST_PROTOCOL))
+        rds.expire(report_id, 20*60)
+
         return report
 
     async def create_qr(self, user_id: str, laboratory_number: str, test_type: str,

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, status, HTTPException, Request
+from fastapi import APIRouter, Depends, Response, status, HTTPException, Request, Body
 from fastapi.responses import StreamingResponse, HTMLResponse
 from datetime import date
 from typing import Optional, List
@@ -27,9 +27,9 @@ router = APIRouter(
 
 @router.post("/", response_model=Report)
 async def create_report(
-        laboratory_number: str,
-        test_type: str,
         report_data: ReportCreate,
+        laboratory_number: str = Body(...),
+        test_type: str = Body(...),
         user: User = Depends(get_current_user),
         service: ReportsService = Depends(get_report_service),
         license_service: LicensesService = Depends(get_licenses_service)):

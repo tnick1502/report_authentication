@@ -1,5 +1,5 @@
 import datetime
-from fastapi import FastAPI, Request, Depends, HTTPException, status, Body
+from fastapi import FastAPI, Request, Depends, HTTPException, status, Query
 from fastapi.middleware.cors import CORSMiddleware
 from passlib.hash import bcrypt
 from sqlalchemy.future import select
@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import http.client
 from typing import Optional
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from db.database import async_session
 from fastapi.security.utils import get_authorization_scheme_param
@@ -68,7 +69,7 @@ async def index(request: Request):
         "index.html",
         context={
             "request": request,
-            "template_report_link": 'https://georeport.ru/report/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
+            "template_report_link": 'http://0.0.0.0:8555/reports/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
         }
     )
 
@@ -94,7 +95,7 @@ async def login(
             reports = await report_service.get_all(user_id=user.id, limit=limit, offset=(page - 1) * limit,
                                                    object_number=object_number)
             objects, objects_count = await report_service.get_objects(user_id=user.id, limit=None, offset=0)
-            pages = int(count["count"] / limit) + 1
+            pages = int(len(reports) / limit) + 1
 
             return templates.TemplateResponse(
                 "personal.html",
@@ -125,6 +126,7 @@ async def login(
             }
         )
 
+
 @app.get("/sign-out/")
 async def sign_out_and_remove_cookie(
         request: Request,
@@ -138,8 +140,10 @@ async def sign_out_and_remove_cookie(
     response.delete_cookie("Authorization")
     return response
 
-@app.get("/reports/{id}", response_class=HTMLResponse)
-async def show_report(id: str, request: Request,
+
+@app.get("/reports/", response_class=HTMLResponse)
+async def show_report(request: Request,
+                      id: str = Query(default="", min_length=40, max_length=40, description="report ID"),
                       service: ReportsService = Depends(get_report_service),
                       users: UsersService = Depends(get_users_service)):
     """Просмотр данных отчета по id"""
@@ -160,6 +164,22 @@ async def show_report(id: str, request: Request,
 
     return templates.TemplateResponse("show_report.html", context=context)
 
+@app.exception_handler(StarletteHTTPException)
+async def my_custom_exception_handler(request: Request, exc: StarletteHTTPException):
+    # print(exc.status_code, exc.detail)
+    if exc.status_code == 404:
+        return templates.TemplateResponse('404.html', {'request': request})
+    elif exc.status_code == 500:
+        return templates.TemplateResponse('500.html', {
+            'request': request,
+            'detail': exc.detail
+        })
+    else:
+        # Generic error page
+        return templates.TemplateResponse('error.html', {
+            'request': request,
+            'detail': exc.detail
+        })
 
 @app.on_event("startup")
 async def startup_event():

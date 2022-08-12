@@ -95,7 +95,7 @@ class UsersService:
         payload = {
             'iat': now,
             'nbf': now,
-            'exp': now + timedelta(seconds=configs.jwt_expiration),
+            'exp': now + timedelta(hours=configs.jwt_expiration),
             'sub': str(user_data.id),
             'user': user_data.dict(),
         }
