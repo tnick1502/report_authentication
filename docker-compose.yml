@@ -23,15 +23,6 @@ services:
     container_name: redis
     ports:
       - "6315:6379"
-      
-  web:
-    build: ./
-    container_name: web
-    ports:
-      - 8555:8555
-    restart: always
-    depends_on:
-      - postgres
 
 
 networks:
