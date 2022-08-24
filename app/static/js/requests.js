@@ -17,7 +17,7 @@ button.addEventListener('click', async _ => {
 
     if checkForm(): {
         let username = document.getElementById('username').value;
-    let password = document.getElementById('password').value;
+        let password = document.getElementById('password').value;
     try {
     let response = await fetch('/authorization/sign_in', {
           method: 'POST', // *GET, POST, PUT, DELETE, etc.
