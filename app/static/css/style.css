@@ -892,3 +892,11 @@ img {
 	border-color: rgb(25, 125, 84);
 	background-color: rgb(25, 125, 84);
 }
+
+.btn-test{
+	border-color: rgb(25, 125, 84);	
+}
+
+.btn-test:hover{
+	background-color: rgb(25, 125, 84);;
+}
