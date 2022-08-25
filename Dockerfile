@@ -20,4 +20,3 @@ RUN apt-get install -y libzbar-dev
 RUN dpkg -L libzbar-dev; ls -l /usr/include/zbar.h
 
 RUN chmod -R 777 ./
-CMD ["python", "main.py"]
