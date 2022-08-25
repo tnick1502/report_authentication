@@ -886,3 +886,9 @@ img {
 		width: 70%;
 	}
 }
+
+/* ========== БРЕЙКПОИНТЫ ==========*/
+.btn-buy{
+	border-color: rgb(25, 125, 84);
+	background-color: rgb(25, 125, 84);
+}
