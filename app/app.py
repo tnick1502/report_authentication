@@ -6,7 +6,6 @@ from sqlalchemy.future import select
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-import http.client
 from typing import Optional
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
@@ -22,12 +21,6 @@ from services.reports import ReportsService
 from services.users import UsersService
 from services.license import LicensesService
 from config import configs
-
-
-def get_self_public_ip():
-    conn = http.client.HTTPConnection("ifconfig.me")
-    conn.request("GET", "/ip")
-    return conn.getresponse().read().decode()
 
 def create_ip_ports_array(ip: str, *ports):
     array = []
@@ -46,7 +39,7 @@ origins = [
     "http://localhost:3000",
     "http://localhost:8080"]
 
-origins += create_ip_ports_array(get_self_public_ip(), 3000, 8000, 80)
+origins += create_ip_ports_array(configs.host_ip, 3000, 8000, 80)
 
 app.add_middleware(
     CORSMiddleware,
@@ -69,7 +62,7 @@ async def index(request: Request):
         "index.html",
         context={
             "request": request,
-            "template_report_link": 'http://0.0.0.0:8555/reports/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
+            "template_report_link": f'http://{configs.host_ip}:8555/reports/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
         }
     )
 
