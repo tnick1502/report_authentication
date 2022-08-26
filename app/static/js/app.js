@@ -110,39 +110,39 @@ console.log(toast)
 
 const toastBtnAccept = document.getElementById('btnAccept')
 
-function setCookie(name,value,days) {
-    var expires = "";
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+function setCookie(name, value, days) {
+	var expires = ''
+	if (days) {
+		var date = new Date()
+		date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000)
+		expires = '; expires=' + date.toUTCString()
+	}
+	document.cookie = name + '=' + (value || '') + expires + '; path=/'
 }
 function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
+	var nameEQ = name + '='
+	var ca = document.cookie.split(';')
+	for (var i = 0; i < ca.length; i++) {
+		var c = ca[i]
+		while (c.charAt(0) == ' ') c = c.substring(1, c.length)
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length)
+	}
+	return null
 }
 
 function eraseCookie(name) {
-    document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+	document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'
 }
 
 function cookieConsent() {
-    if (!getCookie('allowCookies')) {
-        toast.show()
-    }
+	if (!getCookie('allowCookies')) {
+		toast.show()
+	}
 }
 
-toastBtnAccept.addEventListener('click', (event)=>{
-    setCookie('allowCookies','1',7)
-    toast.hide()
+toastBtnAccept.addEventListener('click', (event) => {
+	setCookie('allowCookies', '1', 7)
+	toast.hide()
 })
 
 // load
@@ -155,3 +155,51 @@ cookieConsent()
 //    toast.toast('show')
 //})
 
+// ===================== РАБОТА С ОТЧЕТАМИ =====================
+
+const deleteReportBtns = document.querySelectorAll(
+	'.delete-report-btn[data-id]'
+)
+
+if (deleteReportBtns.length > 0) {
+	let delReportId = null
+	let delReportDialog = null
+
+	deleteReportBtns.forEach((item) => {
+		item.addEventListener('click', onDelReportClick)
+	})
+
+	function onDelReportClick(event) {
+		event.preventDefault()
+		delReportDialog = document.getElementById('del-report-dialog')
+		if (!delReportDialog) return
+
+		delReportDialog.classList.add('del-report-modal__wrapper_show')
+
+		const delItem = event.currentTarget
+		delReportId = delItem.dataset.id
+	}
+
+	document
+		.getElementById('del-report__btn-cancel')
+		.addEventListener('click', () => {
+			delReportId = null
+			delReportDialog.classList.remove('del-report-modal__wrapper_show')
+		})
+	document
+		.getElementById('del-report__btn-del')
+		.addEventListener('click', () => {
+			if (!delReportId) return
+
+			fetch(`../reports/${delReportId}`, {
+				method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+			})
+				.then(() => {
+					window.location.reload()
+				})
+				.then(() => {
+					console.log(delReportId)
+					delReportDialog.classList.remove('del-report-modal__wrapper_show')
+				})
+		})
+}
