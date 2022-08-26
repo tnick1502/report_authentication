@@ -581,8 +581,7 @@ img {
 	display: inline-flex;
 	visibility: visible;
 
-	width: 50px;
-	height: 50px;
+	width: 120px;
 }
 
 .home-img__hover_link > img {
@@ -900,6 +899,14 @@ img {
 .btn-test:hover {
 	background-color: rgb(25, 125, 84);
 }
+
+
+/* ========== КУКИ ==========*/
+.toast:not(.showing):not(.show) {
+	opacity: 0;
+	display: none !important;
+  }
+
 
 /* ========== ЛИЧНЫЙ КАБИНЕТ ==========*/
 
