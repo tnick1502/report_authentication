@@ -3,28 +3,33 @@
 	<table class="table">
 		<tbody>
 			<tr>
-				<td>Имя пользователя</td>
+				<td>Имя пользователя:</td>
 				<td>{{ username }}</td>
 			</tr>
 	
 			<tr>
-				<td>Уровень лицензии</td>
+				<td>Уровень лицензии:</td>
 				<td>{{ license_level }}</td>
 			</tr>
 	
 			<tr>
-				<td>Дата окончания лицензии</td>
+				<td>Дата окончания лицензии:</td>
 				<td>{{ license_end_date }}</td>
 			</tr>
 	
 			<tr>
-				<td>Лимит</td>
+				<td>Лимит:</td>
 				<td>{{ limit }}</td>
 			</tr>
 	
 			<tr>
-				<td>Выдано</td>
+				<td>Выдано:</td>
 				<td>{{ count }}</td>
+			</tr>
+
+			<tr>
+				<td>Остаток:</td>
+				<td>{{ limit - count }}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -67,10 +72,10 @@
 			<tbody>
 				<thead>
 					<tr>
-						<th scope="col">Дата выдачи</th>
-						<th scope="col">Объект</th>
-						<th scope="col">Информация</th>
-						<th scope="col">Действия</th>
+						<th scope="col">Дата выдачи:</th>
+						<th scope="col">Объект:</th>
+						<th scope="col">Информация:</th>
+						<th scope="col">Действия:</th>
 					</tr>
 				</thead>
 				{% for key, value in reports.items() %}
