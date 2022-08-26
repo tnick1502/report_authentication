@@ -181,6 +181,12 @@ img {
 	margin-right: var(--mb-1-5);
 }
 
+@media screen and (max-width: 968px) {
+	.container-mdgt {
+		max-width: 100vw;
+	}
+}
+
 .container-mdgt > .row {
 	row-gap: 1.5rem;
 }
@@ -802,6 +808,12 @@ img {
 	border-bottom: none;
 }
 
+.table-report__wrapper {
+	width: 100%;
+	max-width: 100%;
+	overflow-x: auto;
+}
+
 /* ========== БРЕЙКПОИНТЫ ==========*/
 
 @media screen and (max-width: 900px) {
@@ -894,11 +906,15 @@ img {
 
 .btn-test {
 	border-color: rgb(25, 125, 84);
-}
-
-.btn-test:hover {
 	background-color: rgb(25, 125, 84);
 }
+
+.btn-out{
+	border-color: rgb(25, 125, 84);
+	background-color: rgb(25, 125, 84);
+}
+
+
 
 
 /* ========== КУКИ ==========*/
@@ -1012,5 +1028,4 @@ img {
 	min-width: 64px;
 	border-radius: 4px;
 
-	color: var(--first-color);
-}
+	color: var(--first-color);}
