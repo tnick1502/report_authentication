@@ -1,11 +1,10 @@
 import os.path
-import hashlib
 import datetime
 from typing import List, Optional
-from datetime import date
+import humanize
 from sqlalchemy.future import select
 from sqlalchemy import update, delete
-from fastapi import Depends, HTTPException, status
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import extract
 #import redis
@@ -16,6 +15,7 @@ from models.license import License
 from services.qr_generator import gen_qr_code
 import db.tables as tables
 
+_t = humanize.i18n.activate("ru_RU")
 
 #rds = redis.Redis()
 
@@ -68,7 +68,7 @@ class ReportsService:
         for report in reports:
             res[report.id] = {
                 "object_number": report.object_number,
-                "date": report.date,
+                "date": humanize.naturaldate(report.date),
                 "data": report.data
             }
         return res

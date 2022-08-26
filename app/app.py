@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from typing import Optional
 from starlette.exceptions import HTTPException as StarletteHTTPException
+import humanize
 
 from db.database import async_session
 from fastapi.security.utils import get_authorization_scheme_param
@@ -21,6 +22,8 @@ from services.reports import ReportsService
 from services.users import UsersService
 from services.license import LicensesService
 from config import configs
+
+_t = humanize.i18n.activate("ru_RU")
 
 def create_ip_ports_array(ip: str, *ports):
     array = []
@@ -84,10 +87,24 @@ async def login(
 
             user = get_current_user(token)
             license = await license_service.get(user.id)
-            count = await report_service.get_reports_count(user_id=user.id, license=license)
-            reports = await report_service.get_all(user_id=user.id, limit=limit, offset=(page - 1) * limit,
-                                                   object_number=object_number)
-            objects, objects_count = await report_service.get_objects(user_id=user.id, limit=None, offset=0)
+            count = await report_service.get_reports_count(
+                user_id=user.id,
+                license=license
+            )
+
+            reports = await report_service.get_all(
+                user_id=user.id,
+                limit=limit,
+                offset=(page - 1) * limit,
+                object_number=object_number
+            )
+
+            objects, objects_count = await report_service.get_objects(
+                user_id=user.id,
+                limit=None,
+                offset=0
+            )
+
             pages = int((count["count"] - 1) / limit) + 1
 
             return templates.TemplateResponse(
@@ -96,7 +113,7 @@ async def login(
                     "request": request,
                     "username": user.username,
                     "license_level": license.license_level,
-                    "license_end_date": license.license_end_date,
+                    "license_end_date": humanize.naturaldate(license.license_end_date),
                     "limit": license.limit,
                     "count": count["count"],
                     "reports": reports,

@@ -65,7 +65,6 @@
                     <tr>
                         <th scope="col">Дата выдачи</th>
                         <th scope="col">Объект</th>
-                        <th scope="col">id</th>
                         <th scope="col">Информация</th>
                         <th scope="col">Действия</th>
                     </tr>
@@ -74,7 +73,6 @@
                    <tr>
                        <td class="table__td"> {{ value["date"] }} </td>
                        <td class="table__td"> {{ value["object_number"] }} </td>
-                       <td class="table__td"> {{ key}} </td>
                        <td class="table__td">
                            {% for key, value in value["data"].items() %}
                            <div>
@@ -84,8 +82,8 @@
                        </td>
                        <td class="table__td">
                            <div>
-                               <a href="#"><img src="/static/images/update.png" class="img-fluid" width="30" height="30"></a>
-                               <a href="#"><img src="/static/images/trash.png" class="img-fluid" width="30" height="30"></a>
+                               <a href="#"><img src="/static/images/update.png" class="img-fluid" width="30" height="30" report_id="{{ key }}"></a>
+                               <a href="#"><img src="/static/images/trash.png" class="img-fluid" width="30" height="30" report_id="{{ key }}"></a>
                            </div>
                        </td>
                    </tr>
