@@ -23,8 +23,6 @@ from services.users import UsersService
 from services.license import LicensesService
 from config import configs
 
-_t = humanize.i18n.activate("ru_RU")
-
 def create_ip_ports_array(ip: str, *ports):
     array = []
     for port in ports:
@@ -223,6 +221,18 @@ async def startup_event():
 
                         session.add(user)
 
+                        user_trial = tables.Users(
+                            username="trial",
+                            password_hash=bcrypt.hash("trial"),
+                            mail="nick.mdgt@mail.ru",
+                            organization="МОСТДОРГЕОТРЕСТ",
+                            organization_url="https://mdgt.ru/",
+                            phone=70000000000,
+                            is_superuser=False,
+                            active=True
+                        )
+
+                        session.add(user_trial)
 
                         report = tables.Reports(
                             id="95465771a6f399bf52cd57db2cf640f8624fd868",
@@ -234,7 +244,7 @@ async def startup_event():
                                 "Объект": "-",
                                 "Даты выдачи протокола": "2022-04-26",
                                 "Модуль деформации E50, МПа": 11.9,
-                                "Коэффициент поперечной деформации ν, д.е.:": 0.27
+                                "Коэффициент поперечной деформации ν, д.е.": 0.27
                             },
                             active=True,
                         )
@@ -249,6 +259,16 @@ async def startup_event():
                             limit=1000000000
                         )
                         session.add(license)
+
+                        license_trial = tables.Licenses(
+                            id=2,
+                            user_id=2,
+                            license_level="standart",
+                            license_end_date=datetime.date(year=2030, month=12, day=31),
+                            license_update_date=datetime.date.today(),
+                            limit=100
+                        )
+                        session.add(license_trial)
 
                         await session.commit()
                     except Exception as err:
