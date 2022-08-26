@@ -103,7 +103,12 @@ async def login(
                 offset=0
             )
 
-            pages = int((count["count"] - 1) / limit) + 1
+            reports_count = await report_service.get_count_in_object(
+                user_id=user.id,
+                object_number=object_number
+            )
+
+            pages = int((reports_count - 1) / limit) + 1
 
             return templates.TemplateResponse(
                 "personal.html",
@@ -192,7 +197,7 @@ async def my_custom_exception_handler(request: Request, exc: StarletteHTTPExcept
 @app.on_event("startup")
 async def startup_event():
     async with engine.begin() as conn:
-        #await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
     async def create_surer():
@@ -249,6 +254,34 @@ async def startup_event():
                             active=True,
                         )
                         session.add(report)
+
+                        for i in range(10):
+
+                            report = tables.Reports(
+                                id=f"95465771{i}6f399bf52cd57db2cf640f8624fd868",
+                                user_id=1,
+                                date=datetime.date.today(),
+                                object_number="1",
+                                data={
+                                    "Модуль деформации E50, МПа": i,
+                                },
+                                active=True,
+                            )
+                            session.add(report)
+
+                        for i in range(3):
+
+                            report = tables.Reports(
+                                id=f"95i65771{i}6f399bf52cd57db2cf640f8624fd868",
+                                user_id=1,
+                                date=datetime.date.today(),
+                                object_number="2",
+                                data={
+                                    "Модуль деформации E50, МПа": i,
+                                },
+                                active=True,
+                            )
+                            session.add(report)
 
                         license = tables.Licenses(
                             id=1,

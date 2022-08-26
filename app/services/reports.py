@@ -73,6 +73,24 @@ class ReportsService:
             }
         return res
 
+    async def get_count_in_object(self, user_id: str, object_number: Optional[str] = None) -> int:
+        if object_number:
+            reports = await self.session.execute(
+                select(tables.Reports).
+                filter_by(user_id=user_id).
+                filter_by(object_number=object_number)
+            )
+        else:
+            reports = await self.session.execute(
+                select(tables.Reports).
+                filter_by(user_id=user_id)
+            )
+
+        reports = reports.scalars().all()
+
+        return len(reports)
+
+
     async def get_objects(self, user_id, limit: Optional[int] = None, offset: Optional[int] = None) -> list:
         reports = await self.session.execute(
             select(tables.Reports).
