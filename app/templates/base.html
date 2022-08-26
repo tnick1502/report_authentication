@@ -2,7 +2,10 @@
 <html lang="ru">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=0" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=0"
+		/>
 		<meta name="theme-color" content="#ffffff" />
 
 		<meta
@@ -10,7 +13,10 @@
 			content="Геотехническая лаборатория МОСТДОРГЕОТРЕСТ"
 		/>
 		<link rel="icon" href="{{ url_for('static', path='images/logo-2.png') }}" />
-		<link rel="apple-touch-icon" href="{{ url_for('static', path='images/logo-2.png') }}" />
+		<link
+			rel="apple-touch-icon"
+			href="{{ url_for('static', path='images/logo-2.png') }}"
+		/>
 		<!-- ===================== ICONS ===================== -->
 		<link
 			rel="stylesheet"
@@ -38,7 +44,6 @@
 		/>
 
 		<title>GEOREPORT</title>
-
 	</head>
 	<body class="body" id="body">
 		<div class="wrapper">
@@ -63,7 +68,9 @@
 								</li>
 
 								<li class="nav-item">
-									<a class="nav-link" data-goto="about" href="#">Описание проекта</a>
+									<a class="nav-link" data-goto="about" href="#"
+										>Описание проекта</a
+									>
 								</li>
 
 								<li class="nav-item">
@@ -76,7 +83,6 @@
 								<li class="nav-item">
 									<a class="nav-link" href="/login">Личный кабинет</a>
 								</li>
-
 							</ul>
 
 							<div class="nav__close" id="nav-close">
@@ -219,11 +225,19 @@
 		</div>
 
 		<div class="fixed-bottom p-4">
-			<div class="toast text-white w-100 mw-100" id="toast" role="alert" data-bs-autohide="false" style="background-color:var(--text-color) !important">
+			<div
+				class="toast text-white w-100 mw-100"
+				id="toast"
+				role="alert"
+				data-bs-autohide="false"
+				style="background-color: var(--text-color) !important"
+			>
 				<div class="toast-body p-4 d-flex flex-column">
 					<h4>Мы используем файлы cookie.</h4>
 					<p>
-					Мы используем cookie для обеспечения функционирования веб-сайта и улучшения качества обслуживания. Если Вы не хотите, чтобы эти данные обрабатывались, отключите cookie в настройках браузера.
+						Мы используем cookie для обеспечения функционирования веб-сайта и
+						улучшения качества обслуживания. Если Вы не хотите, чтобы эти данные
+						обрабатывались, отключите cookie в настройках браузера.
 					</p>
 					<div class="ms-auto">
 						<button type="button" class="btn btn-light" id="btnAccept">

@@ -8,39 +8,37 @@ function checkForm(username, password) {
 
 const form = document.getElementById('login-form')
 
-form.addEventListener('submit', async function (event) {
+form.addEventListener('submit', function (event) {
+	event.preventDefault()
+
 	let username = form.username.value
 	let password = form.password.value
 
+	console.log(username, password)
+
 	if (checkForm(username, password)) {
 		try {
-			let response = await fetch('/authorization/sign_in', {
+			fetch('../authorization/sign-in/', {
 				method: 'POST', // *GET, POST, PUT, DELETE, etc.
-				mode: 'cors', // no-cors, *cors, same-origin
-				cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-				credentials: 'same-origin', // include, *same-origin, omit
+				credentials: 'include', // include, *same-origin, omit
 				headers: {
-					'Content-Type': 'application/json',
+					Accept: 'application/json',
+					'Content-Type': 'application/x-www-form-urlencoded',
 					// 'Content-Type': 'application/x-www-form-urlencoded',
+					'X-Requested-With': 'XMLHttpRequest',
 				},
-				redirect: 'follow', // manual, *follow, error
-				referrerPolicy: 'no-referrer', // no-referrer, *client
-				body: {
-					username: username,
-					password: password,
-					grant_type: 'password',
-					scope: '',
-					client_id: '',
-					client_secret: '',
-				},
+				body: `grant_type=password&username=${username}&password=${password}`,
 			})
-			console.log('Completed!', response)
+				.then((response) => {
+					// console.log('Completed!', response)
+				})
+				.then(() => {
+					window.location.reload()
+				})
 		} catch (err) {
 			console.error(`Error: ${err}`)
 		}
 	} else {
 		alert('Заполните все поля')
 	}
-
-	//event.preventDefault()
 })
