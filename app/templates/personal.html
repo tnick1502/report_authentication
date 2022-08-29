@@ -72,16 +72,20 @@
 			<tbody>
 				<thead>
 					<tr>
-						<th scope="col">Дата выдачи:</th>
-						<th scope="col">Объект:</th>
-						<th scope="col">Информация:</th>
-						<th scope="col">Действия:</th>
+						<th scope="col"><p>Дата выдачи:</p></th>
+						<th scope="col"><p>Объект:</p></th>
+						<th scope="col"><p>Лаб. номер:</p></th>
+						<th scope="col"><p>Тип испытания</p></th>
+						<th scope="col"><p>Информация:</p></th>
+						<th scope="col"><p>Действия:</p></th>
 					</tr>
 				</thead>
 				{% for key, value in reports.items() %}
 				<tr>
-					<td class="table__td">{{ value["date"] }}</td>
+					<td class="table__td">{{ value["datetime"] }}</td>
 					<td class="table__td">{{ value["object_number"] }}</td>
+					<td class="table__td">{{ value["laboratory_number"] }}</td>
+					<td class="table__td">{{ value["test_type"] }}</td>
 					<td class="table__td">
 						{% for key, value in value["data"].items() %}
 						<div>{{ key }}: {{ value }}</div>

@@ -67,8 +67,10 @@ class ReportsService:
 
         for report in reports:
             res[report.id] = {
+                "datetime": humanize.naturaltime(report.datetime),
                 "object_number": report.object_number,
-                "date": humanize.naturaltime(report.datetime),
+                "laboratory_number": report.laboratory_number,
+                "test_type": report.test_type,
                 "data": report.data
             }
         return res
