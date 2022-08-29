@@ -1033,3 +1033,7 @@ img {
 .action{
 	display: flex;
 }
+
+.table-report__wrapper th{
+	vertical-align: top;
+  }
