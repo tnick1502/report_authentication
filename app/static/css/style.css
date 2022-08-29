@@ -1029,3 +1029,7 @@ img {
 	border-radius: 4px;
 
 	color: var(--first-color);}
+
+.action{
+	display: flex;
+}
