@@ -117,9 +117,17 @@
 		<nav aria-label="Page navigation example">
 			<ul class="pagination">
 				{% for i in range(pages_reports) %}
-				<li class="page-item">
-					<a class="page-link" href="/login/?page={{ i + 1 }}">{{ i + 1 }}</a>
-				</li>
+
+					{% if object_number %}
+						<li class="page-item">
+							<a class="page-link" href="/login/?object_number={{ object_number }}&page={{ i + 1 }}">{{ i + 1 }}</a>
+						</li>
+					{% else %}
+						<li class="page-item">
+							<a class="page-link" href="/login/?page={{ i + 1 }}">{{ i + 1 }}</a>
+						</li>
+					{% endif %}
+
 				{% endfor %}
 			</ul>
 		</nav>

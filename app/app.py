@@ -122,6 +122,7 @@ async def login(
                     "reports": reports,
                     "objects": objects,
                     "pages_reports": pages,
+                    "object_number": object_number
                 }
             )
         else:
@@ -177,6 +178,7 @@ async def show_report(request: Request,
 
     return templates.TemplateResponse("show_report.html", context=context)
 
+
 @app.exception_handler(StarletteHTTPException)
 async def my_custom_exception_handler(request: Request, exc: StarletteHTTPException):
     # print(exc.status_code, exc.detail)
@@ -193,6 +195,7 @@ async def my_custom_exception_handler(request: Request, exc: StarletteHTTPExcept
             'request': request,
             'detail': exc.detail
         })
+
 
 @app.on_event("startup")
 async def startup_event():
