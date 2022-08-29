@@ -56,7 +56,10 @@ async def create_report(
 
 
 @router.post("/qr")
-def create_qr(id: str, user: User = Depends(get_current_user)):
+def create_qr(
+        id: str, user:
+        User = Depends(get_current_user)
+):
     """Создание qr"""
     if not user.active:
         raise HTTPException(
@@ -64,7 +67,7 @@ def create_qr(id: str, user: User = Depends(get_current_user)):
             detail="User is not active",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    text = f"https://georeport.ru/report/?id={id}"
+    text = f"https://georeport.ru/reports/?id={id}"
 
     path_to_download = os.path.join("services", "digitrock_qr.png")  # Путь до фона qr кода
 
@@ -107,7 +110,7 @@ async def create_report_and_qr(
             detail="User is not active",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    text = f"https://georeport.ru/report/?id={id}"
+    text = f"https://georeport.ru/reports/?id={id}"
 
     path_to_download = os.path.join("services", "digitrock_qr.png")  # Путь до фона qr кода
 
@@ -116,9 +119,12 @@ async def create_report_and_qr(
 
 
 @router.put("/{id}", response_model=Report)
-async def update_report(id: str, report_data: ReportUpdate,
-                        user: User = Depends(get_current_user),
-                        service: ReportsService = Depends(get_report_service)):
+async def update_report(
+        id: str,
+        report_data: ReportUpdate,
+        user: User = Depends(get_current_user),
+        service: ReportsService = Depends(get_report_service)
+):
     """Обновление отчета"""
     if not user.active:
         raise HTTPException(
@@ -131,32 +137,40 @@ async def update_report(id: str, report_data: ReportUpdate,
 
 
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
-async def delete_report(id: str, user: User = Depends(get_current_user),
-                        service: ReportsService = Depends(get_report_service)):
+async def delete_report(
+        id: str, user: User = Depends(get_current_user),
+        service: ReportsService = Depends(get_report_service)
+):
     """Удаление отчета"""
     await service.delete(id=id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.get("/objects/{object_number}", response_model=Optional[List[Report]])
-async def get_object(object_number: str,
-                      user: User = Depends(get_current_user),
-                      service: ReportsService = Depends(get_report_service)):
+async def get_object(
+        object_number: str,
+        user: User = Depends(get_current_user),
+        service: ReportsService = Depends(get_report_service)
+):
     """Просмотр отчетов по объекту"""
     return await service.get_object(user_id=user.id, object_number=object_number, is_superuser=user.is_superuser)
 
 
 @router.get("/objects/", response_model=List)
-async def get_objects(user: User = Depends(get_current_user),
-                      service: ReportsService = Depends(get_report_service)):
+async def get_objects(
+        user: User = Depends(get_current_user),
+        service: ReportsService = Depends(get_report_service)
+):
     """Просмотр всех объектов пользователя"""
     return await service.get_objects(user_id=user.id)
 
 
 @router.post("/objects/{object_number}/{activate}")
-async def activate_deactivate_object(object_number: str, active: bool,
-                     user: User = Depends(get_current_user),
-                     service: ReportsService = Depends(get_report_service)):
+async def activate_deactivate_object(
+        object_number: str, active: bool,
+        user: User = Depends(get_current_user),
+        service: ReportsService = Depends(get_report_service)
+):
     """Активация и деактивация объекта"""
     reports = await service.get_object(user_id=user.id, object_number=object_number, is_superuser=user.is_superuser)
     if reports:
