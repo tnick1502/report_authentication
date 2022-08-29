@@ -157,6 +157,7 @@ cookieConsent()
 
 // ===================== РАБОТА С ОТЧЕТАМИ =====================
 
+// УДАЛЕНИЕ ОТЧЕТА
 const deleteReportBtns = document.querySelectorAll(
 	'.delete-report-btn[data-id]'
 )
@@ -202,4 +203,44 @@ if (deleteReportBtns.length > 0) {
 					delReportDialog.classList.remove('del-report-modal__wrapper_show')
 				})
 		})
+}
+
+// СКАЧИВАНИЕ ОТЧЕТА
+const downloadReportBtns = document.querySelectorAll(
+	'.download-report-btn[data-id]'
+)
+
+if (downloadReportBtns.length > 0) {
+	let downlReportId = null
+
+	downloadReportBtns.forEach((item) => {
+		item.addEventListener('click', onDownlReportClick)
+	})
+
+	function onDownlReportClick(event) {
+		event.preventDefault()
+
+		const downlItem = event.currentTarget
+		downlReportId = downlItem.dataset.id
+
+		if (!downlReportId) return
+
+		console.log(downlReportId)
+		fetch(`../reports/qr?id=${downlReportId}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'image/png ',
+			},
+		})
+			.then((response) => {
+				return response.blob()
+			})
+			.then((data) => {
+				const a = document.createElement('a')
+				a.href = window.URL.createObjectURL(data)
+				a.target = '_blank'
+				a.download = `${downlReportId}`
+				a.click()
+			})
+	}
 }
