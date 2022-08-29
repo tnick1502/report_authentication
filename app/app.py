@@ -81,7 +81,7 @@ async def login(
         scheme, token = get_authorization_scheme_param(authorization)
         if token:
 
-            limit = 5
+            limit = 10
 
             user = get_current_user(token)
             license = await license_service.get(user.id)
@@ -258,29 +258,23 @@ async def startup_event():
                         )
                         session.add(report)
 
-                        for i in range(10):
+                        for i in range(50):
+
+                            import random
+
+                            E = round(random.uniform(15, 50), 2)
+                            c = round(random.uniform(0.001, 0.05), 3)
+                            fi = round(random.uniform(25, 35), 2)
 
                             report = tables.Reports(
-                                id=f"95465771{i}6f399bf52cd57db2cf640f8624fd868",
-                                user_id=1,
+                                id=f"9546577{i}6f399bf52cd57db2cf640f8624fd868",
+                                user_id=2,
                                 date=datetime.date.today(),
-                                object_number="1",
+                                object_number=random.choice(["112-54", "341-15", "294-41"]),
                                 data={
-                                    "Модуль деформации E50, МПа": i,
-                                },
-                                active=True,
-                            )
-                            session.add(report)
-
-                        for i in range(3):
-
-                            report = tables.Reports(
-                                id=f"95i65771{i}6f399bf52cd57db2cf640f8624fd868",
-                                user_id=1,
-                                date=datetime.date.today(),
-                                object_number="2",
-                                data={
-                                    "Модуль деформации E50, МПа": i,
+                                    "Модуль деформации E50, МПа": E,
+                                    "Эффективный угол внутреннего трения, град": fi,
+                                    "Эффективное сцепление c, МПа": c,
                                 },
                                 active=True,
                             )
