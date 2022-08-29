@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Response, status, HTTPException, Request, Body
 from fastapi.responses import StreamingResponse, HTMLResponse
-from datetime import date
+from datetime import date, datetime
 from typing import Optional, List
 import hashlib
 import os
@@ -28,8 +28,6 @@ router = APIRouter(
 @router.post("/", response_model=Report)
 async def create_report(
         report_data: ReportCreate,
-        laboratory_number: str = Body(...),
-        test_type: str = Body(...),
         user: User = Depends(get_current_user),
         service: ReportsService = Depends(get_report_service),
         license_service: LicensesService = Depends(get_licenses_service)):
@@ -50,7 +48,7 @@ async def create_report(
         )
 
     id = hashlib.sha1(
-        f"{report_data.object_number} {laboratory_number} {test_type} {user.id}".encode("utf-8")).hexdigest()
+        f"{report_data.object_number} {report_data.laboratory_number} {report_data.test_type} {user.id}".encode("utf-8")).hexdigest()
 
     return await service.create(report_id=id, user_id=user.id, report_data=report_data)
 
@@ -77,8 +75,6 @@ def create_qr(
 
 @router.post("/report_and_qr")
 async def create_report_and_qr(
-        laboratory_number: str,
-        test_type: str,
         report_data: ReportCreate,
         user: User = Depends(get_current_user),
         service: ReportsService = Depends(get_report_service),
@@ -92,6 +88,7 @@ async def create_report_and_qr(
         )
 
     license = await license_service.get(user_id=user.id)
+
     if date.today() > license.license_end_date:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -100,7 +97,7 @@ async def create_report_and_qr(
         )
 
     id = hashlib.sha1(
-        f"{report_data.object_number} {laboratory_number} {test_type} {user.id}".encode("utf-8")).hexdigest()
+        f"{report_data.object_number} {report_data.laboratory_number} {report_data.test_type} {user.id}".encode("utf-8")).hexdigest()
 
     await service.create(report_id=id, user_id=user.id, report_data=report_data)
 
@@ -118,7 +115,7 @@ async def create_report_and_qr(
     return StreamingResponse(file, media_type="image/png")
 
 
-@router.put("/{id}", response_model=Report)
+@router.put("/{id}", response_model=ReportUpdate)
 async def update_report(
         id: str,
         report_data: ReportUpdate,
@@ -133,7 +130,7 @@ async def update_report(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    return await service.update(id=id, user_id=user.id, report_data=report_data)
+    return await service.update(id=id, report_data=report_data)
 
 
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)

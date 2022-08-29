@@ -245,7 +245,9 @@ async def startup_event():
                         report = tables.Reports(
                             id="95465771a6f399bf52cd57db2cf640f8624fd868",
                             user_id=1,
-                            date=datetime.date.today(),
+                            datetime=datetime.datetime.now(),
+                            laboratory_number="1",
+                            test_type="Трехосное нагружение",
                             object_number="1",
                             data={
                                 "Лабораторный номер": "Э1-1/-/ТС",
@@ -269,8 +271,10 @@ async def startup_event():
                             report = tables.Reports(
                                 id=f"9546577{i}6f399bf52cd57db2cf640f8624fd868",
                                 user_id=2,
-                                date=datetime.date.today(),
+                                datetime=datetime.date.today(),
                                 object_number=random.choice(["112-54", "341-15", "294-41"]),
+                                laboratory_number=f"1{i}",
+                                test_type="Трехосное нагружение",
                                 data={
                                     "Модуль деформации E50, МПа": E,
                                     "Эффективный угол внутреннего трения, град": fi,

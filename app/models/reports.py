@@ -1,10 +1,12 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, datetime
 from typing import Optional
 
 
 class ReportBase(BaseModel):
     object_number: str
+    laboratory_number: str
+    test_type: str
     data: dict
     active: bool
 
@@ -12,7 +14,7 @@ class ReportBase(BaseModel):
 class Report(ReportBase):
     id: str
     user_id: int
-    date: date
+    datetime: datetime
     class Config:
         orm_mode = True
 
@@ -20,6 +22,7 @@ class Report(ReportBase):
 class ReportCreate(ReportBase):
     pass
 
-class ReportUpdate(ReportBase):
-    pass
+class ReportUpdate(BaseModel):
+    data: dict
+    active: bool
 

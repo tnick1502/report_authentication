@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Date, JSON, Boolean, ForeignKey, BigInteger
+from sqlalchemy import Column, String, Integer, Date, JSON, Boolean, ForeignKey, BigInteger, DateTime
 from sqlalchemy.orm import relationship
 from db.database import Base
 
@@ -33,7 +33,9 @@ class Reports(Base):
 
     id = Column(String, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), index=True)
-    date = Column(Date)
+    datetime = Column(DateTime)
+    laboratory_number = Column(String)
+    test_type = Column(String)
     object_number = Column(String)
     data = Column(JSON)
     active = Column(Boolean)
