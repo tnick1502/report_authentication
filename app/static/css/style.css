@@ -909,20 +909,16 @@ img {
 	background-color: rgb(25, 125, 84);
 }
 
-.btn-out{
+.btn-out {
 	border-color: rgb(25, 125, 84);
 	background-color: rgb(25, 125, 84);
 }
-
-
-
 
 /* ========== КУКИ ==========*/
 .toast:not(.showing):not(.show) {
 	opacity: 0;
 	display: none !important;
-  }
-
+}
 
 /* ========== ЛИЧНЫЙ КАБИНЕТ ==========*/
 
@@ -1028,12 +1024,39 @@ img {
 	min-width: 64px;
 	border-radius: 4px;
 
-	color: var(--first-color);}
+	color: var(--first-color);
+}
 
-.action{
+.action {
 	display: flex;
 }
 
-.table-report__wrapper th{
+.table-report__wrapper th {
 	vertical-align: top;
-  }
+}
+
+/* ========== РЕДАКТОР ОПЫТОВ ==========*/
+
+.request-report__wrapper {
+	width: 100%;
+
+	border: 1px solid black;
+	border-radius: 0.25rem;
+
+	padding: 1rem;
+}
+.request-form__actions {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	column-gap: 8px;
+}
+
+.request-form__action .bi {
+	display: inline-block;
+	vertical-align: -0.125em;
+	fill: currentcolor;
+
+	width: 1em;
+	height: 1em;
+}
