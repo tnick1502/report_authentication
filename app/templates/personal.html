@@ -26,7 +26,7 @@
 				<td>Выдано:</td>
 				<td>{{ count }}</td>
 			</tr>
-
+	
 			<tr>
 				<td>Остаток:</td>
 				<td>{{ limit - count }}</td>
@@ -42,6 +42,148 @@
 		id="btn-out"
 		>Выйти</a
 	>
+	
+	<br />
+	
+	<div class="request-report__wrapper">
+		<form class="row g-3" id="request-report">
+			<div class="col-md-4">
+				<label for="inputObj">Объект</label>
+				<input
+					type="text"
+					class="form-control"
+					id="inputObj"
+					name="inputObj"
+					placeholder="Объект*"
+					required
+				/>
+			</div>
+			<div class="col-md-4">
+				<label for="inputLabNo">Лаб.№</label>
+				<input
+					type="text"
+					class="form-control"
+					id="inputLabNo"
+					name="inputLabNo"
+					placeholder="Лаб.№*"
+					required
+				/>
+			</div>
+			<div class="col-md-4">
+				<label for="inputType">Тип опыта</label>
+				<input
+					type="text"
+					class="form-control"
+					id="inputType"
+					name="inputType"
+					placeholder="Тип опыта*"
+					required
+				/>
+			</div>
+			<div class="col-6">
+				<label for="inputParam_1">Параметр</label>
+				<input
+					type="text"
+					class="form-control"
+					id="inputParam_1"
+					name="inputParam_1"
+					placeholder=""
+				/>
+			</div>
+			<div class="col-6">
+				<label for="inputParam_1_val">Значение</label>
+				<input
+					type="text"
+					class="form-control"
+					id="inputParam_1_val"
+					name="inputParam_1"
+					placeholder=""
+				/>
+			</div>
+			<div class="col-6">
+				<input
+					type="text"
+					class="form-control"
+					id="inputParam_2"
+					name="inputParam_2"
+					placeholder=""
+				/>
+			</div>
+			<div class="col-6">
+				<input
+					type="text"
+					class="form-control"
+					id="inputParam_2_val"
+					name="inputParam_2"
+					placeholder=""
+				/>
+			</div>
+			<div class="col-6">
+				<input
+					type="text"
+					class="form-control"
+					id="inputParam_3"
+					name="inputParam_3"
+					placeholder=""
+				/>
+			</div>
+			<div class="col-6">
+				<input
+					type="text"
+					class="form-control"
+					id="inputParam_3_val"
+					name="inputParam_3"
+					placeholder=""
+				/>
+			</div>
+			<div class="request-form__actions">
+				<button
+					type="button"
+					class="btn btn-outline-secondary request-form__action"
+					id="request-form-add-btn"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+						fill="currentColor"
+						class="bi bi-plus"
+						viewBox="0 0 16 16"
+					>
+						<path
+							d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+						/>
+					</svg>
+				</button>
+				<button
+					type="button"
+					class="btn btn-outline-secondary request-form__action"
+					id="request-form-delete-btn"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+						fill="currentColor"
+						class="bi bi-dash"
+						viewBox="0 0 16 16"
+					>
+						<path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z" />
+					</svg>
+				</button>
+			</div>
+			<div class="col-12">
+				<button
+					type="submit"
+					class="btn-out btn btn-success btn-lg w-100 w-lg-50 align-center"
+					id="request-report-submit-btn"
+					disabled
+				>
+					Отправить
+				</button>
+			</div>
+		</form>
+	</div>
 	
 	<br />
 	
@@ -107,7 +249,7 @@
 									width="30"
 									height="30"
 							/></a>
-							<a href="#"  class="download-report-btn" data-id="{{ key }}"
+							<a href="#" class="download-report-btn" data-id="{{ key }}"
 								><img
 									src="/static/images/download.png"
 									class="img-fluid"
@@ -125,19 +267,19 @@
 	<div>
 		<nav aria-label="Page navigation example">
 			<ul class="pagination">
-				{% for i in range(pages_reports) %}
-
-					{% if object_number %}
-						<li class="page-item">
-							<a class="page-link" href="/login/?object_number={{ object_number }}&page={{ i + 1 }}">{{ i + 1 }}</a>
-						</li>
-					{% else %}
-						<li class="page-item">
-							<a class="page-link" href="/login/?page={{ i + 1 }}">{{ i + 1 }}</a>
-						</li>
-					{% endif %}
-
-				{% endfor %}
+				{% for i in range(pages_reports) %} {% if object_number %}
+				<li class="page-item">
+					<a
+						class="page-link"
+						href="/login/?object_number={{ object_number }}&page={{ i + 1 }}"
+						>{{ i + 1 }}</a
+					>
+				</li>
+				{% else %}
+				<li class="page-item">
+					<a class="page-link" href="/login/?page={{ i + 1 }}">{{ i + 1 }}</a>
+				</li>
+				{% endif %} {% endfor %}
 			</ul>
 		</nav>
 	</div>
@@ -156,6 +298,7 @@
 	</div>
 	
 	<br />
+	<script src="{{ url_for('static', path='js/requestReport.js') }}"></script>
 	
 	{% endblock %}
 	
