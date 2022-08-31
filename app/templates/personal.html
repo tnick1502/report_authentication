@@ -1,5 +1,7 @@
-{% extends 'base.html' %} {% block title %} Личный кабинет {% endblock %} {%
-	block content %}
+{% extends 'base.html' %}
+{% block title %} Личный кабинет {% endblock %}
+{% block header %} {% include 'header_personal.html' %} {% endblock %}
+{% block content %}
 	<table class="table">
 		<tbody>
 			<tr>
@@ -36,49 +38,116 @@
 	
 	<br />
 	
-	<a
-		class="btn-out btn btn-success btn-lg w-100 w-lg-50 align-center"
-		href="/sign-out/"
-		id="btn-out"
-		>Выйти</a
-	>
+
 	
 	<br />
 	
 	<div class="request-report__wrapper">
+		<div class="request-report__description">
+			Уникальный номер протокола формируется по номеру объекта, лаб.номеру и типу
+			испытания, поэтому для разных протоколов эти параметры должны отличаться.
+			Например, для одной пробы 2 разных протокола будут с одинаковыми номерами
+			объекта и лаб.номерами, но тип опыта нужно вводить разный.
+		</div>
 		<form class="row g-3" id="request-report">
 			<div class="col-md-4">
-				<label for="inputObj">Объект</label>
-				<input
-					type="text"
-					class="form-control"
-					id="inputObj"
-					name="inputObj"
-					placeholder="Объект*"
-					required
-				/>
+				<label for="inputObj">Объект *</label>
+				<div class="input-group has-validation">
+					<span class="input-group-text" id="inputGroupObjInfo"
+						><svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							fill="currentColor"
+							class="bi bi-info-circle"
+							viewBox="0 0 16 16"
+						>
+							<path
+								d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+							/>
+							<path
+								d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"
+							/>
+						</svg>
+						<div class="form-info-box">Внутренний номер объекта</div>
+					</span>
+					<input
+						type="text"
+						class="form-control"
+						id="inputObj"
+						name="inputObj"
+						placeholder="111-11"
+						required
+						aria-describedby="inputGroupObjInfo"
+					/>
+					<div class="invalid-feedback">Ошибка в номере объекта</div>
+				</div>
 			</div>
 			<div class="col-md-4">
-				<label for="inputLabNo">Лаб.№</label>
-				<input
-					type="text"
-					class="form-control"
-					id="inputLabNo"
-					name="inputLabNo"
-					placeholder="Лаб.№*"
-					required
-				/>
+				<label for="inputLabNo">Лаб.№ *</label>
+				<div class="input-group has-validation">
+					<span class="input-group-text" id="inputGroupLabInfo"
+						><svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							fill="currentColor"
+							class="bi bi-info-circle"
+							viewBox="0 0 16 16"
+						>
+							<path
+								d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+							/>
+							<path
+								d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"
+							/>
+						</svg>
+						<div class="form-info-box">Лабораторный номер пробы</div>
+					</span>
+					<input
+						type="text"
+						class="form-control"
+						id="inputLabNo"
+						name="inputLabNo"
+						placeholder="A1-1/AA"
+						required
+						aria-describedby="inputGroupLabInfo"
+					/>
+					<div class="invalid-feedback">Ошибка в лабораторном номере</div>
+				</div>
 			</div>
 			<div class="col-md-4">
-				<label for="inputType">Тип опыта</label>
-				<input
-					type="text"
-					class="form-control"
-					id="inputType"
-					name="inputType"
-					placeholder="Тип опыта*"
-					required
-				/>
+				<label for="inputType">Тип испытания *</label>
+				<div class="input-group has-validation">
+					<span class="input-group-text" id="inputGroupTypeInfo"
+						><svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							fill="currentColor"
+							class="bi bi-info-circle"
+							viewBox="0 0 16 16"
+						>
+							<path
+								d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+							/>
+							<path
+								d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"
+							/>
+						</svg>
+						<div class="form-info-box">Тип испытания</div>
+					</span>
+					<input
+						type="text"
+						class="form-control"
+						id="inputType"
+						name="inputType"
+						placeholder="fi-c, fi-c-E, вибро, консолидация и т.д."
+						required
+						aria-describedby="inputGroupTypeInfo"
+					/>
+					<div class="invalid-feedback">Ошибка в типе испытания</div>
+				</div>
 			</div>
 			<div class="col-6">
 				<label for="inputParam_1">Параметр</label>
@@ -87,8 +156,12 @@
 					class="form-control"
 					id="inputParam_1"
 					name="inputParam_1"
-					placeholder=""
+					placeholder="Дата выдачи протокола"
+					aria-describedby="validationFeedback"
 				/>
+				<div class="invalid-feedback" id="validationFeedback">
+					Пожалуйста, заполните это поле.
+				</div>
 			</div>
 			<div class="col-6">
 				<label for="inputParam_1_val">Значение</label>
@@ -97,8 +170,12 @@
 					class="form-control"
 					id="inputParam_1_val"
 					name="inputParam_1"
-					placeholder=""
+					placeholder="01.09.2022"
+					aria-describedby="validationFeedback"
 				/>
+				<div class="invalid-feedback" id="validationFeedback">
+					Пожалуйста, заполните это поле.
+				</div>
 			</div>
 			<div class="col-6">
 				<input
@@ -107,7 +184,11 @@
 					id="inputParam_2"
 					name="inputParam_2"
 					placeholder=""
+					aria-describedby="validationFeedback"
 				/>
+				<div class="invalid-feedback" id="validationFeedback">
+					Пожалуйста, заполните это поле.
+				</div>
 			</div>
 			<div class="col-6">
 				<input
@@ -116,7 +197,11 @@
 					id="inputParam_2_val"
 					name="inputParam_2"
 					placeholder=""
+					aria-describedby="validationFeedback"
 				/>
+				<div class="invalid-feedback" id="validationFeedback">
+					Пожалуйста, заполните это поле.
+				</div>
 			</div>
 			<div class="col-6">
 				<input
@@ -125,7 +210,11 @@
 					id="inputParam_3"
 					name="inputParam_3"
 					placeholder=""
+					aria-describedby="validationFeedback"
 				/>
+				<div class="invalid-feedback" id="validationFeedback">
+					Пожалуйста, заполните это поле.
+				</div>
 			</div>
 			<div class="col-6">
 				<input
@@ -134,7 +223,11 @@
 					id="inputParam_3_val"
 					name="inputParam_3"
 					placeholder=""
+					aria-describedby="validationFeedback"
 				/>
+				<div class="invalid-feedback" id="validationFeedback">
+					Пожалуйста, заполните это поле.
+				</div>
 			</div>
 			<div class="request-form__actions">
 				<button

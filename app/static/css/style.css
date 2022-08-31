@@ -463,6 +463,24 @@ img {
 	.navbar-collapse {
 		margin-left: 0;
 	}
+	/* ========== Шапка для личного кабинета ==========*/
+
+	.navbar-collapse-personal{
+		width: 100%;
+	}
+
+	.navbar-nav-personal{
+		width: 100%;
+		justify-content: space-between;
+	}
+	.navbar-collapse-wrapper-personal{
+		width: 100%;
+	}
+
+	.nav-link.nav-link-personal{
+		padding-right: 2rem;
+	}	
+
 }
 
 /* ============== БЛОК КОНТАКТОВ ============== */
@@ -1040,11 +1058,20 @@ img {
 .request-report__wrapper {
 	width: 100%;
 
-	border: 1px solid black;
+	border: 1px solid #e9ecef;
 	border-radius: 0.25rem;
 
 	padding: 1rem;
+
+	display: flex;
+	flex-direction: column;
+	row-gap: 1rem;
 }
+
+.request-report__description{
+	text-align: justify;
+}
+
 .request-form__actions {
 	display: inline-flex;
 	justify-content: center;
@@ -1052,11 +1079,41 @@ img {
 	column-gap: 8px;
 }
 
-.request-form__action .bi {
+.bi {
 	display: inline-block;
 	vertical-align: -0.125em;
 	fill: currentcolor;
 
 	width: 1em;
 	height: 1em;
+}
+
+.input-group.has-validation .input-group-text {
+	cursor: pointer;
+	position: relative;
+}
+
+.input-group.has-validation .input-group-text:hover .form-info-box{
+	visibility: visible;
+	z-index: 10;
+}
+
+.input-group.has-validation .input-group-text .form-info-box {
+	visibility: hidden;
+	position: absolute;
+
+	top: calc(100% + 2px);
+	left: -1px;
+
+	width: fit-content;
+
+	padding: 0.375rem 0.75rem;
+	background-color: #e9ecef;
+
+	border-top-right-radius: 0.25rem;
+	border-bottom-right-radius: 0.25rem;
+
+	border-radius: 0.25rem;
+	border: 1px solid #ced4da;
+	z-index: 0;
 }
