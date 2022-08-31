@@ -921,6 +921,10 @@ img {
 }
 
 /* ========== ЛИЧНЫЙ КАБИНЕТ ==========*/
+#login-form{
+	width: 260px;
+	max-width: 100%;
+}
 
 .del-report-modal__wrapper {
 	position: fixed;
