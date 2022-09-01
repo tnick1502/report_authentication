@@ -12,7 +12,7 @@
 			name="Геотехническая лаборатория МОСТДОРГЕОТРЕСТ"
 			content="Геотехническая лаборатория МОСТДОРГЕОТРЕСТ"
 		/>
-		<link rel="icon" href="{{ url_for('static', path='images/logo-2.png') }}" />
+		<link rel="icon" href="{{ url_for('static', _external=True, _scheme='https', path='images/logo-2.png') }}" />
 		<link
 			rel="apple-touch-icon"
 			href="{{ url_for('static', path='images/logo-2.png') }}"
@@ -21,7 +21,7 @@
 		<link
 			rel="stylesheet"
 			type="text/css"
-			href="{{ url_for('static', path='css/bootstrap.min.css') }}"
+			href="{{ url_for('static', _external=True, _scheme='https', path='css/bootstrap.min.css') }}"
 		/>
 		<link
 			href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css"
@@ -40,7 +40,7 @@
 		<link
 			rel="stylesheet"
 			type="text/css"
-			href="{{ url_for('static', path='css/style.css') }}"
+			href="{{ url_for('static', _external=True, _scheme='https', path='css/style.css') }}"
 		/>
 
 		<title>GEOREPORT</title>
@@ -199,8 +199,8 @@
 			</div>
 		</div>
 
-		<script src="{{ url_for('static', path='js/bootstrap.bundle.min.js') }}"></script>
-		<script src="{{ url_for('static', path='js/app.js') }}"></script>
-		<script src="{{ url_for('static', path='js/requests.js') }}"></script>
+		<script src="{{ url_for('static', _external=True, _scheme='https', path='js/bootstrap.bundle.min.js') }}"></script>
+		<script src="{{ url_for('static', _external=True, _scheme='https', path='js/app.js') }}"></script>
+		<script src="{{ url_for('static', _external=True, _scheme='https', path='js/requests.js') }}"></script>
 	</body>
 </html>
