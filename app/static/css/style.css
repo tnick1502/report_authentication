@@ -1065,6 +1065,17 @@ img {
 
 }
 
+/* ФОРМА ВХОДА */
+
+#login-form{
+	width: 260px;
+	max-width: 100%;
+}
+
+#login-form.row.form-row{
+	row-gap: 1rem;
+}
+
 
 /* УДАЛЕНИЕ ОТЧЕТА */
 
