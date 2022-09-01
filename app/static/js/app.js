@@ -244,3 +244,53 @@ if (downloadReportBtns.length > 0) {
 			})
 	}
 }
+
+// ===================== НАВИГЦИЯ В ЛИЧНОМ КАБИНЕТЕ =====================
+const navItemsPersonal = document.querySelectorAll('.nav-link-personal[data-goto]')
+if (navItemsPersonal.length > 0) {
+	navItemsPersonal.forEach((item) => {
+		item.addEventListener('click', onNavItemPersonalClick)
+	})
+
+	function onNavItemPersonalClick(event) {
+		const navItem = event.target
+		if (navItem.dataset.goto && document.getElementById(navItem.dataset.goto)) {
+			const gotoBlock = document.getElementById(navItem.dataset.goto)
+			const gotoBlockValue =
+				gotoBlock.getBoundingClientRect().top +
+				pageYOffset -
+				document.querySelector('header').offsetHeight
+			window.scrollTo({
+				top: gotoBlockValue,
+				behavior: 'smooth',
+			})
+
+			closeNavPersonal()
+
+			event.preventDefault()
+		}
+	}
+}
+
+const navMenuPersonal = document.getElementById('navbar-collapse-personal'),
+	navTogglePersonal = document.getElementById('nav-toggle-personal'),
+	navClosePersonal = document.getElementById('nav-close-personal'),
+	navWrapperPersonal = document.getElementById('navbar-collapse-wrapper-personal')
+
+if (navTogglePersonal) {
+	navTogglePersonal.addEventListener('click', () => {
+		navWrapperPersonal.classList.add('navbar-collapse-wrapper-show')
+		navMenuPersonal.classList.add('navbar-collapse-show')
+		body.classList.add('body-hidden')
+	})
+}
+
+function closeNavPersonal() {
+	navMenuPersonal.classList.remove('navbar-collapse-show')
+	body.classList.remove('body-hidden')
+	navWrapperPersonal.classList.remove('navbar-collapse-wrapper-show')
+}
+
+if (navClosePersonal) {
+	navClosePersonal.addEventListener('click', closeNavPersonal)
+}
