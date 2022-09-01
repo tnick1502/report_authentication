@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block title %} Личный кабинет {% endblock %} {%
 block content %}
-<form class="row" id="login-form" novalidate>
+<form class="row form-row" id="login-form" novalidate>
 	<div class="col-12">
 		<label for="username">Имя пользователя:</label>
 		<input
@@ -8,7 +8,7 @@ block content %}
 			id="username"
 			placeholder="Введите имя"
 			aria-describedby="validationServer"
-			
+			required
 		/>
 	</div>
 	<div class="col-12">
@@ -19,7 +19,7 @@ block content %}
 			id="password"
 			placeholder="Введите пароль"
 			aria-describedby="validationServer"
-			
+			required
 		/>
 		<div id="validationServer" class="invalid-feedback">
 			Не верные имя пользователя или пароль.

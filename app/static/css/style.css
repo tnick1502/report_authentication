@@ -926,6 +926,10 @@ img {
 	max-width: 100%;
 }
 
+#login-form.row.form-row{
+	row-gap: 1rem;
+}
+
 .del-report-modal__wrapper {
 	position: fixed;
 	top: 0;
