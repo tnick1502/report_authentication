@@ -940,14 +940,6 @@ img {
 }
 
 /* ========== ЛИЧНЫЙ КАБИНЕТ ==========*/
-#login-form{
-	width: 260px;
-	max-width: 100%;
-}
-
-#login-form.row.form-row{
-	row-gap: 1rem;
-}
 /* НАВИГАЦИЯ */
 @media screen and (max-width: 460px) {
 	/* оболочка для создания затемненной части */
@@ -1071,6 +1063,17 @@ img {
 		padding-right: 2rem;
 	}	
 
+}
+
+/* ФОРМА ВХОДА */
+
+#login-form{
+	width: 260px;
+	max-width: 100%;
+}
+
+#login-form.row.form-row{
+	row-gap: 1rem;
 }
 
 
