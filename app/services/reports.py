@@ -49,7 +49,7 @@ class ReportsService:
                 select(tables.Reports).
                 filter_by(user_id=user_id).
                 filter_by(object_number=object_number).
-                order_by(tables.Reports.datetime).
+                order_by(tables.Reports.datetime.desc()).
                 offset(offset).
                 limit(limit)
             )
@@ -57,7 +57,7 @@ class ReportsService:
             reports = await self.session.execute(
                 select(tables.Reports).
                 filter_by(user_id=user_id).
-                order_by(tables.Reports.datetime).
+                order_by(tables.Reports.datetime.desc()).
                 offset(offset).
                 limit(limit)
             )
