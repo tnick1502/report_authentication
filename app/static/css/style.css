@@ -231,6 +231,7 @@ img {
 .navbar-brand {
 	color: var(--title-color);
 	white-space: nowrap;
+	min-width: fit-content;
 }
 
 /* сначала мобильная версия */
@@ -266,7 +267,7 @@ img {
 		overflow: auto;
 	}
 
-	.nav-item:last-child {
+	.nav-link:last-child {
 		margin-bottom: 1.5rem;
 	}
 }
@@ -464,7 +465,7 @@ img {
 		margin-left: 0;
 	}
 	/* ========== Шапка для личного кабинета ==========*/
-
+/* 
 	.navbar-collapse-personal{
 		width: 100%;
 	}
@@ -479,7 +480,7 @@ img {
 
 	.nav-link.nav-link-personal{
 		padding-right: 2rem;
-	}	
+	}	 */
 
 }
 
@@ -939,7 +940,247 @@ img {
 }
 
 /* ========== ЛИЧНЫЙ КАБИНЕТ ==========*/
+/* НАВИГАЦИЯ */
+@media screen and (max-width: 460px) {
+	/* оболочка для создания затемненной части */
+	.navbar-collapse-wrapper-personal {
+		background-color: hsla(var(--hue), 24%, 15%, 0.5);
+		position: fixed;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		/* right: 0; */
+		right: -100%;
+		z-index: calc(var(--z-fixed) - 1);
+		overflow-y: auto;
+	}
 
+	/* сам список ссылок + кнопка "закрыть" */
+	.navbar-collapse-personal {
+		position: absolute;
+		background-color: var(--container-color);
+		width: 50%;
+		height: 100%;
+		/* top: 0; */
+		/* right: 0; */
+		right: -100%;
+		box-shadow: -2px 0 4px hsla(var(--hue), 24%, 15%, 0.1);
+		padding: 4rem 0 0 3rem;
+		border-radius: 1rem 0 0 1rem;
+		transition: 0.3s;
+		z-index: var(--z-fixed);
+		overflow: auto;
+	}
+
+	.nav-item-personal:last-child {
+		margin-bottom: 1.5rem;
+	}
+}
+
+.navbar-nav-personal {
+	padding: 5px, 0;
+}
+
+
+.nav__toggle-personal,
+.nav__close-personal {
+	color: var(--title-color);
+}
+
+.nav__toggle-personal {
+	display: inline-flex;
+	font-size: 1.15rem;
+	cursor: pointer;
+}
+
+.nav__close-personal {
+	font-size: 1.5rem;
+	position: absolute;
+	top: 1rem;
+	right: 1.25rem;
+	cursor: pointer;
+}
+
+.navbar-nav-personal {
+	display: flex;
+	flex-direction: column;
+	row-gap: 1.5rem;
+
+	flex-wrap: wrap;
+}
+
+.nav-link-personal {
+	color: var(--title-color);
+	font-weight: var(--font-medium);
+}
+.nav-link-personal:hover {
+	color: var(--first-color);
+}
+
+.navbar-collapse-wrapper-personal.navbar-collapse-wrapper-show,
+.navbar-collapse-personal.navbar-collapse-show {
+	right: 0;
+}
+
+
+/* ======== БРЕЙКПОИНТЫ ДЛЯ РАЗНЫХ РАЗМЕРОВ ЭКРАНОВ ======== */
+@media screen and (min-width: 461px) {
+
+	.container-fluid-mdgt.container-fluid-mdgt-personal {
+		height: calc(var(--header-height) + 1.5rem);
+		column-gap: 3rem;
+		justify-content: flex-start;
+	}
+
+	.nav__toggle-personal,
+	.nav__close-personal {
+		display: none;
+	}
+
+	.navbar-nav-personal {
+		flex-direction: row;		
+	}
+
+	.navbar-collapse-wrapper-personal,
+	.navbar-collapse-personal {
+		margin-left: 0;
+	}
+	/* ========== Шапка для личного кабинета ==========*/
+
+	.navbar-collapse-personal{
+		width: 100%;
+	}
+
+	.navbar-nav-personal{
+		width: 100%;
+		justify-content: space-between;
+	}
+	.navbar-collapse-wrapper-personal{
+		width: 100%;
+	}
+
+	.nav-link-personal{
+		padding-right: 2rem;
+	}	
+
+}
+
+
+/* УДАЛЕНИЕ ОТЧЕТА */
+
+
+.del-report-modal__wrapper {
+	position: fixed;
+	top: 0;
+	left: 0;
+
+	width: 100vw;
+	height: 100vh;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	opacity: 0;
+	transition-duration: 250ms;
+	transition-property: opacity, visibility;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	visibility: hidden;
+}
+
+.del-report-modal {
+	max-height: 360px;
+	min-width: 240px;
+	max-width: 240px;
+
+	border-radius: 4px;
+
+	background-color: #fff;
+
+	display: flex;
+	flex-direction: column;
+
+	box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%),
+		0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
+
+	opacity: 0;
+	transition-duration: 250ms;
+	transition-property: opacity, visibility;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	visibility: hidden;
+}
+
+.del-report-modal__wrapper.del-report-modal__wrapper_show,
+.del-report-modal__wrapper.del-report-modal__wrapper_show .del-report-modal {
+	opacity: 1;
+	visibility: visible;
+}
+
+.del-report__title {
+	font-size: var(--h2-font-size);
+	font-weight: var(--font-semi-bold);
+	letter-spacing: 0.0125em;
+	display: block;
+	position: relative;
+	padding: 0 24px 9px;
+	margin: 0;
+
+	border-bottom: 1px solid transparent;
+}
+
+.del-report__title::before {
+	display: inline-block;
+	width: 0;
+	height: 40px;
+	content: '';
+	vertical-align: 0;
+}
+
+.del-report__content {
+	padding: 20px 24px;
+	padding-top: 0;
+
+	opacity: 0.6;
+	font-size: var(--normal-font-size);
+	line-height: 1.5rem;
+	font-weight: var(--font-base);
+	letter-spacing: 0.03125em;
+}
+
+.del-report__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	min-height: 52px;
+	padding: 8px;
+	border-top: 1px solid transparent;
+	column-gap: 8px;
+}
+
+.del-report__btn {
+	text-align: right;
+	height: 36px;
+
+	font-size: var(--normal-font-size);
+	font-weight: var(--font-medium);
+	padding: 0 8px 0 8px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 64px;
+	border-radius: 4px;
+
+	color: var(--first-color);
+}
+
+.action {
+	display: flex;
+}
+
+.table-report__wrapper th {
+	vertical-align: top;
+}
 .del-report-modal__wrapper {
 	position: fixed;
 	top: 0;
@@ -1117,3 +1358,4 @@ img {
 	border: 1px solid #ced4da;
 	z-index: 0;
 }
+
