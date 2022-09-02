@@ -274,6 +274,8 @@ if (updateReportBtns.length > 0) {
 			top: gotoBlockValue,
 			behavior: 'smooth',
 		})
+
+		requiredChange()
 	}
 }
 
