@@ -103,17 +103,22 @@ async def create_report_and_qr(
     id = hashlib.sha1(
         f"{report_data.object_number} {report_data.laboratory_number} {report_data.test_type} {user.id}".encode("utf-8")).hexdigest()
 
-    await service.create(report_id=id, user_id=user.id, report_data=report_data)
-
     if not user.active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User is not active",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
     text = f"https://georeport.ru/reports/?id={id}"
 
     path_to_download = os.path.join("services", "digitrock_qr.png")  # Путь до фона qr кода
+
+    try:
+        check = await service.get(id)
+        await service.update(id=id, report_data=report_data)
+    except HTTPException:
+        await service.create(report_id=id, user_id=user.id, report_data=report_data)
 
     file = gen_qr_code(text, path_to_download)
     return StreamingResponse(file, media_type="image/png")
