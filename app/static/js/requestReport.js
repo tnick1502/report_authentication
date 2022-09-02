@@ -133,13 +133,13 @@ if (requestReport) {
 			if (inputs[i].value.length === 0 && inputs[i + 1].value.length !== 0) {
 				inputs[i].classList.add('is-invalid')
 				inputs[i + 1].classList.add('is-valid')
-        notValid = true
+				notValid = true
 				continue
 			}
 			if (inputs[i].value.length !== 0 && inputs[i + 1].value.length === 0) {
 				inputs[i].classList.add('is-valid')
 				inputs[i + 1].classList.add('is-invalid')
-        notValid = true
+				notValid = true
 				continue
 			}
 			inputs[i].classList.add('is-valid')
@@ -177,7 +177,7 @@ if (requestReport) {
 }
 
 function sendRequestReport(info, data) {
-	fetch('../reports/', {
+	fetch('../reports/report_and_qr', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -190,10 +190,29 @@ function sendRequestReport(info, data) {
 			active: true,
 		}),
 	}).then((response) => {
-		console.log(response)
 		if (!response.ok) {
-			console.log('error')
+			console.log(response)
 			serverError()
+		} else {
+			response.blob().then((data) => {
+				if (data) {
+					const a = document.createElement('a')
+					a.href = window.URL.createObjectURL(data)
+					a.target = '_blank'
+					a.download = `${info['inputLabNo']} ${info['inputType']}`
+					a.click()
+
+					const requestReportSuccses = document.getElementById(
+						'request-report-succses'
+					)
+					if (requestReportSuccses) {
+						requestReportSuccses.classList.add('request-report-succses-show')
+					}
+				} else {
+					serverError()
+				}
+			})
+			// window.location.reload()
 		}
 	})
 }
@@ -204,6 +223,11 @@ function clearSubmit() {
 		input.classList.remove('is-valid')
 		input.classList.remove('is-invalid')
 	})
+
+	const requestReportSuccses = document.getElementById('request-report-succses')
+	if (requestReportSuccses) {
+		requestReportSuccses.classList.remove('request-report-succses-show')
+	}
 }
 
 function serverError() {

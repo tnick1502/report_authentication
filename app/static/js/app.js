@@ -228,9 +228,6 @@ if (downloadReportBtns.length > 0) {
 		console.log(downlReportId)
 		fetch(`../reports/qr?id=${downlReportId}`, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'image/png ',
-			},
 		})
 			.then((response) => {
 				return response.blob()
@@ -246,7 +243,9 @@ if (downloadReportBtns.length > 0) {
 }
 
 // ===================== НАВИГЦИЯ В ЛИЧНОМ КАБИНЕТЕ =====================
-const navItemsPersonal = document.querySelectorAll('.nav-link-personal[data-goto]')
+const navItemsPersonal = document.querySelectorAll(
+	'.nav-link-personal[data-goto]'
+)
 if (navItemsPersonal.length > 0) {
 	navItemsPersonal.forEach((item) => {
 		item.addEventListener('click', onNavItemPersonalClick)
@@ -275,7 +274,9 @@ if (navItemsPersonal.length > 0) {
 const navMenuPersonal = document.getElementById('navbar-collapse-personal'),
 	navTogglePersonal = document.getElementById('nav-toggle-personal'),
 	navClosePersonal = document.getElementById('nav-close-personal'),
-	navWrapperPersonal = document.getElementById('navbar-collapse-wrapper-personal')
+	navWrapperPersonal = document.getElementById(
+		'navbar-collapse-wrapper-personal'
+	)
 
 if (navTogglePersonal) {
 	navTogglePersonal.addEventListener('click', () => {

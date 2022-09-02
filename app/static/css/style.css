@@ -1370,3 +1370,15 @@ img {
 	z-index: 0;
 }
 
+.request-report-succses{
+	width: 100%;
+
+	text-align: center;
+	color: var(--first-color);
+
+	display: none;
+}
+
+.request-report-succses.request-report-succses-show{
+	display: inline-block;
+}
