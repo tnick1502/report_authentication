@@ -1,21 +1,35 @@
 {% extends 'base.html' %}
+{% block title %} Личный кабинет {% endblock %}
 {% block header %} {% include 'header.html' %} {% endblock %}
-{% block title %}
-    Личный кабинет
-{% endblock %}
-
-{% block content %}
-    <form id="login-form">
-      <div class="form-group">
-        <label for="username">Имя пользователя:</label>
-        <input class="form-control" id="username" placeholder="Введите имя">
-      </div>
-      <div class="form-group">
-        <label for="password">Пароль:</label>
-        <input type="password" class="form-control" id="password" placeholder="Введите пароль">
-      </div>
-      <br>
-      <button type="submit" class="btn btn-success align-center" id="mdgt-btn">Войти</button>
-    </form>
-
-{% endblock %}
+{%block content %}
+<form class="row form-row" id="login-form" novalidate>
+	<div class="col-12">
+		<label for="username">Имя пользователя:</label>
+		<input
+			class="form-control"
+			id="username"
+			placeholder="Введите имя"
+			aria-describedby="validationServer"
+			required
+		/>
+	</div>
+	<div class="col-12">
+		<label for="password">Пароль:</label>
+		<input
+			type="password"
+			class="form-control"
+			id="password"
+			placeholder="Введите пароль"
+			aria-describedby="validationServer"
+			required
+		/>
+		<div id="validationServer" class="invalid-feedback">
+			Не верные имя пользователя или пароль.
+		</div>
+	</div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-success align-center" id="mdgt-btn">
+      Войти
+    </button>
+  </div>
+</form>
