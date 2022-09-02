@@ -228,9 +228,6 @@ if (downloadReportBtns.length > 0) {
 		console.log(downlReportId)
 		fetch(`../reports/qr?id=${downlReportId}`, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'image/png ',
-			},
 		})
 			.then((response) => {
 				return response.blob()
@@ -245,8 +242,47 @@ if (downloadReportBtns.length > 0) {
 	}
 }
 
+// ОБНОВЛЕНИЕ ОТЧЕТА
+const updateReportBtns = document.querySelectorAll(
+	'.update-report-btn[data-id]'
+)
+
+if (updateReportBtns.length > 0) {
+	updateReportBtns.forEach((item) => {
+		item.addEventListener('click', onUpdateReportClick)
+	})
+
+	function onUpdateReportClick(event) {
+		event.preventDefault()
+
+		const _requestReport = document.getElementById('request-report'),
+			_inputObj = document.getElementById('inputObj'),
+			_inputLabNo = document.getElementById('inputLabNo'),
+			_inputType = document.getElementById('inputType')
+
+		if (_requestReport && _inputObj && _inputLabNo && _inputType) {
+			_inputObj.value = event.currentTarget.dataset.object_number
+			_inputLabNo.value = event.currentTarget.dataset.laboratory_number
+			_inputType.value = event.currentTarget.dataset.test_type
+		}
+
+		const gotoBlockValue =
+			_requestReport.parentNode.getBoundingClientRect().top +
+			pageYOffset -
+			document.querySelector('header').offsetHeight
+		window.scrollTo({
+			top: gotoBlockValue,
+			behavior: 'smooth',
+		})
+
+		requiredChange()
+	}
+}
+
 // ===================== НАВИГЦИЯ В ЛИЧНОМ КАБИНЕТЕ =====================
-const navItemsPersonal = document.querySelectorAll('.nav-link-personal[data-goto]')
+const navItemsPersonal = document.querySelectorAll(
+	'.nav-link-personal[data-goto]'
+)
 if (navItemsPersonal.length > 0) {
 	navItemsPersonal.forEach((item) => {
 		item.addEventListener('click', onNavItemPersonalClick)
@@ -275,7 +311,9 @@ if (navItemsPersonal.length > 0) {
 const navMenuPersonal = document.getElementById('navbar-collapse-personal'),
 	navTogglePersonal = document.getElementById('nav-toggle-personal'),
 	navClosePersonal = document.getElementById('nav-close-personal'),
-	navWrapperPersonal = document.getElementById('navbar-collapse-wrapper-personal')
+	navWrapperPersonal = document.getElementById(
+		'navbar-collapse-wrapper-personal'
+	)
 
 if (navTogglePersonal) {
 	navTogglePersonal.addEventListener('click', () => {

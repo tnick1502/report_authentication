@@ -276,6 +276,9 @@
 				</button>
 			</div>
 		</form>
+		<div class="request-report-succses" id="request-report-succses">
+			Данные успешно отправлены!<div class="request-report-succses__sub">Чтобы их увидеть в таблице, обновите страницу</div>
+		</div>
 	</div>
 	
 	<br />
@@ -328,7 +331,11 @@
 					</td>
 					<td class="table__td">
 						<div class="action">
-							<a href="#" class="update-report-btn" data-id="{{ key }}"
+							<a href="#" class="update-report-btn"
+							data-id="{{ key }}"
+							data-object_number="{{ value["object_number"] }}"
+							data-laboratory_number="{{ value["laboratory_number"] }}"
+							data-test_type="{{ value["test_type"] }}"
 								><img
 									src="/static/images/update.png"
 									class="img-fluid"
