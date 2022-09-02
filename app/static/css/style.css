@@ -465,7 +465,7 @@ img {
 		margin-left: 0;
 	}
 	/* ========== Шапка для личного кабинета ==========*/
-/* 
+	/* 
 	.navbar-collapse-personal{
 		width: 100%;
 	}
@@ -481,7 +481,6 @@ img {
 	.nav-link.nav-link-personal{
 		padding-right: 2rem;
 	}	 */
-
 }
 
 /* ============== БЛОК КОНТАКТОВ ============== */
@@ -981,7 +980,6 @@ img {
 	padding: 5px, 0;
 }
 
-
 .nav__toggle-personal,
 .nav__close-personal {
 	color: var(--title-color);
@@ -1022,10 +1020,8 @@ img {
 	right: 0;
 }
 
-
 /* ======== БРЕЙКПОИНТЫ ДЛЯ РАЗНЫХ РАЗМЕРОВ ЭКРАНОВ ======== */
 @media screen and (min-width: 461px) {
-
 	.container-fluid-mdgt.container-fluid-mdgt-personal {
 		height: calc(var(--header-height) + 1.5rem);
 		column-gap: 3rem;
@@ -1038,7 +1034,7 @@ img {
 	}
 
 	.navbar-nav-personal {
-		flex-direction: row;		
+		flex-direction: row;
 	}
 
 	.navbar-collapse-wrapper-personal,
@@ -1047,38 +1043,35 @@ img {
 	}
 	/* ========== Шапка для личного кабинета ==========*/
 
-	.navbar-collapse-personal{
+	.navbar-collapse-personal {
 		width: 100%;
 	}
 
-	.navbar-nav-personal{
+	.navbar-nav-personal {
 		width: 100%;
 		justify-content: space-between;
 	}
-	.navbar-collapse-wrapper-personal{
+	.navbar-collapse-wrapper-personal {
 		width: 100%;
 	}
 
-	.nav-link-personal{
+	.nav-link-personal {
 		padding-right: 2rem;
-	}	
-
+	}
 }
 
 /* ФОРМА ВХОДА */
 
-#login-form{
+#login-form {
 	width: 260px;
 	max-width: 100%;
 }
 
-#login-form.row.form-row{
+#login-form.row.form-row {
 	row-gap: 1rem;
 }
 
-
 /* УДАЛЕНИЕ ОТЧЕТА */
-
 
 .del-report-modal__wrapper {
 	position: fixed;
@@ -1320,7 +1313,7 @@ img {
 	row-gap: 1rem;
 }
 
-.request-report__description{
+.request-report__description {
 	text-align: justify;
 }
 
@@ -1345,7 +1338,7 @@ img {
 	position: relative;
 }
 
-.input-group.has-validation .input-group-text:hover .form-info-box{
+.input-group.has-validation .input-group-text:hover .form-info-box {
 	visibility: visible;
 	z-index: 10;
 }
@@ -1370,7 +1363,7 @@ img {
 	z-index: 0;
 }
 
-.request-report-succses{
+.request-report-succses {
 	width: 100%;
 
 	text-align: center;
@@ -1379,6 +1372,11 @@ img {
 	display: none;
 }
 
-.request-report-succses.request-report-succses-show{
+.request-report-succses__sub {
+	font-size: var(--smaller-font-size);
+	opacity: 0.6;
+}
+
+.request-report-succses.request-report-succses-show {
 	display: inline-block;
 }

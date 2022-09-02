@@ -1,7 +1,5 @@
-{% extends 'base.html' %}
-{% block title %} Личный кабинет {% endblock %}
-{% block header %} {% include 'header.html' %} {% endblock %}
-{%block content %}
+{% extends 'base.html' %} {% block title %} Личный кабинет {% endblock %} {%
+block header %} {% include 'header.html' %} {% endblock %} {% block content %}
 <form class="row form-row" id="login-form" novalidate>
 	<div class="col-12">
 		<label for="username">Имя пользователя:</label>
@@ -27,9 +25,10 @@
 			Не верные имя пользователя или пароль.
 		</div>
 	</div>
-  <div class="col-12">
-    <button type="submit" class="btn btn-success align-center" id="mdgt-btn">
-      Войти
-    </button>
-  </div>
+	<div class="col-12">
+		<button type="submit" class="btn btn-success align-center" id="mdgt-btn">
+			Войти
+		</button>
+	</div>
 </form>
+{% endblock %}

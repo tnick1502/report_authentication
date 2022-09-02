@@ -242,6 +242,41 @@ if (downloadReportBtns.length > 0) {
 	}
 }
 
+// ОБНОВЛЕНИЕ ОТЧЕТА
+const updateReportBtns = document.querySelectorAll(
+	'.update-report-btn[data-id]'
+)
+
+if (updateReportBtns.length > 0) {
+	updateReportBtns.forEach((item) => {
+		item.addEventListener('click', onUpdateReportClick)
+	})
+
+	function onUpdateReportClick(event) {
+		event.preventDefault()
+
+		const _requestReport = document.getElementById('request-report'),
+			_inputObj = document.getElementById('inputObj'),
+			_inputLabNo = document.getElementById('inputLabNo'),
+			_inputType = document.getElementById('inputType')
+
+		if (_requestReport && _inputObj && _inputLabNo && _inputType) {
+			_inputObj.value = event.currentTarget.dataset.object_number
+			_inputLabNo.value = event.currentTarget.dataset.laboratory_number
+			_inputType.value = event.currentTarget.dataset.test_type
+		}
+
+		const gotoBlockValue =
+			_requestReport.parentNode.getBoundingClientRect().top +
+			pageYOffset -
+			document.querySelector('header').offsetHeight
+		window.scrollTo({
+			top: gotoBlockValue,
+			behavior: 'smooth',
+		})
+	}
+}
+
 // ===================== НАВИГЦИЯ В ЛИЧНОМ КАБИНЕТЕ =====================
 const navItemsPersonal = document.querySelectorAll(
 	'.nav-link-personal[data-goto]'
