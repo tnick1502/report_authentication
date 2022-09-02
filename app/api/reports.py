@@ -25,7 +25,7 @@ router = APIRouter(
     #return await service.get(id)
 
 
-@router.post("/", response_model=Report)
+@router.post("/")
 async def create_report(
         report_data: ReportCreate,
         user: User = Depends(get_current_user),
@@ -50,7 +50,11 @@ async def create_report(
     id = hashlib.sha1(
         f"{report_data.object_number} {report_data.laboratory_number} {report_data.test_type} {user.id}".encode("utf-8")).hexdigest()
 
-    return await service.create(report_id=id, user_id=user.id, report_data=report_data)
+    try:
+        check = await service.get(id)
+        return await service.update(id=id, report_data=report_data)
+    except HTTPException:
+        return await service.create(report_id=id, user_id=user.id, report_data=report_data)
 
 
 @router.post("/qr")

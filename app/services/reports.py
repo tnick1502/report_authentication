@@ -180,16 +180,6 @@ class ReportsService:
         await self.session.commit()
 
     async def create(self, user_id: str, report_id: str, report_data: ReportCreate) -> tables.Reports:
-        report = await self.session.execute(
-            select(tables.Reports)
-            .filter_by(id=report_id)
-        )
-
-        report = report.scalars().first()
-
-        if report:
-            return await self.update(id=report_id, report_data=report_data)
-
         report = tables.Reports(
             **report_data.dict(),
             id=report_id,
