@@ -14,10 +14,12 @@
 #### [Схема БД](https://dbdiagram.io/d/63088a2bf1a9b01b0feae726)
 
 ## Запуск:
-1. Создать папку для проекта. Открыть папку в терминале и выполнить:\
+1. Скопировать файл .env в корень проекта
+    
+2. Создать папку для проекта. Открыть папку в терминале и выполнить:\
     `git init`\
     `git clone https://github.com/tnick1502/report_authentication.git`
 
-2. Запуск через docker-compose\
+3. Запуск через docker-compose\
     `docker-compose up`
 
