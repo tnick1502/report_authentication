@@ -3,6 +3,5 @@ venv
 .cache
 key.key
 crt.crt
-/server
 **/.idea
 **/__pycache__

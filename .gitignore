@@ -2,7 +2,6 @@ venv
 .env
 key.key
 crt.crt
-/server
 **/.env
 **/.idea
 **/__pycache__
