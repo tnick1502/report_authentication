@@ -63,7 +63,7 @@ async def index(request: Request):
         "index.html",
         context={
             "request": request,
-            "template_report_link": f'http://{configs.host_ip}:8555/reports/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
+            "template_report_link": f'https://georeport/reports/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
         }
     )
 
