@@ -15,7 +15,7 @@
 
 ## Запуск:
 1. Создать папку для проекта. Открыть папку в терминале и выполнить:\
-    `git init`
+    `git init`\
     `git clone https://github.com/tnick1502/report_authentication.git`
 
 2. Запуск через docker-compose\
