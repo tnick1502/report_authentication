@@ -1,7 +1,8 @@
 venv
 .env
+key.key
+crt.crt
+/server
 **/.env
 **/.idea
 **/__pycache__
-superreport.json
-superuser.json

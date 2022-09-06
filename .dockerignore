@@ -1,7 +1,8 @@
 venv
 .git
 .cache
-data
-app/superuser.json
+key.key
+crt.crt
+/server
 **/.idea
 **/__pycache__
