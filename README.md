@@ -8,8 +8,8 @@
 * сервис отчетов хранит данные по всем отчетам в базе
 
 #### Стек:
-* fastapi
-* postgresql
+* fastapi + postgresql + sqlalchemy
+* html + CSS + js
 
 #### [Схема БД](https://dbdiagram.io/d/63088a2bf1a9b01b0feae726)
 
@@ -34,7 +34,7 @@
     `git init`\
     `git clone https://github.com/tnick1502/report_authentication.git`
 
-4. Запуск через docker-compose\
+4. Запуск через docker-compose:\
     `docker-compose up --force-recreate -d --build`
 
 
