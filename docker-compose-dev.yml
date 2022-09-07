@@ -1,0 +1,71 @@
+version: '3.5'
+
+services:
+  db:
+    image: postgres:13-alpine
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=5000"
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "effective_cache_size=768MB"
+      - "-c"
+      - "maintenance_work_mem=64MB"
+      - "-c"
+      - "checkpoint_completion_target=0.9"
+      - "-c"
+      - "wal_buffers=7864kB"
+      - "-c"
+      - "default_statistics_target=100"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "effective_io_concurrency=200"
+      - "-c"
+      - "work_mem=64kB"
+      - "-c"
+      - "min_wal_size=1GB"
+      - "-c"
+      - "max_wal_size=4GB"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_NAME}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+        - /home/${USER}/data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    restart: unless-stopped
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  web:
+    build:
+      context: './'
+      dockerfile: 'Dockerfile-dev'
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 15; done; uvicorn main:app --host 0.0.0.0'
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/reports
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ALGORITHM=${JWT_ALGORITHM}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - SUPERUSER_NAME=${SUPERUSER_NAME}
+      - SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD}
+    depends_on:
+      - db
+    ports:
+      - 8555:8000
+    restart: always
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  postgres:
