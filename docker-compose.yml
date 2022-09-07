@@ -42,19 +42,6 @@ services:
     restart: always
     ports:
       - 8080:8080
-  server:
-     restart: always
-     image: nginx
-     volumes:
-      - ./app/key.key:/etc/ssl/key.key
-      - ./app/crt.crt:/etc/ssl/crt.crt
-      - ./server/conf.d:/etc/nginx/conf.d
-      - ./app:/app
-     links:
-      - web:web
-     ports:
-      - "80:80"
-      - "443:443"
 
   web:
     build: ./
@@ -69,7 +56,7 @@ services:
     depends_on:
       - db
     ports:
-      - 8000
+      - 8555:8000
     restart: always
     volumes:
       - /etc/timezone:/etc/timezone:ro

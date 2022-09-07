@@ -23,5 +23,5 @@ RUN dpkg -L libzbar-dev; ls -l /usr/include/zbar.h
 RUN chmod -R 777 ./
 
 
-COPY crt.crt /etc/ssl/
-COPY key.key /etc/ssl/
+# COPY crt.crt /etc/ssl/
+# COPY key.key /etc/ssl/
