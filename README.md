@@ -20,7 +20,7 @@
     `git init`\
     `git clone https://github.com/tnick1502/report_authentication.git`
 
-3. Запуск через docker-compose\
+3. Запуск через docker-compose:\
     `docker-compose -f docker-compose-dev.yml up`
 
 ## Деплой:
@@ -38,6 +38,6 @@
     `docker-compose up --force-recreate -d --build`
 
 
-Для очищения докера от проекта\
+Для очищения докера от проекта:\
     `docker rm $(docker ps -a -q) -f`\
     `docker rmi $(docker images -a -q) -f`
