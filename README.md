@@ -21,7 +21,7 @@
     `git clone https://github.com/tnick1502/report_authentication.git`
 
 3. Запуск через docker-compose\
-    `docker-compose up`
+    `docker-compose -f docker-compose-dev.yml up`
 
 ## Деплой:
 ~/ = папка проекта 
