@@ -233,11 +233,7 @@ if (downloadReportBtns.length > 0) {
 				return response.blob()
 			})
 			.then((data) => {
-				const a = document.createElement('a')
-				a.href = window.URL.createObjectURL(data)
-				a.target = '_blank'
-				a.download = `${downlReportId}`
-				a.click()
+				downloadData(data, `${downlReportId}`)
 			})
 	}
 }
@@ -331,4 +327,13 @@ function closeNavPersonal() {
 
 if (navClosePersonal) {
 	navClosePersonal.addEventListener('click', closeNavPersonal)
+}
+
+// ===================== ПРОЧИЕ ФУКНЦИИ =====================
+function downloadData(_data, _file_name) {
+	const a = document.createElement('a')
+	a.href = window.URL.createObjectURL(_data)
+	a.target = '_blank'
+	a.download = _file_name
+	a.click()
 }
