@@ -1,7 +1,5 @@
 venv
 .git
 .cache
-key.key
-crt.crt
 **/.idea
 **/__pycache__
