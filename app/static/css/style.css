@@ -645,9 +645,9 @@ img {
 @media screen and (max-width: 375px) {
 	.home-img__link_wrapper:hover,
 	.home-img.onscroll .home-img__link_wrapper {
-	transform: scale(1.5);
+		transform: scale(1.5);
 	}
-  }
+}
 
 .home-img__link_wrapper {
 	display: inline-flex;
@@ -1095,14 +1095,27 @@ img {
 	height: 100vh;
 
 	display: flex;
+	-webkit-display: flex;
+	-moz-display: flex;
+
 	align-items: center;
+	-webkit-align-items: center;
 	justify-content: center;
 
 	opacity: 0;
+
 	transition-duration: 250ms;
+	-webkit-transition-duration: 250ms;
+	-moz-transition-duration: 250ms;
+
 	transition-property: opacity, visibility;
+	-webkit-transition-property: opacity, visibility;
+	-moz-transition-property: opacity, visibility;
+
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	visibility: hidden;
+
+	z-index: var(--z-fixed);
 }
 
 .del-report-modal {
@@ -1115,16 +1128,29 @@ img {
 	background-color: #fff;
 
 	display: flex;
+	-webkit-display: flex;
+	-moz-display: flex;
+
 	flex-direction: column;
 
 	box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%),
 		0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
 
 	opacity: 0;
+
 	transition-duration: 250ms;
+	-webkit-transition-duration: 250ms;
+	-moz-transition-duration: 250ms;
+
 	transition-property: opacity, visibility;
+	-webkit-transition-property: opacity, visibility;
+	-moz-transition-property: opacity, visibility;
+
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
 	visibility: hidden;
+
+	z-index: calc(var(--z-fixed) + 1);
 }
 
 .del-report-modal__wrapper.del-report-modal__wrapper_show,
@@ -1182,7 +1208,9 @@ img {
 	font-size: var(--normal-font-size);
 	font-weight: var(--font-medium);
 	padding: 0 8px 0 8px;
+
 	display: inline-flex;
+
 	align-items: center;
 	justify-content: center;
 	min-width: 64px;

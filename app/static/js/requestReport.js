@@ -1,8 +1,9 @@
 // ЗАПРОС ОТЧЕТА
 const requestReport = document.getElementById('request-report')
 if (requestReport) {
-	function addRequestFormRow() {
-		if (dataRows >= 10) return
+	const maxDataRows = 10
+	const addRequestFormRow = () => {
+		if (dataRows >= maxDataRows) return
 
 		const lastRow = document.getElementById(
 			`inputParam_${dataRows}_val`
@@ -42,7 +43,7 @@ if (requestReport) {
 
 		lastRow.insertAdjacentHTML('afterend', newRow)
 	}
-	function deleteRequestFormRow() {
+	const deleteRequestFormRow = () => {
 		if (dataRows <= 3) return
 
 		let lastRow = document.getElementById(
@@ -58,6 +59,62 @@ if (requestReport) {
 		lastRow.parentNode.removeChild(lastRow)
 
 		dataRows = dataRows - 1
+	}
+	const fillInputTable = (_data) => {
+		const keys = Object.keys(_data)
+		const dataLenth = keys.length
+
+		while (dataRows < dataLenth && dataRows < maxDataRows) {
+			addRequestFormRow()
+		}
+
+		if (dataRows < keys.length) return
+
+		for (let row = 0; row < keys.length; row++) {
+			let inputRow = document.getElementById(`inputParam_${row + 1}`)
+			let inputRowVal = document.getElementById(`inputParam_${row + 1}_val`)
+
+			if (!inputRow || !inputRowVal) continue
+
+			inputRow.value = keys[row]
+			inputRowVal.value = _data[keys[row]]
+		}
+	}
+	const fillFormAfterSubmit = (_form) => {
+		if (!_form) return
+	
+		const wasSubmitted = localStorage.getItem('wasSubmitted')
+		if (!wasSubmitted) return
+	
+		const _objNum = localStorage.getItem('inputObj'),
+			_labNum = localStorage.getItem('inputLabNo'),
+			_testType = localStorage.getItem('inputType'),
+			_tableData = JSON.parse(localStorage.getItem('inputData'))['data']
+	
+		if (!_objNum || !_labNum || !_testType) return
+	
+		const _inputObj = document.getElementById('inputObj'),
+			_inputLabNo = document.getElementById('inputLabNo'),
+			_inputType = document.getElementById('inputType')
+	
+		if (!_inputObj || !_inputLabNo || !_inputType) return
+	
+		_inputObj.value = _objNum
+		_inputLabNo.value = _labNum
+		_inputType.value = _testType
+	
+		const requestReportSuccses = document.getElementById('request-report-succses')
+		if (requestReportSuccses) {
+			requestReportSuccses.classList.add('request-report-succses-show')
+		}
+	
+		fillInputTable(_tableData)
+	
+		localStorage.removeItem('wasSubmitted')
+		localStorage.removeItem('inputObj')
+		localStorage.removeItem('inputLabNo')
+		localStorage.removeItem('inputType')
+		localStorage.removeItem('inputData')
 	}
 
 	const requestFormAddBtn = document.getElementById('request-form-add-btn')
@@ -77,7 +134,7 @@ if (requestReport) {
 		inputLabNo = document.getElementById('inputLabNo'),
 		inputType = document.getElementById('inputType')
 
-	function requiredChange() {
+	const requiredChange = () => {
 		if (
 			inputObj.value.length > 0 &&
 			inputLabNo.value.length > 0 &&
@@ -93,7 +150,9 @@ if (requestReport) {
 	inputLabNo.addEventListener('input', requiredChange)
 	inputType.addEventListener('input', requiredChange)
 
-	//
+	// Заполняем данными форму, если страничка была обновлена из-за успешной ее отправки
+	fillFormAfterSubmit(requestReport)
+	requiredChange()
 
 	// Подкючением отправку формы
 	requestReport.addEventListener('submit', (event) => {
@@ -176,7 +235,7 @@ if (requestReport) {
 	})
 }
 
-function sendRequestReport(info, data) {
+function sendRequestReport(info, tableData) {
 	fetch('../reports/report_and_qr', {
 		method: 'POST',
 		headers: {
@@ -186,28 +245,37 @@ function sendRequestReport(info, data) {
 			object_number: info['inputObj'],
 			laboratory_number: info['inputLabNo'],
 			test_type: info['inputType'],
-			data: data,
+			data: tableData,
 			active: true,
 		}),
 	}).then((response) => {
 		if (!response.ok) {
-			console.log(response)
+			// console.log(response)
 			serverError()
 		} else {
-			response.blob().then((data) => {
-				if (data) {
-					const a = document.createElement('a')
-					a.href = window.URL.createObjectURL(data)
-					a.target = '_blank'
-					a.download = `${info['inputLabNo']} ${info['inputType']}`
-					a.click()
-
+			response.blob().then((response_data) => {
+				if (response_data) {
+					// Показ сообщения об успехе
 					const requestReportSuccses = document.getElementById(
 						'request-report-succses'
 					)
 					if (requestReportSuccses) {
 						requestReportSuccses.classList.add('request-report-succses-show')
 					}
+
+					// Скачивание кода
+					downloadData(
+						response_data,
+						`${info['inputObj']} - ${info['inputLabNo']} - ${info['inputType']}`
+					)
+
+					localStorage.setItem('wasSubmitted', true)
+					localStorage.setItem('inputObj', info['inputObj'])
+					localStorage.setItem('inputLabNo', info['inputLabNo'])
+					localStorage.setItem('inputType', info['inputType'])
+					localStorage.setItem('inputData', JSON.stringify({ data: tableData }))
+
+					window.location.reload()
 				} else {
 					serverError()
 				}
