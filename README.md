@@ -8,16 +8,36 @@
 * сервис отчетов хранит данные по всем отчетам в базе
 
 #### Стек:
-* fastapi
-* postgresql
+* fastapi + postgresql + sqlalchemy
+* html + CSS + js
 
 #### [Схема БД](https://dbdiagram.io/d/63088a2bf1a9b01b0feae726)
 
-## Запуск:
-1. Создать папку для проекта. Открыть папку в терминале и выполнить:\
-    `git init`
+## Для разработки:
+1. Скопировать файл .env в корень проекта
+    
+2. Создать папку для проекта. Открыть папку в терминале и выполнить:\
+    `git init`\
     `git clone https://github.com/tnick1502/report_authentication.git`
 
-2. Запуск через docker-compose\
-    `docker-compose up`
+3. Запуск через docker-compose:\
+    `docker-compose -f docker-compose-dev.yml up`
 
+## Деплой:
+~/ = папка проекта 
+
+1. Скопировать файл .env в ~/
+
+2. Добавить конфигуратор nginx. Дефолтный конфигуратор nginx находится в ~/server/conf.d/app.conf (устанавливается автоматически в докер). Сертификат и ключ key.key и crt.crt должны находится в папке ~/*
+    
+3. Открыть папку ~/ в терминале и выполнить:\
+    `git init`\
+    `git clone https://github.com/tnick1502/report_authentication.git`
+
+4. Запуск через docker-compose:\
+    `docker-compose up --force-recreate -d --build`
+
+
+Для очищения докера от проекта:\
+    `docker rm $(docker ps -a -q) -f`\
+    `docker rmi $(docker images -a -q) -f`
