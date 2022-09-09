@@ -72,7 +72,7 @@ services:
     depends_on:
       - db
     ports:
-      - 8000
+      - 8555:8000
     restart: always
     volumes:
       - /etc/timezone:/etc/timezone:ro

@@ -552,6 +552,13 @@ img {
 	text-align: justify;
 }
 
+
+@media screen and (max-width: 565px) {
+	.index_content > p {
+	  text-align: left;
+	}
+  }
+
 .index_contener {
 	display: flex;
 	flex-direction: column;
