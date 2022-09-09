@@ -173,7 +173,11 @@ async def show_report(request: Request,
         "link": {'link': user_data["organization_url"],
                  'name': user_data["organization_url"][user_data["organization_url"].index("//") + 2:].replace("/",
                                                                                                                "")},
-        "res": data["data"]
+        "res": {
+            "Объект": data["object_number"],
+            "Лабораторный номер": data["laboratory_number"],
+            "Тип опыта": data["test_type"],
+            **data["data"]}
     }
 
     return templates.TemplateResponse("show_report.html", context=context)
