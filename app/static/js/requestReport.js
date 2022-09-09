@@ -266,7 +266,7 @@ function sendRequestReport(info, tableData) {
 					// Скачивание кода
 					downloadData(
 						response_data,
-						`${info['inputLabNo']} ${info['inputType']}`
+						`${info['inputObj']} - ${info['inputLabNo']} - ${info['inputType']}`
 					)
 
 					localStorage.setItem('wasSubmitted', true)

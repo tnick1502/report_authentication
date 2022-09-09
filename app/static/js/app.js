@@ -222,6 +222,9 @@ if (downloadReportBtns.length > 0) {
 
 				const downlItem = event.currentTarget
 				downlReportId = downlItem.dataset.id
+				const _inputObj = downlItem.dataset.object_number
+				const _inputLabNo = downlItem.dataset.laboratory_number
+				const _inputType = downlItem.dataset.test_type
 
 				if (!downlReportId) return
 
@@ -233,7 +236,7 @@ if (downloadReportBtns.length > 0) {
 						return response.blob()
 					})
 					.then((data) => {
-						downloadData(data, `${downlReportId}`)
+						downloadData(data, `${_inputObj} - ${_inputLabNo} - ${_inputType}`)
 					})
 			}
 		})
