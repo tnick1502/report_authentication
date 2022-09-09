@@ -250,7 +250,7 @@ function sendRequestReport(info, tableData) {
 		}),
 	}).then((response) => {
 		if (!response.ok) {
-			console.log(response)
+			// console.log(response)
 			serverError()
 		} else {
 			response.blob().then((response_data) => {
