@@ -164,44 +164,46 @@ const deleteReportBtns = document.querySelectorAll(
 
 if (deleteReportBtns.length > 0) {
 	let delReportId = null
-	let delReportDialog = null
+	let delReportDialog = document.getElementById('del-report-dialog')
 
 	deleteReportBtns.forEach((item) => {
-		item.addEventListener('click', onDelReportClick)
+		item.addEventListener('click', (event) => {
+			event.preventDefault()
+			if (!delReportDialog) return
+
+			delReportDialog.classList.add('del-report-modal__wrapper_show')
+
+			const delItem = event.currentTarget
+			delReportId = delItem.dataset.id
+		})
 	})
 
-	function onDelReportClick(event) {
+	const delReport__btnCancel = document.getElementById('del-report__btn-cancel')
+
+	delReport__btnCancel.addEventListener('click', (event) => {
 		event.preventDefault()
-		delReportDialog = document.getElementById('del-report-dialog')
-		if (!delReportDialog) return
+		event.stopPropagation()
 
-		delReportDialog.classList.add('del-report-modal__wrapper_show')
+		delReportId = null
+		delReportDialog.classList.remove('del-report-modal__wrapper_show')
+	})
 
-		const delItem = event.currentTarget
-		delReportId = delItem.dataset.id
-	}
-
-	document
-		.getElementById('del-report__btn-cancel')
-		.addEventListener('click', () => {
-			delReportId = null
-			delReportDialog.classList.remove('del-report-modal__wrapper_show')
-		})
 	document
 		.getElementById('del-report__btn-del')
-		.addEventListener('click', () => {
+		.addEventListener('click', (event) => {
+			event.preventDefault()
+			event.stopPropagation()
+
 			if (!delReportId) return
 
 			fetch(`../reports/${delReportId}`, {
 				method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+			}).then(() => {
+				// console.log(delReportId)
+				delReportDialog.classList.remove('del-report-modal__wrapper_show')
+
+				window.location.reload()
 			})
-				.then(() => {
-					window.location.reload()
-				})
-				.then(() => {
-					console.log(delReportId)
-					delReportDialog.classList.remove('del-report-modal__wrapper_show')
-				})
 		})
 }
 
@@ -214,28 +216,31 @@ if (downloadReportBtns.length > 0) {
 	let downlReportId = null
 
 	downloadReportBtns.forEach((item) => {
-		item.addEventListener('click', onDownlReportClick)
-	})
+		item.addEventListener('click', (event) => {
+			{
+				event.preventDefault()
 
-	function onDownlReportClick(event) {
-		event.preventDefault()
+				const downlItem = event.currentTarget
+				downlReportId = downlItem.dataset.id
+				const _inputObj = downlItem.dataset.object_number
+				const _inputLabNo = downlItem.dataset.laboratory_number
+				const _inputType = downlItem.dataset.test_type
 
-		const downlItem = event.currentTarget
-		downlReportId = downlItem.dataset.id
+				if (!downlReportId) return
 
-		if (!downlReportId) return
-
-		console.log(downlReportId)
-		fetch(`../reports/qr?id=${downlReportId}`, {
-			method: 'POST',
+				console.log(downlReportId)
+				fetch(`../reports/qr?id=${downlReportId}`, {
+					method: 'POST',
+				})
+					.then((response) => {
+						return response.blob()
+					})
+					.then((data) => {
+						downloadData(data, `${_inputObj} - ${_inputLabNo} - ${_inputType}`)
+					})
+			}
 		})
-			.then((response) => {
-				return response.blob()
-			})
-			.then((data) => {
-				downloadData(data, `${downlReportId}`)
-			})
-	}
+	})
 }
 
 // ОБНОВЛЕНИЕ ОТЧЕТА
