@@ -82,34 +82,36 @@ if (requestReport) {
 	}
 	const fillFormAfterSubmit = (_form) => {
 		if (!_form) return
-	
+
 		const wasSubmitted = localStorage.getItem('wasSubmitted')
 		if (!wasSubmitted) return
-	
+
 		const _objNum = localStorage.getItem('inputObj'),
 			_labNum = localStorage.getItem('inputLabNo'),
 			_testType = localStorage.getItem('inputType'),
 			_tableData = JSON.parse(localStorage.getItem('inputData'))['data']
-	
+
 		if (!_objNum || !_labNum || !_testType) return
-	
+
 		const _inputObj = document.getElementById('inputObj'),
 			_inputLabNo = document.getElementById('inputLabNo'),
 			_inputType = document.getElementById('inputType')
-	
+
 		if (!_inputObj || !_inputLabNo || !_inputType) return
-	
+
 		_inputObj.value = _objNum
 		_inputLabNo.value = _labNum
 		_inputType.value = _testType
-	
-		const requestReportSuccses = document.getElementById('request-report-succses')
+
+		const requestReportSuccses = document.getElementById(
+			'request-report-succses'
+		)
 		if (requestReportSuccses) {
 			requestReportSuccses.classList.add('request-report-succses-show')
 		}
-	
+
 		fillInputTable(_tableData)
-	
+
 		localStorage.removeItem('wasSubmitted')
 		localStorage.removeItem('inputObj')
 		localStorage.removeItem('inputLabNo')
@@ -134,11 +136,15 @@ if (requestReport) {
 		inputLabNo = document.getElementById('inputLabNo'),
 		inputType = document.getElementById('inputType')
 
-	const requiredChange = () => {
+	function requiredChange() {
+		const _inputObj = document.getElementById('inputObj'),
+			_inputLabNo = document.getElementById('inputLabNo'),
+			_inputType = document.getElementById('inputType')
+
 		if (
-			inputObj.value.length > 0 &&
-			inputLabNo.value.length > 0 &&
-			inputType.value.length > 0
+			_inputObj.value.length > 0 &&
+			_inputLabNo.value.length > 0 &&
+			_inputType.value.length > 0
 		) {
 			document.getElementById('request-report-submit-btn').disabled = false
 		} else {
@@ -306,4 +312,13 @@ function serverError() {
 		input.classList.remove('is-valid')
 		input.classList.add('is-invalid')
 	})
+}
+
+// ===================== ПРОЧИЕ ФУКНЦИИ =====================
+function downloadData(_BLOB, _file_name) {
+	const a = document.createElement('a')
+	a.href = window.URL.createObjectURL(_BLOB)
+	a.target = '_blank'
+	a.download = _file_name
+	a.click()
 }
