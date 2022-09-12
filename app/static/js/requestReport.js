@@ -149,22 +149,6 @@ window.addEventListener('load', function () {
 			inputLabNo = document.getElementById('inputLabNo'),
 			inputType = document.getElementById('inputType')
 
-		function requiredChange() {
-			const _inputObj = document.getElementById('inputObj'),
-				_inputLabNo = document.getElementById('inputLabNo'),
-				_inputType = document.getElementById('inputType')
-
-			if (
-				_inputObj.value.length > 0 &&
-				_inputLabNo.value.length > 0 &&
-				_inputType.value.length > 0
-			) {
-				document.getElementById('request-report-submit-btn').disabled = false
-			} else {
-				document.getElementById('request-report-submit-btn').disabled = true
-			}
-		}
-
 		inputObj.addEventListener('input', requiredChange)
 		inputLabNo.addEventListener('input', requiredChange)
 		inputType.addEventListener('input', requiredChange)
@@ -336,6 +320,21 @@ function serverError() {
 	})
 }
 
+function requiredChange() {
+	const _inputObj = document.getElementById('inputObj'),
+		_inputLabNo = document.getElementById('inputLabNo'),
+		_inputType = document.getElementById('inputType')
+
+	if (
+		_inputObj.value.length > 0 &&
+		_inputLabNo.value.length > 0 &&
+		_inputType.value.length > 0
+	) {
+		document.getElementById('request-report-submit-btn').disabled = false
+	} else {
+		document.getElementById('request-report-submit-btn').disabled = true
+	}
+}
 // ===================== ПРОЧИЕ ФУКНЦИИ =====================
 function downloadData(_BLOB, _file_name) {
 	const a = document.createElement('a')
