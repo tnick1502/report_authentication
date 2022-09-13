@@ -228,7 +228,7 @@ if (downloadReportBtns.length > 0) {
 
 				if (!downlReportId) return
 
-				console.log(downlReportId)
+				// console.log(downlReportId)
 				fetch(`../reports/qr?id=${downlReportId}`, {
 					method: 'POST',
 				})
@@ -332,13 +332,4 @@ function closeNavPersonal() {
 
 if (navClosePersonal) {
 	navClosePersonal.addEventListener('click', closeNavPersonal)
-}
-
-// ===================== ПРОЧИЕ ФУКНЦИИ =====================
-function downloadData(_data, _file_name) {
-	const a = document.createElement('a')
-	a.href = window.URL.createObjectURL(_data)
-	a.target = '_blank'
-	a.download = _file_name
-	a.click()
 }
