@@ -11,7 +11,6 @@ from sqlalchemy.sql import extract
 #import pickle
 
 from models.reports import Report, ReportCreate, ReportUpdate
-from models.license import License
 from services.qr_generator import gen_qr_code
 import db.tables as tables
 
@@ -129,16 +128,16 @@ class ReportsService:
 
         return reports
 
-    async def get_reports_count(self, user_id: int, license: License) -> dict:
+    async def get_reports_count(self, user) -> dict:
         license_update_datetime = datetime.datetime(
-            year=license.license_update_date.year,
-            month=license.license_update_date.month,
-            day=license.license_update_date.day
+            year=user.license_update_date.year,
+            month=user.license_update_date.month,
+            day=user.license_update_date.day
         )
 
         reports = await self.session.execute(
             select(tables.Reports)
-            .filter_by(user_id=user_id)
+            .filter_by(user_id=user.id)
             .filter(tables.Reports.datetime >= license_update_datetime)
         )
         reports = reports.scalars().all()
