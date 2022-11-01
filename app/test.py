@@ -1,9 +1,3 @@
-import enum
-class LicenseLevel(enum.Enum):
-    STANDART = 'Standart'
-    PRO = 'Pro'
-    ENTERPRISE = 'Enterprise'
-
-l=LicenseLevel
-
-print(l.ENTERPRISE.value)
+not_id = False
+super = False
+print(id or super)

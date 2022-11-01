@@ -128,6 +128,14 @@ async def update_report(
         service: ReportsService = Depends(get_report_service)
 ):
     """Обновление отчета"""
+    report = await service.get(id)
+
+    if report.user_id != user.id and not user.is_superuser:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Don't have the right to do this"
+        )
+
     if not user.active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -144,6 +152,12 @@ async def delete_report(
         service: ReportsService = Depends(get_report_service)
 ):
     """Удаление отчета"""
+    report = await service.get(id)
+    if report.user_id != user.id and not user.is_superuser:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Don't have the right to do this"
+        )
     await service.delete(id=id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 

@@ -5,7 +5,7 @@ from passlib.hash import bcrypt
 from sqlalchemy.future import select
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from typing import Optional
 from starlette.exceptions import HTTPException as StarletteHTTPException
 import humanize
@@ -185,17 +185,12 @@ async def my_custom_exception_handler(request: Request, exc: StarletteHTTPExcept
     # print(exc.status_code, exc.detail)
     if exc.status_code == 404:
         return templates.TemplateResponse('404.html', {'request': request})
-    elif exc.status_code == 500:
-        return templates.TemplateResponse('500.html', {
-            'request': request,
-            'detail': exc.detail
-        })
     else:
         # Generic error page
-        return templates.TemplateResponse('error.html', {
-            'request': request,
-            'detail': exc.detail
-        })
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={"message": f"{exc.detail}"},
+        )
 
 
 @app.on_event("startup")
