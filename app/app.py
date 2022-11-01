@@ -153,11 +153,18 @@ async def sign_out_and_remove_cookie(
 
 
 @app.get("/reports/", response_class=HTMLResponse)
-async def show_report(request: Request,
-                      id: str = Query(default="", min_length=40, max_length=40, description="report ID"),
-                      service: ReportsService = Depends(get_report_service),
-                      users: UsersService = Depends(get_users_service)):
+async def show_report(
+        request: Request,
+        id: str = '',
+        service: ReportsService = Depends(get_report_service),
+        users: UsersService = Depends(get_users_service)
+):
     """Просмотр данных отчета по id"""
+    if len(id) != 40:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Wrong id"
+        )
     data = await service.get(id)
     data = data.__dict__
 
