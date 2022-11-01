@@ -3,7 +3,7 @@ import datetime
 from typing import List, Optional
 import humanize
 from sqlalchemy.future import select
-from sqlalchemy import update, delete
+from sqlalchemy import update, delete, func
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import extract
@@ -77,19 +77,18 @@ class ReportsService:
     async def get_count_in_object(self, user_id: str, object_number: Optional[str] = None) -> int:
         if object_number:
             reports = await self.session.execute(
-                select(tables.Reports).
-                filter_by(user_id=user_id).
-                filter_by(object_number=object_number)
+                select(func.count(tables.Reports.id))
+                .filter_by(user_id=user_id)
+                .filter_by(object_number=object_number)
             )
         else:
             reports = await self.session.execute(
-                select(tables.Reports).
-                filter_by(user_id=user_id)
+                select(func.count(tables.Reports.id))
+                .filter_by(user_id=user_id)
             )
+        count = reports.scalar_one()
 
-        reports = reports.scalars().all()
-
-        return len(reports)
+        return count
 
     async def get_objects(self, user_id, limit: Optional[int] = None, offset: Optional[int] = None) -> list:
         reports = await self.session.execute(
@@ -136,12 +135,13 @@ class ReportsService:
         )
 
         reports = await self.session.execute(
-            select(tables.Reports)
+            select(func.count(tables.Reports.id))
             .filter_by(user_id=user.id)
             .filter(tables.Reports.datetime >= license_update_datetime)
         )
-        reports = reports.scalars().all()
-        return {"count": len(reports)}
+        count = reports.scalar_one()
+
+        return {"count": count}
 
     async def update(self, id: str, report_data: ReportUpdate) -> ReportUpdate:
 
