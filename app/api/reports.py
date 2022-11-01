@@ -105,6 +105,15 @@ async def create_report_and_qr(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    count = await service.get_reports_count(user)
+
+    if count >= user.limit:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Year limit reached",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     id = hashlib.sha1(
         f"{report_data.object_number} {report_data.laboratory_number} {report_data.test_type} {user.id}".encode("utf-8")).hexdigest()
 
