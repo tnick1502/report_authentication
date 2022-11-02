@@ -378,6 +378,20 @@ img {
 	white-space: nowrap;
 }
 
+.container_contact {
+	width: 100%;
+}
+
+.text-start_check{
+	width: auto;
+    height: 17px
+}
+
+.text-start_close{
+	width: auto;
+    height: 13px
+}
+
 /* ======== ФУТЕР ======== */
 .footer__container {
 	flex: 0 0 auto;
@@ -701,6 +715,86 @@ img {
 } */
 
 /* ============== БЛОК ОТЧЕТА ОБ ИСПЫТАНИИ ============== */
+
+/* НАВИГАЦИЯ */
+.navbar-nav-report {
+	padding: 5px, 0;
+}
+
+.nav__toggle-report,
+.nav__close-report {
+	color: var(--title-color);
+}
+
+.nav__toggle-report {
+	display: inline-flex;
+	font-size: 1.15rem;
+	cursor: pointer;
+}
+
+.nav__close-report {
+	font-size: 1.5rem;
+	position: absolute;
+	top: 1rem;
+	right: 1.25rem;
+	cursor: pointer;
+}
+
+.navbar-nav-report {
+	display: flex;
+	flex-direction: column;
+	row-gap: 1.5rem;
+
+	flex-wrap: wrap;
+}
+
+.nav-link-report {
+	color: var(--title-color);
+	font-weight: var(--font-medium);
+}
+.nav-link-report:hover {
+	color: var(--first-color);
+}
+
+.container-fluid-mdgt.container-fluid-mdgt-report {
+	height: calc(var(--header-height) + 1.5rem);
+	column-gap: 3rem;
+	justify-content: flex-start;
+}
+
+@media screen and (max-width: 460px) {
+    .container-fluid-mdgt.container-fluid-mdgt-report {
+        column-gap: 1.5rem;
+    }
+}
+
+.nav__toggle-report,
+.nav__close-report {
+	display: none;
+}
+
+.navbar-nav-report {
+	flex-direction: row;
+}
+
+.navbar-collapse-report {
+	margin-left: 0;
+}
+
+.navbar-collapse-report {
+	width: 100%;
+}
+
+.navbar-nav-report {
+	width: 100%;
+	justify-content: space-between;
+}
+
+.nav-link-report {
+	padding-right: 2rem;
+}
+
+/* САМ ОТЧЕТ */
 
 .report-wrapper {
 	display: flex;
