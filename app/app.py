@@ -5,7 +5,7 @@ from passlib.hash import bcrypt
 from sqlalchemy.future import select
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from typing import Optional
 from starlette.exceptions import HTTPException as StarletteHTTPException
 import humanize
@@ -17,11 +17,11 @@ from db import tables
 from db.database import Base, engine
 from api import router
 from models.users import User
-from services.depends import get_report_service, get_users_service, get_licenses_service
+from services.depends import get_report_service, get_users_service
 from services.reports import ReportsService
 from services.users import UsersService
-from services.license import LicensesService
 from config import configs
+from db.tables import LicenseLevel
 
 def create_ip_ports_array(ip: str, *ports):
     array = []
@@ -73,7 +73,6 @@ async def login(
         request: Request,
         page: Optional[int] = 1,
         object_number: Optional[str] = None,
-        license_service: LicensesService = Depends(get_licenses_service),
         report_service: ReportsService = Depends(get_report_service)
 ):
     try:
@@ -84,10 +83,8 @@ async def login(
             limit = 10
 
             user = get_current_user(token)
-            license = await license_service.get(user.id)
             count = await report_service.get_reports_count(
-                user_id=user.id,
-                license=license
+                user=user,
             )
 
             reports = await report_service.get_all(
@@ -115,9 +112,9 @@ async def login(
                 context={
                     "request": request,
                     "username": user.username,
-                    "license_level": license.license_level,
-                    "license_end_date": humanize.naturaldate(license.license_end_date),
-                    "limit": license.limit,
+                    "license_level": user.license_level.value,
+                    "license_end_date": humanize.naturaldate(user.license_end_date),
+                    "limit": user.limit,
                     "count": count["count"],
                     "reports": reports,
                     "objects": objects,
@@ -156,11 +153,18 @@ async def sign_out_and_remove_cookie(
 
 
 @app.get("/reports/", response_class=HTMLResponse)
-async def show_report(request: Request,
-                      id: str = Query(default="", min_length=40, max_length=40, description="report ID"),
-                      service: ReportsService = Depends(get_report_service),
-                      users: UsersService = Depends(get_users_service)):
+async def show_report(
+        request: Request,
+        id: str = '',
+        service: ReportsService = Depends(get_report_service),
+        users: UsersService = Depends(get_users_service)
+):
     """Просмотр данных отчета по id"""
+    if len(id) != 40:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Wrong id"
+        )
     data = await service.get(id)
     data = data.__dict__
 
@@ -188,17 +192,12 @@ async def my_custom_exception_handler(request: Request, exc: StarletteHTTPExcept
     # print(exc.status_code, exc.detail)
     if exc.status_code == 404:
         return templates.TemplateResponse('404.html', {'request': request})
-    elif exc.status_code == 500:
-        return templates.TemplateResponse('500.html', {
-            'request': request,
-            'detail': exc.detail
-        })
     else:
         # Generic error page
-        return templates.TemplateResponse('error.html', {
-            'request': request,
-            'detail': exc.detail
-        })
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={"message": f"{exc.detail}"},
+        )
 
 
 @app.on_event("startup")
@@ -228,7 +227,11 @@ async def startup_event():
                             organization_url="https://mdgt.ru/",
                             phone=74956566910,
                             is_superuser=True,
-                            active=True
+                            active=True,
+                            license_level=LicenseLevel.ENTERPRISE,
+                            license_end_date=datetime.date(year=2030, month=12, day=31),
+                            license_update_date=datetime.date.today(),
+                            limit=1000000000
                         )
 
                         session.add(user)
@@ -241,7 +244,11 @@ async def startup_event():
                             organization_url="https://mdgt.ru/",
                             phone=70000000000,
                             is_superuser=False,
-                            active=True
+                            active=True,
+                            license_level=LicenseLevel.STANDART,
+                            license_end_date=datetime.date(year=2030, month=12, day=31),
+                            license_update_date=datetime.date.today(),
+                            limit=100
                         )
 
                         session.add(user_trial)
@@ -287,26 +294,6 @@ async def startup_event():
                                 active=True,
                             )
                             session.add(report)
-
-                        license = tables.Licenses(
-                            id=1,
-                            user_id=1,
-                            license_level="pro",
-                            license_end_date=datetime.date(year=2030, month=12, day=31),
-                            license_update_date=datetime.date.today(),
-                            limit=1000000000
-                        )
-                        session.add(license)
-
-                        license_trial = tables.Licenses(
-                            id=2,
-                            user_id=2,
-                            license_level="standart",
-                            license_end_date=datetime.date(year=2030, month=12, day=31),
-                            license_update_date=datetime.date.today(),
-                            limit=100
-                        )
-                        session.add(license_trial)
 
                         await session.commit()
                         print("Создан суперпользователь")

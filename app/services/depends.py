@@ -1,7 +1,6 @@
 from db.database import async_session
 from services.reports import ReportsService
 from services.users import UsersService
-from services.license import LicensesService
 
 
 async def get_report_service():
@@ -13,8 +12,3 @@ async def get_users_service():
     async with async_session() as session:
         async with session.begin():
             yield UsersService(session)
-
-async def get_licenses_service():
-    async with async_session() as session:
-        async with session.begin():
-            yield LicensesService(session)
