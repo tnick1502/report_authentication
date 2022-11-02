@@ -1,13 +1,13 @@
-from pydantic import BaseModel
-from datetime import date, datetime
+from pydantic import BaseModel, Field
+from datetime import datetime
 from typing import Optional
 
 
 class ReportBase(BaseModel):
-    object_number: str
-    laboratory_number: str
-    test_type: str
-    data: dict
+    object_number: str = Field(..., max_length=250)
+    laboratory_number: str = Field(..., max_length=100)
+    test_type: str = Field(..., max_length=100)
+    data: Optional[dict] = None
     active: bool
 
 
@@ -23,6 +23,6 @@ class ReportCreate(ReportBase):
     pass
 
 class ReportUpdate(BaseModel):
-    data: dict
+    data: Optional[dict] = None
     active: bool
 

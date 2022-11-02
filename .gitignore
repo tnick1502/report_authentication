@@ -3,5 +3,7 @@ venv
 key.key
 crt.crt
 **/.env
+**/env.txt
+**/.DS_Store
 **/.idea
 **/__pycache__

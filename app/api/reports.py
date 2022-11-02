@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, status, HTTPException, Request, Body
+from fastapi import APIRouter, Depends, Response, status, HTTPException
 from fastapi.responses import StreamingResponse, HTMLResponse
 from datetime import date, datetime
 from typing import Optional, List
@@ -9,8 +9,7 @@ from services.qr_generator import gen_qr_code
 from models.reports import Report, ReportCreate, ReportUpdate
 from models.users import User
 from services.users import get_current_user
-from services.license import LicensesService
-from services.depends import get_report_service, get_users_service, get_licenses_service
+from services.depends import get_report_service, get_users_service
 from services.reports import ReportsService
 from services.users import UsersService
 
@@ -29,8 +28,8 @@ router = APIRouter(
 async def create_report(
         report_data: ReportCreate,
         user: User = Depends(get_current_user),
-        service: ReportsService = Depends(get_report_service),
-        license_service: LicensesService = Depends(get_licenses_service)):
+        service: ReportsService = Depends(get_report_service)
+):
     """Создание отчета"""
     if not user.active:
         raise HTTPException(
@@ -39,11 +38,19 @@ async def create_report(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    license = await license_service.get(user_id=user.id)
-    if date.today() > license.license_end_date:
+    if date.today() > user.license_end_date:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="The license is invalid",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    count = await service.get_reports_count(user)
+
+    if count >= user.limit:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Year limit reached",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -81,8 +88,8 @@ def create_qr(
 async def create_report_and_qr(
         report_data: ReportCreate,
         user: User = Depends(get_current_user),
-        service: ReportsService = Depends(get_report_service),
-        license_service: LicensesService = Depends(get_licenses_service)):
+        service: ReportsService = Depends(get_report_service)
+):
     """Создание отчета"""
     if not user.active:
         raise HTTPException(
@@ -91,9 +98,7 @@ async def create_report_and_qr(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    license = await license_service.get(user_id=user.id)
-
-    if date.today() > license.license_end_date:
+    if date.today() > user.license_end_date:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="The license is invalid",
@@ -132,6 +137,14 @@ async def update_report(
         service: ReportsService = Depends(get_report_service)
 ):
     """Обновление отчета"""
+    report = await service.get(id)
+
+    if report.user_id != user.id and not user.is_superuser:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Don't have the right to do this"
+        )
+
     if not user.active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -148,6 +161,12 @@ async def delete_report(
         service: ReportsService = Depends(get_report_service)
 ):
     """Удаление отчета"""
+    report = await service.get(id)
+    if report.user_id != user.id and not user.is_superuser:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Don't have the right to do this"
+        )
     await service.delete(id=id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
