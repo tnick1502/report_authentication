@@ -382,6 +382,16 @@ img {
 	width: 100%;
 }
 
+.text-start_check{
+	width: auto;
+    height: 17px
+}
+
+.text-start_close{
+	width: auto;
+    height: 13px
+}
+
 /* ======== ФУТЕР ======== */
 .footer__container {
 	flex: 0 0 auto;
