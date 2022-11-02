@@ -1,22 +1,16 @@
-from pydantic import BaseModel, Field
-from datetime import date
-from db.tables import LicenseLevel
+from pydantic import BaseModel
 
 class BaseUser(BaseModel):
-    username: str= Field(..., max_length=50)
-    mail: str = Field(..., max_length=50)
+    username: str
+    mail: str
     is_superuser: bool
-    organization: str = Field(..., max_length=50)
+    organization: str
     phone: int
     active: bool
-    organization_url: str = Field(..., max_length=50)
-    license_level: LicenseLevel
-    license_end_date: date
-    license_update_date: date
-    limit: int
+    organization_url: str
 
 class UserCreate(BaseUser):
-    password: str = Field(..., max_length=50)
+    password: str
 
 class UserUpdate(UserCreate):
     pass
@@ -27,12 +21,6 @@ class User(BaseUser):
 
     class Config:
         orm_mode = True
-
-class LicenseUpdate(BaseModel):
-    license_level: LicenseLevel
-    license_end_date: date
-    license_update_date: date
-    limit: int
 
 class Token(BaseModel):
     access_token: str

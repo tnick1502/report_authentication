@@ -3,7 +3,7 @@ import datetime
 from typing import List, Optional
 import humanize
 from sqlalchemy.future import select
-from sqlalchemy import update, delete, func
+from sqlalchemy import update, delete
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import extract
@@ -11,6 +11,7 @@ from sqlalchemy.sql import extract
 #import pickle
 
 from models.reports import Report, ReportCreate, ReportUpdate
+from models.license import License
 from services.qr_generator import gen_qr_code
 import db.tables as tables
 
@@ -77,18 +78,19 @@ class ReportsService:
     async def get_count_in_object(self, user_id: str, object_number: Optional[str] = None) -> int:
         if object_number:
             reports = await self.session.execute(
-                select(func.count(tables.Reports.id))
-                .filter_by(user_id=user_id)
-                .filter_by(object_number=object_number)
+                select(tables.Reports).
+                filter_by(user_id=user_id).
+                filter_by(object_number=object_number)
             )
         else:
             reports = await self.session.execute(
-                select(func.count(tables.Reports.id))
-                .filter_by(user_id=user_id)
+                select(tables.Reports).
+                filter_by(user_id=user_id)
             )
-        count = reports.scalar_one()
 
-        return count
+        reports = reports.scalars().all()
+
+        return len(reports)
 
     async def get_objects(self, user_id, limit: Optional[int] = None, offset: Optional[int] = None) -> list:
         reports = await self.session.execute(
@@ -127,21 +129,20 @@ class ReportsService:
 
         return reports
 
-    async def get_reports_count(self, user) -> dict:
+    async def get_reports_count(self, user_id: int, license: License) -> dict:
         license_update_datetime = datetime.datetime(
-            year=user.license_update_date.year,
-            month=user.license_update_date.month,
-            day=user.license_update_date.day
+            year=license.license_update_date.year,
+            month=license.license_update_date.month,
+            day=license.license_update_date.day
         )
 
         reports = await self.session.execute(
-            select(func.count(tables.Reports.id))
-            .filter_by(user_id=user.id)
+            select(tables.Reports)
+            .filter_by(user_id=user_id)
             .filter(tables.Reports.datetime >= license_update_datetime)
         )
-        count = reports.scalar_one()
-
-        return {"count": count}
+        reports = reports.scalars().all()
+        return {"count": len(reports)}
 
     async def update(self, id: str, report_data: ReportUpdate) -> ReportUpdate:
 

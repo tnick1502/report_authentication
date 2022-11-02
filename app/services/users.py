@@ -1,5 +1,5 @@
 from passlib.hash import bcrypt
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from pydantic import ValidationError
 from sqlalchemy.future import select
 from sqlalchemy import update, delete
@@ -15,7 +15,6 @@ from fastapi.security import OAuth2
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from fastapi.security.utils import get_authorization_scheme_param
 from sqlalchemy.orm import Session
-from models.users import LicenseUpdate
 
 
 __hash__ = lambda obj: id(obj)
@@ -82,9 +81,6 @@ class UsersService:
 
         user_data = payload.get('user')
 
-        user_data['license_end_date'] = datetime.strptime(user_data['license_end_date'], "%d.%m.%Y").date()
-        user_data['license_update_date'] = datetime.strptime(user_data['license_update_date'], "%d.%m.%Y").date()
-
         try:
             user = User.parse_obj(user_data)
         except ValidationError:
@@ -95,17 +91,13 @@ class UsersService:
     @classmethod
     def create_token(cls, user: tables.Users) -> Token:
         user_data = User.from_orm(user)
-        user_data = user_data.dict()
-        user_data['license_level'] = user_data['license_level'].value
-        user_data['license_end_date'] = user_data['license_end_date'].strftime("%d.%m.%Y")
-        user_data['license_update_date'] = user_data['license_update_date'].strftime("%d.%m.%Y")
         now = datetime.utcnow()
         payload = {
             'iat': now,
             'nbf': now,
             'exp': now + timedelta(hours=configs.jwt_expiration),
-            'sub': str(user_data['id']),
-            'user': user_data,
+            'sub': str(user_data.id),
+            'user': user_data.dict(),
         }
         token = jwt.encode(
             payload,
@@ -125,51 +117,53 @@ class UsersService:
         user = users.scalars().first()
         return user
 
-    async def register_new_user(self, user_data: UserCreate) -> Token:
-        user_names = await self.session.execute(
-            select(tables.Users).
-            filter_by(username=user_data.username)
-        )
-
-        mails = await self.session.execute(
-            select(tables.Users).
-            filter_by(mail=user_data.mail)
-        )
-
-        phones = await self.session.execute(
-            select(tables.Users).
-            filter_by(phone=user_data.phone)
-        )
-
-        user_names = user_names.scalars().first()
-        mails = mails.scalars().first()
-        phones = phones.scalars().first()
-
-        if user_names or mails or phones:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="This name or mail or phone is already exist",
-                headers={"WWW-Authenticate": "Bearer"},
+    async def register_new_user(self, user_data: UserCreate, user: User) -> Token:
+        if user.is_superuser:
+            user_names = await self.session.execute(
+                select(tables.Users).
+                filter_by(username=user_data.username)
             )
 
-        user = tables.Users(
-            username=user_data.username,
-            active=user_data.active,
-            password_hash=self.hash_password(user_data.password),
-            mail=user_data.mail,
-            organization=user_data.organization,
-            phone=user_data.phone,
-            organization_url=user_data.organization_url,
-            is_superuser=user_data.is_superuser,
-            license_level=user_data.license_level,
-            license_end_date=user_data.license_end_date,
-            license_update_date=user_data.license_update_date,
-            limit=user_data.limit
-        )
+            mails = await self.session.execute(
+                select(tables.Users).
+                filter_by(mail=user_data.mail)
+            )
 
-        self.session.add(user)
-        await self.session.commit()
-        return user
+            phones = await self.session.execute(
+                select(tables.Users).
+                filter_by(phone=user_data.phone)
+            )
+
+            user_names = user_names.scalars().first()
+            mails = mails.scalars().first()
+            phones = phones.scalars().first()
+
+            if user_names or mails or phones:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="This name or mail or phone is already exist",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+
+            user = tables.Users(
+                username=user_data.username,
+                active=user_data.active,
+                password_hash=self.hash_password(user_data.password),
+                mail=user_data.mail,
+                organization=user_data.organization,
+                phone=user_data.phone,
+                organization_url=user_data.organization_url,
+                is_superuser=user_data.is_superuser
+            )
+
+            self.session.add(user)
+            await self.session.commit()
+            return user
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="You don't have enough rights to perform this operation",
+                headers={'Authenticate': 'Bearer'})
 
     async def authenticate_user(self, username: str, password: str) -> Token:
         exception = HTTPException(
@@ -193,51 +187,51 @@ class UsersService:
 
         return self.create_token(user)
 
-    async def get_all(self) -> List[tables.Users]:
-        users = await self.session.execute(
-            select(tables.Users)
-        )
-        users = users.scalars().all()
-        return users
+    async def get_all(self, user: User) -> List[tables.Users]:
 
-    async def update(self, id: int, user_data: UserUpdate) -> tables.Users:
-        q = update(tables.Users).where(tables.Users.id == id).values(
-            username=user_data.username,
-            mail=user_data.mail,
-            active=user_data.active,
-            organization=user_data.organization,
-            phone=user_data.phone,
-            is_superuser=user_data.is_superuser,
-            organization_url=user_data.organization_url,
-            password_hash=bcrypt.hash(user_data.password),
-            license_level=user_data.license_level,
-            license_end_date=user_data.license_end_date,
-            license_update_date=user_data.license_update_date,
-            limit=user_data.limit
-        )
+        if user.is_superuser:
+            users = await self.session.execute(
+                select(tables.Users)
+            )
+            users = users.scalars().all()
+            return users
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="You don't have enough rights to perform this operation",
+                headers={'Authenticate': 'Bearer'})
 
-        q.execution_options(synchronize_session="fetch")
-        await self.session.execute(q)
-        await self.session.commit()
-        return user_data
+    async def update(self, id: int, user_data: UserUpdate, user: User) -> tables.Users:
+        if user.is_superuser == True:
 
-    async def delete(self, id: int):
-        q = delete(tables.Users).where(tables.Users.id == id)
-        q.execution_options(synchronize_session="fetch")
-        await self.session.execute(q)
+            q = update(tables.Users).where(tables.Users.id == id).values(
+                username=user_data.username,
+                mail=user_data.mail,
+                active=user_data.active,
+                organization=user_data.organization,
+                phone=user_data.phone,
+                is_superuser=user_data.is_superuser,
+                organization_url=user_data.organization_url,
+                password_hash=bcrypt.hash(user_data.password))
 
-    async def update_license(self, user_id, license_data: LicenseUpdate) -> LicenseUpdate:
-        await self.get(user_id)
+            q.execution_options(synchronize_session="fetch")
+            await self.session.execute(q)
+            await self.session.commit()
+            return user_data
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="You don't have enough rights to perform this operation",
+                headers={'Authenticate': 'Bearer'})
 
-        q = update(tables.Users).where(tables.Users.id == user_id).values(
-            license_level=license_data.license_level,
-            license_end_date=license_data.license_end_date,
-            license_update_date=date.today(),
-            limit=license_data.limit
-        )
-        q.execution_options(synchronize_session="fetch")
-        await self.session.execute(q)
-        await self.session.commit()
+    async def delete(self, id: int, user: User):
 
-        return license_data
-
+        if user.is_superuser == True:
+            q = delete(tables.Users).where(tables.Users.id == id)
+            q.execution_options(synchronize_session="fetch")
+            await self.session.execute(q)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="You don't have enough rights to perform this operation",
+                headers={'Authenticate': 'Bearer'})
