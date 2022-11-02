@@ -378,6 +378,10 @@ img {
 	white-space: nowrap;
 }
 
+.container_contact {
+	width: 100%;
+}
+
 /* ======== ФУТЕР ======== */
 .footer__container {
 	flex: 0 0 auto;
