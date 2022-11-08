@@ -7,8 +7,8 @@ def request_qr(data):
     with requests.Session() as sess:
         sess.post('https://georeport.ru/authorization/sign-in/',
                   data={
-                      "username": "mdgt_admin",
-                      "password": "mdgt_admin_password",
+                      "username": "trial",
+                      "password": "trial",
                       "grant_type": "password",
                       "scope": "",
                       "client_id": "",

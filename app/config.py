@@ -12,7 +12,7 @@ def get_self_public_ip():
 
 class Configs_env(BaseSettings):
     host_ip: str = get_self_public_ip()
-    database_url: str = f'postgresql+asyncpg://{os.getenv("POSTGRES_USER")}:{os.getenv("POSTGRES_PASSWORD")}@localhost:{os.getenv("POSTGRES_PORT")}/{os.getenv("POSTGRES_NAME")}'
+    database_url: str = f'postgresql+asyncpg://{os.getenv("POSTGRES_USER")}:{str(os.getenv("POSTGRES_PASSWORD"))}@{str(os.getenv("POSTGRES_HOST"))}:{os.getenv("POSTGRES_PORT")}/{os.getenv("POSTGRES_NAME")}'
     jwt_secret: str = os.getenv('JWT_SECRET')
     jwt_algorithm: str = os.getenv('JWT_ALGORITHM')
     jwt_expiration: int = os.getenv('JWT_EXPIRATION')
