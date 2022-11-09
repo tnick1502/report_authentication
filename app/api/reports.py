@@ -47,7 +47,7 @@ async def create_report(
 
     count = await service.get_reports_count(user)
 
-    if count >= user.limit:
+    if count['count'] >= user.limit:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Year limit reached",
@@ -107,7 +107,7 @@ async def create_report_and_qr(
 
     count = await service.get_reports_count(user)
 
-    if count >= user.limit:
+    if count['count'] >= user.limit:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Year limit reached",
