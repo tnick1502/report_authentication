@@ -21,8 +21,8 @@ def main_page():
 
     assert response.status_code == 200, 'Main page error'
 
-    response = client.post(
-        'authorization/sign-in/',
+    '''response = client.post(
+        "authorization/sign-in/",
         data={
             "username": "ytv",
             "password": "lijuh",
@@ -34,4 +34,4 @@ def main_page():
         verify=False, allow_redirects=False
     )
 
-    assert response.status_code == 401, 'Authorization error'
+    assert response.status_code == 401, "Authorization error"'''
