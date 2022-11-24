@@ -37,6 +37,7 @@ def test_auth():
 
     assert response.status_code == 401, 'Authorization error'
 
+def test_random_auth():
     response = client.post(
         'authorization/sign-in/',
         data={
