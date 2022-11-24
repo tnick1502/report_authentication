@@ -9,6 +9,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from typing import Optional
 from starlette.exceptions import HTTPException as StarletteHTTPException
 import humanize
+import os
 
 from db.database import async_session
 from fastapi.security.utils import get_authorization_scheme_param
@@ -52,7 +53,11 @@ app.add_middleware(
 
 app.include_router(router)
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+script_dir = os.path.dirname(__file__)
+st_abs_file_path = os.path.join(script_dir, "static/")
+app.mount("/static", StaticFiles(directory=st_abs_file_path), name="static")
+
+#app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
