@@ -17,9 +17,7 @@ data = {
     }
 
 def main_page():
-    response = client.get(
-        '/',
-    )
+    response = client.get("/")
 
     assert response.status_code == 200, 'Main page error'
 
