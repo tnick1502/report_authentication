@@ -1,7 +1,11 @@
 from fastapi.testclient import TestClient
 import requests
 import datetime
-#import urllib3
+
+from main import app
+
+client = TestClient(app)
+
 data = {
         "object_number": "111-11",
         "laboratory_number": "A1-11",
@@ -12,10 +16,12 @@ data = {
         "active": True
     }
 
-from main import app
+def main_page():
+    response = client.get(
+        '/',
+    )
 
-client = TestClient(app)
-
+    assert response.status_code == 200, 'Main page error'
 
 def test_auth():
     response = client.post(
@@ -31,5 +37,20 @@ def test_auth():
         verify=False, allow_redirects=False
     )
 
-    assert response.json() == {"detail": 'Incorrect username or password'}
+    assert response.status_code == 401, 'Authorization error'
+
+    response = client.post(
+        'authorization/sign-in/',
+        data={
+            "username": "trial",
+            "password": "trial",
+            "grant_type": "password",
+            "scope": "",
+            "client_id": "",
+            "client_secret": ""
+        },
+        verify=False, allow_redirects=False
+    )
+
+    assert response.status_code == 200, 'Authorization error'
 
