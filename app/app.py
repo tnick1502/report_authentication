@@ -84,13 +84,21 @@ async def login(
         authorization: str = request.cookies.get("Authorization")
         scheme, token = get_authorization_scheme_param(authorization)
         if token:
-
-            limit = 10
-
+            limit = 30
             user = get_current_user(token)
             count = await report_service.get_reports_count(
                 user=user,
             )
+
+            objects = await report_service.get_objects(
+                user_id=user.id,
+                limit=None,
+                offset=0
+            )
+            objects_count = len(objects)
+
+            if not object_number:
+                object_number = objects[0] if objects_count else None
 
             reports = await report_service.get_all(
                 user_id=user.id,
@@ -99,11 +107,6 @@ async def login(
                 object_number=object_number
             )
 
-            objects, objects_count = await report_service.get_objects(
-                user_id=user.id,
-                limit=None,
-                offset=0
-            )
 
             reports_count = await report_service.get_count_in_object(
                 user_id=user.id,
