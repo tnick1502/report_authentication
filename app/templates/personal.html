@@ -295,7 +295,7 @@
 		>
 			Выбор объекта
 		</button>
-		<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+		<ul class="dropdown-menu  verticalScroll" aria-labelledby="dropdownMenuButton1">
 			{% for object in objects %}
 			<a class="dropdown-item" href="/login/?object_number={{ object }}"
 				>{{ object }}</a
@@ -368,7 +368,7 @@
 	
 	<div>
 		<nav aria-label="Page navigation example">
-			<ul class="pagination">
+			<ul class="pagination horizontalScroll">
 				{% for i in range(pages_reports) %} {% if object_number %}
 				<li class="page-item">
 					<a
