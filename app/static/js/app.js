@@ -106,7 +106,7 @@ if (isMobile.any() && homeImgLink) {
 const toastItem = document.getElementById('toast')
 const toast = new bootstrap.Toast(toastItem)
 
-console.log(toast)
+// console.log(toast)
 
 const toastBtnAccept = document.getElementById('btnAccept')
 
@@ -155,6 +155,24 @@ cookieConsent()
 //    toast.toast('show')
 //})
 
+
+// ===================== СТАТИСТИКА ПРОТОКОЛОВ =====================
+const reportsCounter = document.getElementById('reportsCounter')
+if (reportsCounter) {
+	fetch(' ../reports/count', {
+		method: 'POST', // *GET, POST, PUT, DELETE, etc.
+		//credentials: 'include', // include, *same-origin, omit
+	}).then((response) => {
+		if (!response.ok) {
+			return
+		}
+		response.json().then((data) => {
+			if (typeof data != 'undefined') {
+				reportsCounter.innerText = `${data}`
+				}
+			})
+		})
+}
 // ===================== РАБОТА С ОТЧЕТАМИ =====================
 
 // УДАЛЕНИЕ ОТЧЕТА
