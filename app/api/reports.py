@@ -47,7 +47,7 @@ async def create_report(
 
     count = await service.get_reports_count(user)
 
-    if count >= user.limit:
+    if count['count'] >= user.limit:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Year limit reached",
@@ -102,6 +102,15 @@ async def create_report_and_qr(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="The license is invalid",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    count = await service.get_reports_count(user)
+
+    if count['count'] >= user.limit:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Year limit reached",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -204,3 +213,10 @@ async def activate_deactivate_object(
 
         await service.update_many(id=report.id, reports=reports)
     return {"massage": f"{len(reports)} reports from object {object_number} is {'activate' if active else 'deactivate'}"}
+
+@router.post("/count")
+async def count(
+        service: ReportsService = Depends(get_report_service)
+):
+    """Число выданных протоколов"""
+    return await service.count()

@@ -9,6 +9,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from typing import Optional
 from starlette.exceptions import HTTPException as StarletteHTTPException
 import humanize
+import os
 
 from db.database import async_session
 from fastapi.security.utils import get_authorization_scheme_param
@@ -52,7 +53,11 @@ app.add_middleware(
 
 app.include_router(router)
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+script_dir = os.path.dirname(__file__)
+st_abs_file_path = os.path.join(script_dir, "static/")
+app.mount("/static", StaticFiles(directory=st_abs_file_path), name="static")
+
+#app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -63,7 +68,7 @@ async def index(request: Request):
         "index.html",
         context={
             "request": request,
-            "template_report_link": f'http://localhost:8555/reports/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
+            "template_report_link": f'https://georeport.ru/reports/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
         }
     )
 
@@ -79,13 +84,21 @@ async def login(
         authorization: str = request.cookies.get("Authorization")
         scheme, token = get_authorization_scheme_param(authorization)
         if token:
-
-            limit = 10
-
+            limit = 30
             user = get_current_user(token)
             count = await report_service.get_reports_count(
                 user=user,
             )
+
+            objects = await report_service.get_objects(
+                user_id=user.id,
+                limit=None,
+                offset=0
+            )
+            objects_count = len(objects)
+
+            if not object_number:
+                object_number = objects[0] if objects_count else None
 
             reports = await report_service.get_all(
                 user_id=user.id,
@@ -94,11 +107,6 @@ async def login(
                 object_number=object_number
             )
 
-            objects, objects_count = await report_service.get_objects(
-                user_id=user.id,
-                limit=None,
-                offset=0
-            )
 
             reports_count = await report_service.get_count_in_object(
                 user_id=user.id,

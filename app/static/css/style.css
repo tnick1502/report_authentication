@@ -1528,3 +1528,13 @@ img {
 .request-report-succses.request-report-succses-show {
 	display: inline-block;
 }
+
+.verticalScroll {
+  height: 400px;
+  overflow-y: scroll;
+}
+
+.horizontalScroll {
+  width: 500px;
+  overflow-y: scroll;
+}

@@ -4,6 +4,7 @@ from typing import List, Optional
 import humanize
 from sqlalchemy.future import select
 from sqlalchemy import update, delete, func
+from sqlalchemy.sql.expression import func as expression_func
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import extract
@@ -74,6 +75,14 @@ class ReportsService:
             }
         return res
 
+    async def count(self) -> int:
+        reports = await self.session.execute(
+            select(func.count(tables.Reports.id))
+        )
+        count = reports.scalar_one()
+
+        return count
+
     async def get_count_in_object(self, user_id: str, object_number: Optional[str] = None) -> int:
         if object_number:
             reports = await self.session.execute(
@@ -91,24 +100,17 @@ class ReportsService:
         return count
 
     async def get_objects(self, user_id, limit: Optional[int] = None, offset: Optional[int] = None) -> list:
-        reports = await self.session.execute(
-            select(tables.Reports).
+        objects = await self.session.execute(
+            select(tables.Reports.object_number).
             filter_by(user_id=user_id).
+            group_by(tables.Reports.object_number).
+            order_by(expression_func.max(tables.Reports.datetime)).
             offset(offset).
             limit(limit)
         )
-        reports = reports.scalars().all()
+        objects = objects.scalars().all()
 
-        objects = []
-
-        for report in reports:
-            if report.object_number not in objects:
-                objects.append(report.object_number)
-
-        if not limit or not (offset + limit < len(reports)):
-            return objects[offset:len(reports)], len(objects)
-        else:
-            return objects[offset:offset + limit], len(objects)
+        return objects[::-1]
 
     async def get_object(self, user_id: str, object_number: str, is_superuser: bool = False) -> List[tables.Reports]:
         if is_superuser:
