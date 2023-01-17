@@ -75,6 +75,14 @@ class ReportsService:
             }
         return res
 
+    async def count(self) -> int:
+        reports = await self.session.execute(
+            select(func.count(tables.Reports.id))
+        )
+        count = reports.scalar_one()
+
+        return count
+
     async def get_count_in_object(self, user_id: str, object_number: Optional[str] = None) -> int:
         if object_number:
             reports = await self.session.execute(

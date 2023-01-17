@@ -213,3 +213,10 @@ async def activate_deactivate_object(
 
         await service.update_many(id=report.id, reports=reports)
     return {"massage": f"{len(reports)} reports from object {object_number} is {'activate' if active else 'deactivate'}"}
+
+@router.post("/count")
+async def count(
+        service: ReportsService = Depends(get_report_service)
+):
+    """Число выданных протоколов"""
+    return await service.count()
