@@ -566,6 +566,26 @@ img {
 	text-align: justify;
 }
 
+.reports-counter__wrapper {
+	display: flex;
+	flex-direction: column;
+
+	align-items: center;
+	justify-content: center;
+
+	padding: 1.5rem 0.5rem 0rem 0.5rem;
+
+	row-gap: 1rem;
+
+	width: 100%;
+
+	text-align: center;
+}
+
+.reports-counter__wrapper > #reportsCounter {
+	color: rgb(25, 125, 84);
+}
+
 
 @media screen and (max-width: 565px) {
 	.index_content > p {
