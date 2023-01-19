@@ -34,7 +34,10 @@ class OAuth2PasswordBearerWithCookie(OAuth2):
         super().__init__(flows=flows, scheme_name=scheme_name, auto_error=auto_error)
 
     async def __call__(self, request: Request) -> Optional[Token]:
-        authorization: str = request.cookies.get("Authorization")
+        authorization_headers = request.headers.get("Authorization")
+        authorization_cookies = request.cookies.get("Authorization")
+
+        authorization = authorization_cookies if authorization_cookies else authorization_headers
 
         scheme, param = get_authorization_scheme_param(authorization)
         if not authorization or scheme.lower() != "bearer":
@@ -93,7 +96,7 @@ class UsersService:
         return user
 
     @classmethod
-    def create_token(cls, user: tables.Users) -> Token:
+    def create_token(cls, user: tables.Users, exp=None) -> Token:
         user_data = User.from_orm(user)
         user_data = user_data.dict()
         user_data['license_level'] = user_data['license_level'].value
@@ -103,7 +106,7 @@ class UsersService:
         payload = {
             'iat': now,
             'nbf': now,
-            'exp': now + timedelta(hours=configs.jwt_expiration),
+            'exp': now + timedelta(hours=configs.jwt_expiration) if not exp else exp,
             'sub': str(user_data['id']),
             'user': user_data,
         }
@@ -192,6 +195,26 @@ class UsersService:
             raise exception
 
         return self.create_token(user)
+
+    async def get_token(self, user_id) -> Token:
+        exception = HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='Incorrect username or password',
+            headers={'WWW-Authenticate': 'Bearer'},
+        )
+
+        user = await self.session.execute(
+            select(tables.Users)
+            .filter(tables.Users.id == user_id)
+        )
+
+        user = user.scalars().first()
+
+        if not user:
+            raise exception
+
+        return self.create_token(user, datetime(year=user.license_end_date.year, month=user.license_end_date.month,
+                                                day=user.license_end_date.day, hour=0, minute=0, second=0))
 
     async def get_all(self) -> List[tables.Users]:
         users = await self.session.execute(

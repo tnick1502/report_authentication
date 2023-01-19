@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, Response, HTTPException
 from fastapi.responses import JSONResponse
 from typing import List
-from models.users import UserCreate, Token, User, UserUpdate, LicenseUpdate
+from models.users import UserCreate, Token, User, UserUpdate, LicenseUpdate, LicenseLevel
 from services.users import UsersService, get_current_user
 from services.depends import get_report_service
 from services.reports import ReportsService
@@ -56,6 +56,21 @@ async def sign_in(
     response = JSONResponse(content=content)
     response.set_cookie("Authorization", value=f"Bearer {token.access_token}", httponly=True)
     return response
+
+
+@router.post('/token/', response_model=Token)
+async def get_token(
+        user: User = Depends(get_current_user),
+        auth_service: UsersService = Depends(get_users_service)
+):
+    """Получение токена"""
+    if user.license_level == LicenseLevel.ENTERPRISE:
+        return await auth_service.get_token(user.id)
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Don't have the right to do this"
+        )
 
 
 @router.get('/user/', response_model=User)
