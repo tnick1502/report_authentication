@@ -199,7 +199,7 @@ async def show_report(
 async def my_custom_exception_handler(request: Request, exc: StarletteHTTPException):
     # print(exc.status_code, exc.detail)
     if exc.status_code == 404:
-        return templates.TemplateResponse('404.html', {'request': request})
+        return templates.TemplateResponse('404.html', {'request': request}, status_code=exc.status_code)
     else:
         # Generic error page
         return JSONResponse(
