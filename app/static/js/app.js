@@ -173,6 +173,7 @@ if (reportsCounter) {
 			})
 		})
 }
+
 // ===================== РАБОТА С ОТЧЕТАМИ =====================
 
 // УДАЛЕНИЕ ОТЧЕТА
@@ -296,6 +297,41 @@ if (updateReportBtns.length > 0) {
 
 		requiredChange()
 	}
+}
+
+
+// ПОЛУЧЕНИЕ ТОКЕНА
+const getTokenBtn = document.getElementById('get-token-btn')
+const requestTokenDialog = document.getElementById('request-token-dialog')
+const requestTokenDialogBtn = document.getElementById('request-token-dialog-btn')
+
+if (getTokenBtn) {
+	getTokenBtn.addEventListener('click', ()=>{
+		// console.log(getTokenBtn);
+		fetch('../authorization/token/', {
+			method: 'POST', // *GET, POST, PUT, DELETE, etc.
+			credentials: 'include', // include, *same-origin, omit
+		}).then((response) => {
+			if (!response.ok) {
+				console.log(response);
+				requestTokenDialog.classList.add('request-token-modal__wrapper_show')
+			}
+			else {
+				response.json().then((data)=>{
+					// console.log(data['access_token']);
+					const content = document.getElementById('request-token__content')
+					content.innerText = 'Токен скопирован в буфер обмена'
+					navigator.clipboard.writeText(data['access_token'])
+					requestTokenDialog.classList.add('request-token-modal__wrapper_show')
+				})
+			}
+		})
+	})
+}
+if (requestTokenDialogBtn) {
+	requestTokenDialogBtn.addEventListener('click', ()=>{
+		requestTokenDialog.classList.remove('request-token-modal__wrapper_show')
+	})
 }
 
 // ===================== НАВИГЦИЯ В ЛИЧНОМ КАБИНЕТЕ =====================
