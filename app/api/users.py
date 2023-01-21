@@ -7,6 +7,7 @@ from services.depends import get_report_service
 from services.reports import ReportsService
 from fastapi.security import OAuth2PasswordRequestForm
 from services.depends import get_users_service
+from exceptions import exception_right
 
 router = APIRouter(
     prefix='/authorization',
@@ -21,11 +22,7 @@ async def get_all(
 ):
     """Просмотр всех пользователей"""
     if not current_user.is_superuser:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="You dont have rights",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise exception_right
     return await auth_service.get_all()
 
 
@@ -37,11 +34,7 @@ async def sign_up(
 ):
     """Регисртрация нового пользователя"""
     if not current_user.is_superuser:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="You dont have rights",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise exception_right
     return await auth_service.register_new_user(user_data)
 
 
@@ -67,10 +60,7 @@ async def get_token(
     if user.license_level == LicenseLevel.ENTERPRISE:
         return await auth_service.get_token(user.id)
     else:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Don't have the right to do this"
-        )
+        raise exception_right
 
 
 @router.get('/user/', response_model=User)
@@ -98,11 +88,7 @@ async def delete_user(
 ):
     """Удаление пользователя"""
     if not current_user.is_superuser:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="You dont have rights",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise exception_right
     await auth_service.delete(id=id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
@@ -115,11 +101,7 @@ async def update_user(
 ):
     """Обновление данных пользователя"""
     if not current_user.is_superuser:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="You dont have rights",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise exception_right
     return await auth_service.update(id=id, user_data=user_data)
 
 
@@ -133,11 +115,7 @@ async def get_counts(
 ):
     """Получение количества всех выданных протоколов по пользователям"""
     if not current_user.is_superuser:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="You dont have rights",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise exception_right
     users = await auth_service.get_all()
     reports_data = {}
     for user in users:
@@ -156,11 +134,7 @@ async def update_license(
 ):
     """Обновление лицензии"""
     if not user.is_superuser:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="You dont have rights to chenge this",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise exception_right
 
     return await service.update_license(user_id=user_id, license_data=license_data)
 

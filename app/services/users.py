@@ -3,20 +3,20 @@ from datetime import datetime, timedelta, date
 from pydantic import ValidationError
 from sqlalchemy.future import select
 from sqlalchemy import update, delete
-from db import tables
-from models.users import User, Token, UserCreate, UserUpdate
 from jose import jwt, JWTError
 from typing import List
 from config import configs
 from typing import Optional, Dict
-from fastapi import status, HTTPException, Depends, Request
-#from db.database import get_session
+from fastapi import Depends, Request
 from fastapi.security import OAuth2
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from fastapi.security.utils import get_authorization_scheme_param
 from sqlalchemy.orm import Session
-from models.users import LicenseUpdate
 
+from models.users import LicenseUpdate
+from exceptions import exception_token, exception_registration_data, exception_user_form
+from db import tables
+from models.users import User, Token, UserCreate, UserUpdate
 
 __hash__ = lambda obj: id(obj)
 
@@ -41,11 +41,7 @@ class OAuth2PasswordBearerWithCookie(OAuth2):
 
         scheme, param = get_authorization_scheme_param(authorization)
         if not authorization or scheme.lower() != "bearer":
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token is wrong or missing",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
+            raise exception_token
 
         return param
 
@@ -68,12 +64,6 @@ class UsersService:
 
     @classmethod
     def verify_token(cls, token: str) -> User:
-        exception = HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Could not validate credentials',
-            headers={'Authenticate': 'Bearer'},
-        )
-
         try:
             payload = jwt.decode(
                 token,
@@ -81,7 +71,7 @@ class UsersService:
                 algorithms=[configs.jwt_algorithm],
             )
         except JWTError:
-            raise exception from None
+            raise exception_token from None
 
         user_data = payload.get('user')
 
@@ -91,7 +81,7 @@ class UsersService:
         try:
             user = User.parse_obj(user_data)
         except ValidationError:
-            raise exception from None
+            raise exception_token from None
 
         return user
 
@@ -149,11 +139,7 @@ class UsersService:
         phones = phones.scalars().first()
 
         if user_names or mails or phones:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="This name or mail or phone is already exist",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
+            raise exception_registration_data
 
         user = tables.Users(
             username=user_data.username,
@@ -175,12 +161,6 @@ class UsersService:
         return user
 
     async def authenticate_user(self, username: str, password: str) -> Token:
-        exception = HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Incorrect username or password',
-            headers={'WWW-Authenticate': 'Bearer'},
-        )
-
         user = await self.session.execute(
             select(tables.Users)
             .filter(tables.Users.username == username)
@@ -189,20 +169,14 @@ class UsersService:
         user = user.scalars().first()
 
         if not user:
-            raise exception
+            raise exception_user_form
 
         if not self.verify_password(password, user.password_hash):
-            raise exception
+            raise exception_user_form
 
         return self.create_token(user)
 
     async def get_token(self, user_id) -> Token:
-        exception = HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Incorrect username or password',
-            headers={'WWW-Authenticate': 'Bearer'},
-        )
-
         user = await self.session.execute(
             select(tables.Users)
             .filter(tables.Users.id == user_id)
@@ -211,7 +185,7 @@ class UsersService:
         user = user.scalars().first()
 
         if not user:
-            raise exception
+            raise exception_user_form
 
         return self.create_token(user, datetime(year=user.license_end_date.year, month=user.license_end_date.month,
                                                 day=user.license_end_date.day, hour=0, minute=0, second=0))

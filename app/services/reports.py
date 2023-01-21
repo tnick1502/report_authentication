@@ -5,7 +5,6 @@ import humanize
 from sqlalchemy.future import select
 from sqlalchemy import update, delete, func
 from sqlalchemy.sql.expression import func as expression_func
-from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import extract
 #import redis
@@ -14,6 +13,7 @@ from sqlalchemy.sql import extract
 from models.reports import Report, ReportCreate, ReportUpdate
 from services.qr_generator import gen_qr_code
 import db.tables as tables
+from exceptions import exception_not_found
 
 _t = humanize.i18n.activate("ru_RU")
 
@@ -31,7 +31,7 @@ class ReportsService:
         report = report.scalars().first()
 
         if not report:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+            raise exception_not_found
         return report
 
     async def get(self, id: str) -> tables.Reports:
@@ -155,11 +155,7 @@ class ReportsService:
         report = report.scalars().first()
 
         if not report:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="No this report id",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
+            raise exception_not_found
 
         q = update(tables.Reports).where(tables.Reports.id == id).values(
             datetime=datetime.datetime.now(),
