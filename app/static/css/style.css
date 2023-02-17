@@ -45,6 +45,9 @@
 	--brown_logo: #897460;
 	--beige_logo: #d3a462;
 	--green_logo: 	#73893d;
+	--green_logo_hover: #596a2f;
+	--green_logo_shadow: #90a165;
+	--green_logo_form: #c7d0b2;
 
 
 	/* ШРИФТЫ */
@@ -291,7 +294,7 @@ img {
 }
 
 .navbar-brand:hover {
-	color: var(--first-color);
+	color: var(--green_logo);
 }
 
 .navbar-brand__icon {
@@ -348,7 +351,7 @@ img {
 	font-weight: var(--font-medium);
 }
 .nav-link:hover {
-	color: var(--first-color);
+	color: var(--green_logo);
 }
 
 /* КЛАССЫ ОТКРЫТИЯ-ЗАКРЫТИЯ МЕНЮ */
@@ -513,7 +516,7 @@ img {
 }
 
 .contacts__link:hover {
-	color: var(--mdgt-green);
+	color: var(--green_logo);
 }
 
 .contacts__description {
@@ -533,7 +536,7 @@ img {
 }
 
 .contacts__link_tel:hover {
-	color: var(--mdgt-green);
+	color: var(--green_logo);
 }
 
 .contacts__link {
@@ -558,7 +561,7 @@ img {
 }
 
 .contacts__link_map:hover {
-	color: var(--mdgt-green);
+	color: var(--green_logo);
 }
 
 /* ============== ОСНОВНОЙ БЛОК ============== */
@@ -587,7 +590,7 @@ img {
 }
 
 .reports-counter__wrapper > #reportsCounter {
-	color: rgb(25, 125, 84);
+	color: var(--green_logo);
 }
 
 
@@ -777,7 +780,7 @@ img {
 	font-weight: var(--font-medium);
 }
 .nav-link-report:hover {
-	color: var(--first-color);
+	color: var(--green_logo);
 }
 
 .container-fluid-mdgt.container-fluid-mdgt-report {
@@ -867,7 +870,7 @@ img {
 }
 
 .table-header__wrapper a:hover {
-	color: rgb(2, 128, 1);
+	color: var(--green_logo);
 }
 
 .table-header__title-wrapper {
@@ -1057,18 +1060,45 @@ img {
 
 /* ========== БРЕЙКПОИНТЫ ==========*/
 .btn-buy {
-	border-color: rgb(25, 125, 84);
-	background-color: rgb(25, 125, 84);
+	border-color: var(--green_logo);
+	background-color: var(--green_logo);
+}
+
+.btn-test:hover, .btn-test:focus,
+.btn-buy:hover, .btn-buy:focus,
+.btn-out:hover, .btn-out:focus
+ {
+	border-color: var(--green_logo_hover);
+	background-color: var(--green_logo_hover);
+}
+
+.btn-test:focus,
+ .btn-buy:focus,
+ .btn-out:focus
+ {
+	box-shadow: 0 0 0 0.25rem var(--green_logo_shadow);
+}
+
+
+.btn-success.disabled, .btn-success:disabled {
+	border-color: var(--green_logo);
+	background-color: var(--green_logo);
+	opacity: 0.6;
 }
 
 .btn-test {
-	border-color: rgb(25, 125, 84);
-	background-color: rgb(25, 125, 84);
+	border-color: var(--green_logo);
+	background-color: var(--green_logo);
 }
 
 .btn-out {
-	border-color: rgb(25, 125, 84);
-	background-color: rgb(25, 125, 84);
+	border-color: var(--green_logo);
+	background-color: var(--green_logo);
+}
+
+.form-control:focus {
+	border-color: var(--green_logo_hover);
+	box-shadow: 0 0 0 0.25rem var(--green_logo_form);
 }
 
 /* ========== КУКИ ==========*/
@@ -1151,7 +1181,7 @@ img {
 	font-weight: var(--font-medium);
 }
 .nav-link-personal:hover {
-	color: var(--first-color);
+	color: var(--green_logo);
 }
 
 .navbar-collapse-wrapper-personal.navbar-collapse-wrapper-show,
@@ -1639,6 +1669,8 @@ img {
 
 	padding: 0.5rem 0.75rem;
 	padding-left: 0;
+
+	text-align: left;
 }
 
 .figure__productIconBox {
