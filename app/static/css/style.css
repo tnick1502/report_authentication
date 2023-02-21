@@ -617,7 +617,6 @@ img {
 	position: relative;
 
 	display: inline-flex;
-	max-height: 450px;
 	border: none;
 }
 
@@ -634,6 +633,7 @@ img {
 .home-img__image {
 	height: 100%;
 	width: auto;
+	max-height: 450px;
 }
 
 .home-img__hover {
@@ -1730,4 +1730,19 @@ img {
 .figure__productIcon {
     width: 60px;
     height: 60px;
+}
+
+/* ДОРАБОТКА КАРТОЧЕК */
+
+.card-group {
+	column-gap: 0.75rem;
+}
+
+.card-group .card .text-start{
+	font-size: var(--small-font-size);
+}
+
+.card-group .card ul {
+	margin-top: 1.5rem;
+	list-style: none;
 }
