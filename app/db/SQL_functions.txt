@@ -1,0 +1,30 @@
+CREATE OR REPLACE FUNCTION get_month_count ()
+RETURNS TABLE (month smallint, year smallint, count bigint) AS $$
+	SELECT EXTRACT(MONTH FROM datetime) as month, EXTRACT(YEAR FROM datetime) as year, COUNT(id)
+	FROM reports
+	GROUP BY year, month
+	ORDER BY year, month
+$$ LANGUAGE SQL;
+
+SELECT * FROM get_month_count();
+
+CREATE OR REPLACE FUNCTION get_month_count_by_test_type ()
+RETURNS TABLE (month smallint, year smallint, test_type varchar, count bigint) AS $$
+	SELECT EXTRACT(MONTH FROM datetime) as month, EXTRACT(YEAR FROM datetime) as year, test_type, COUNT(id)
+	FROM reports
+	GROUP BY test_type, year, month
+	ORDER BY year, month, test_type
+$$ LANGUAGE SQL;
+
+SELECT * FROM get_month_count_by_test_type();
+
+CREATE OR REPLACE FUNCTION get_month_count_by_users ()
+RETURNS TABLE (month smallint, year smallint, username varchar, count bigint) AS $$
+	SELECT EXTRACT(MONTH FROM datetime) as month, EXTRACT(YEAR FROM datetime) as year, username, COUNT(reports.id)
+	FROM reports
+	LEFT JOIN users ON users.id = reports.user_id
+	GROUP BY username, year, month
+	ORDER BY year, month, username
+$$ LANGUAGE SQL;
+
+SELECT * FROM get_month_count_by_users();
