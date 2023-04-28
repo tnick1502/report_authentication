@@ -179,7 +179,11 @@ async def show_report(
     user_data = await users.get(data["user_id"])
     user_data = user_data.__dict__
 
-    #files = await service.get_files(id)
+    try:
+       get_files = await service.get_files(id)
+       files = {f.filename: f.link for f in get_files}
+    except:
+        files = {}
 
     files = {
         "Трехосное нагружение": "https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/files/954657706f399bf52cd57db2cf640f8624fd868-rtg.xls",

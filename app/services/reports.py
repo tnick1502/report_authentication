@@ -214,6 +214,9 @@ class ReportsService:
 
         if not files:
             raise exception_not_found
+
+        files = [file for file in files if s3.check(file.link)]
+
         return files
 
     async def create_file(self, report_id: str, filename: str, file: bytes) -> tables.Files:

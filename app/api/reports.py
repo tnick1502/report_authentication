@@ -8,9 +8,9 @@ from services.qr_generator import gen_qr_code
 
 from models.reports import Report, ReportCreate, ReportUpdate
 from models.files import FileCreate, File
-from models.users import User
-from services.users import get_current_user
-from services.depends import get_report_service
+from models.users import User, LicenseLevel
+from services.users import get_current_user, UsersService
+from services.depends import get_report_service, get_users_service
 from services.reports import ReportsService
 from exceptions import exception_active, exception_license, exception_limit, exception_right
 
@@ -182,6 +182,9 @@ async def create_file(
         service: ReportsService = Depends(get_report_service)
 ):
     """Добавление файла"""
+    if user.license_level != LicenseLevel.ENTERPRISE:
+        raise exception_right
+
     report = await service.get(report_id)
     if report.user_id != user.id and not user.is_superuser:
         raise exception_right
