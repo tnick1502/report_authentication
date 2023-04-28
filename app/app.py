@@ -185,10 +185,6 @@ async def show_report(
     except:
         files = {}
 
-    files = {
-        "Трехосное нагружение": "https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/files/954657706f399bf52cd57db2cf640f8624fd868-rtg.xls",
-        "Резонансная колонка": "https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/files/954657706f399bf52cd57db2cf640f8624fd868-str.pdf"
-    }
     context = {
         "request": request,
         "title": user_data["organization"],
