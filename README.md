@@ -43,3 +43,4 @@
 Для очищения докера от проекта:\
     `docker rm $(docker ps -a -q) -f`\
     `docker rmi $(docker images -a -q) -f`
+
