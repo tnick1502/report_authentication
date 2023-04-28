@@ -18,6 +18,12 @@ class Configs_env(BaseSettings):
     jwt_expiration: int = os.getenv('JWT_EXPIRATION')
     superuser_name: str = os.getenv('SUPERUSER_NAME')
     superuser_password: str = os.getenv('SUPERUSER_PASSWORD')
+    endpoint_url: str = os.getenv('AWS_URI')
+    aws_access_key_id: str = os.getenv('AWS_ACCCESS_KEY')
+    service_name: str = os.getenv('AWS_SERVICE_NAME')
+    aws_secret_access_key: str = os.getenv('AWS_SECRET_KEY')
+    region_name: str = os.getenv('AWS_REGION')
+    bucket: str = os.getenv('AWS_BUCKET')
 
 class Configs_docker_compose(BaseSettings):
     host_ip: str = get_self_public_ip()
@@ -27,6 +33,12 @@ class Configs_docker_compose(BaseSettings):
     jwt_expiration: int = Field(..., env='JWT_EXPIRATION')
     superuser_name: str = Field(..., env='SUPERUSER_NAME')
     superuser_password: str = Field(..., env='SUPERUSER_PASSWORD')
+    endpoint_url: str = Field(..., env='AWS_URI')
+    aws_access_key_id: str = Field(..., env='AWS_ACCCESS_KEY')
+    service_name: str = Field(..., env='AWS_SERVICE_NAME')
+    aws_secret_access_key: str = Field(..., env='AWS_SECRET_KEY')
+    region_name: str = Field(..., env='AWS_REGION')
+    bucket: str = Field(..., env='AWS_BUCKET')
 
 
 try:

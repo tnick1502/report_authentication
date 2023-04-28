@@ -41,5 +41,16 @@ class Reports(Base):
     data = Column(JSON, nullable=True, default=None)
     active = Column(Boolean)
 
+
+class Files(Base):
+    __tablename__ = "files"
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    report_id = Column(String, ForeignKey('reports.id'), index=True)
+    filename = Column(String)
+    link = Column(String)
+
+
 ix_create_date = Index('ix_create_date', Reports.datetime, postgresql_using='btree')
 ix_object_number = Index('ix_object_number', Reports.object_number, postgresql_using='btree')
+ix_files_report_id = Index('files_report_id', Files.report_id, postgresql_using='btree')

@@ -10,14 +10,12 @@ class ReportBase(BaseModel):
     data: Optional[dict] = None
     active: bool
 
-
 class Report(ReportBase):
     id: str
     user_id: int
     datetime: datetime
     class Config:
         orm_mode = True
-
 
 class ReportCreate(ReportBase):
     pass

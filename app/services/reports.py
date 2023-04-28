@@ -11,9 +11,11 @@ from sqlalchemy.sql import extract
 #import pickle
 
 from models.reports import Report, ReportCreate, ReportUpdate
+from models.files import FileCreate, FileBase
 from services.qr_generator import gen_qr_code
 import db.tables as tables
-from exceptions import exception_not_found
+from exceptions import exception_not_found, exception_file
+from s3 import s3
 
 _t = humanize.i18n.activate("ru_RU")
 
@@ -200,4 +202,47 @@ class ReportsService:
         path_to_download = os.path.join("static/images", "digitrock_qr.png")  # Путь до фона qr кода
 
         return gen_qr_code(text, path_to_download)
+
+
+
+    async def get_files(self, report_id: str) -> Optional[tables.Files]:
+        files = await self.session.execute(
+            select(tables.Files).
+                filter_by(report_id=report_id)
+        )
+        files = files.scalars().all()
+
+        if not files:
+            raise exception_not_found
+        return files
+
+    async def create_file(self, report_id: str, filename: str, file: bytes) -> tables.Files:
+
+        try:
+            s3.put_object(data=file, key=f"georeport/files/{report_id}-{filename}")
+        except Exception as err:
+            print(err)
+            raise exception_file
+
+        file = tables.Files(
+            link=f"https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/files/{report_id}-{filename}",
+            report_id=report_id,
+            filename=filename
+        )
+        self.session.add(file)
+        await self.session.commit()
+
+        return file
+
+    async def delete_files(self, report_id: str):
+        q = delete(tables.Files).where(tables.Files.report_id == report_id)
+        q.execution_options(synchronize_session="fetch")
+        await self.session.execute(q)
+        await self.session.commit()
+
+    async def delete_file(self, file_id: int):
+        q = delete(tables.Files).where(tables.Files.report_id == file_id)
+        q.execution_options(synchronize_session="fetch")
+        await self.session.execute(q)
+        await self.session.commit()
 

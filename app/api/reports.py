@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, status, HTTPException
+from fastapi import APIRouter, Depends, Response, status, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 from datetime import date
 from typing import Optional, List
@@ -7,6 +7,7 @@ import os
 from services.qr_generator import gen_qr_code
 
 from models.reports import Report, ReportCreate, ReportUpdate
+from models.files import FileCreate, File
 from models.users import User
 from services.users import get_current_user
 from services.depends import get_report_service
@@ -170,3 +171,51 @@ async def count(
 ):
     """Число выданных протоколов"""
     return await service.count()
+
+
+@router.post("/files/")
+async def create_file(
+        report_id: str,
+        filename: str,
+        file: UploadFile,
+        user: User = Depends(get_current_user),
+        service: ReportsService = Depends(get_report_service)
+):
+    """Добавление файла"""
+    report = await service.get(report_id)
+    if report.user_id != user.id and not user.is_superuser:
+        raise exception_right
+
+    contents = await file.read()
+
+    format = file.filename.split(".")[-1].lower()
+
+    return await service.create_file(report_id, f"{filename}.{format}", contents)
+
+
+@router.get("/files/{report_id}", response_model=Optional[List[File]])
+async def get_files(
+        report_id: str,
+        user: User = Depends(get_current_user),
+        service: ReportsService = Depends(get_report_service)
+):
+    """Просмотр отчетов по объекту"""
+    report = await service.get(report_id)
+    if report.user_id != user.id and not user.is_superuser:
+        raise exception_right
+    return await service.get_files(report_id=report_id)
+
+
+@router.delete('/files/', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_files(
+        report_id: str,
+        user: User = Depends(get_current_user),
+        service: ReportsService = Depends(get_report_service)
+):
+    """Удаление всех файлов"""
+    report = await service.get(report_id)
+    if report.user_id != user.id and not user.is_superuser:
+        raise exception_right
+
+    await service.delete_files(report_id=report_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

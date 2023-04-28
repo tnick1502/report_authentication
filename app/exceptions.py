@@ -12,6 +12,12 @@ exception_license = HTTPException(
     headers={"WWW-Authenticate": "Bearer"},
 )
 
+exception_file = HTTPException(
+    status_code=status.HTTP_403_FORBIDDEN,
+    detail="The file is invalid",
+    headers={"WWW-Authenticate": "Bearer"},
+)
+
 exception_limit = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
     detail="Year limit reached",

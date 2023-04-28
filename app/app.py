@@ -179,6 +179,12 @@ async def show_report(
     user_data = await users.get(data["user_id"])
     user_data = user_data.__dict__
 
+    #files = await service.get_files(id)
+
+    files = {
+        "Трехосное нагружение": "https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/files/954657706f399bf52cd57db2cf640f8624fd868-rtg.xls",
+        "Резонансная колонка": "https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/files/954657706f399bf52cd57db2cf640f8624fd868-str.pdf"
+    }
     context = {
         "request": request,
         "title": user_data["organization"],
@@ -189,7 +195,8 @@ async def show_report(
             "Объект": data["object_number"],
             "Лабораторный номер": data["laboratory_number"],
             "Тип опыта": data["test_type"],
-            **data["data"]}
+            **data["data"]},
+        "files": files
     }
 
     return templates.TemplateResponse("show_report.html", context=context)
