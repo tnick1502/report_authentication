@@ -215,7 +215,7 @@ class ReportsService:
         if not files:
             raise exception_not_found
 
-        files = [file for file in files if s3.check(file.link)]
+        #files = [file for file in files if s3.check(file.link)]
 
         return files
 
