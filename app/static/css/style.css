@@ -830,14 +830,14 @@ img {
 	row-gap: 2rem;
 
 	height: 100%;
-	width: 100%;
+	width: min-content;
 
 	align-items: center;
 	/* justify-content: center; */
 
 	margin: 0 auto;
 
-	min-width: fit-content;
+	max-width: 100%;
 }
 
 /* ========== ШАПКА ==========*/
@@ -920,12 +920,18 @@ img {
 	margin: 0 1rem;
 	/* padding: 10px 10px 0px 10px; */
 
-	width: fit-content;
-	max-width: 100%;
+	width: max-content;
+	max-width: calc(100% - 2rem);
+	min-width: fit-content;
 
 	border: 1px solid var(--text-color-super-light);
 	border-radius: 1rem;
 }
+
+.table__container.table__container-additional .table-header__title_main {
+	border-bottom: none;
+}
+
 
 .table__container.table__container-additional {
 	width: calc(100% - 2rem);
@@ -975,7 +981,7 @@ img {
 }
 
 .table__tr.table__tr-additional .table__td a{
-	text-decoration: none;
+	text-decoration: underline;
 	color: inherit;
 	font-family: inherit;
 	font-size: inherit;
