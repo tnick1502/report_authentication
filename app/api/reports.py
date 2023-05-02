@@ -4,6 +4,7 @@ from datetime import date
 from typing import Optional, List
 import hashlib
 import os
+import sys
 from services.qr_generator import gen_qr_code
 
 from models.reports import Report, ReportCreate, ReportUpdate
@@ -12,7 +13,8 @@ from models.users import User, LicenseLevel
 from services.users import get_current_user, UsersService
 from services.depends import get_report_service, get_users_service
 from services.reports import ReportsService
-from exceptions import exception_active, exception_license, exception_limit, exception_right
+from exceptions import exception_active, exception_license, exception_limit, exception_right, exception_file_count, \
+    exception_file_size
 
 router = APIRouter(
     prefix="/reports",
@@ -174,7 +176,7 @@ async def count(
 
 
 @router.post("/files/")
-async def create_file(
+async def upload_file(
         report_id: str,
         filename: str,
         file: UploadFile,
@@ -189,7 +191,14 @@ async def create_file(
     if report.user_id != user.id and not user.is_superuser:
         raise exception_right
 
+    files_count = await service.get_files_count_by_report(report_id=report_id)
+
+    if files_count > 3:
+        raise exception_file_count
+
     contents = await file.read()
+    if sys.getsizeof(contents) / (1024 * 1024) > 10:
+        raise exception_file_size
 
     format = file.filename.split(".")[-1].lower()
 
