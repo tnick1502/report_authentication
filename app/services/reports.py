@@ -222,13 +222,13 @@ class ReportsService:
     async def create_file(self, report_id: str, filename: str, file: bytes) -> tables.Files:
 
         try:
-            s3.put_object(data=file, key=f"georeport/files/{report_id}-{filename}")
+            s3.put_object(data=file, key=f"georeport/files/{report_id}-{filename.replace(' ', '_')}")
         except Exception as err:
             print(err)
             raise exception_file
 
         file = tables.Files(
-            link=f"https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/files/{report_id}-{filename}",
+            link=f"https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/files/{report_id}-{filename.replace(' ', '_')}",
             report_id=report_id,
             filename=filename
         )
