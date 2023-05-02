@@ -215,11 +215,11 @@ class ReportsService:
         if not files:
             raise exception_not_found
 
-        #files = [file for file in files if s3.check(file.link)]
-
         return files
 
     async def create_file(self, report_id: str, filename: str, file: bytes) -> tables.Files:
+
+        filename = filename.replace(' ', '_')
 
         try:
             s3.put_object(data=file, key=f"georeport/files/{report_id}-{filename}")
@@ -237,7 +237,30 @@ class ReportsService:
 
         return file
 
+    async def get_files_count_by_report(self, report_id: str) -> int:
+        reports = await self.session.execute(
+            select(func.count(tables.Files.id)).filter_by(report_id=report_id)
+        )
+        count = reports.scalar_one()
+
+        return count
+
     async def delete_files(self, report_id: str):
+        files = await self.session.execute(
+            select(tables.Files).
+                filter_by(report_id=report_id)
+        )
+        files = files.scalars().all()
+
+        if not files:
+            return
+
+        for file in files:
+            try:
+                s3.delete_object(f"georeport/files/{report_id}-{file.filename}")
+            except Exception as err:
+                print(err)
+
         q = delete(tables.Files).where(tables.Files.report_id == report_id)
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)

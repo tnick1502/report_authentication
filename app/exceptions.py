@@ -18,6 +18,18 @@ exception_file = HTTPException(
     headers={"WWW-Authenticate": "Bearer"},
 )
 
+exception_file_count = HTTPException(
+    status_code=status.HTTP_403_FORBIDDEN,
+    detail="You can upload only three files for one report",
+    headers={"WWW-Authenticate": "Bearer"},
+)
+
+exception_file_size = HTTPException(
+    status_code=status.HTTP_403_FORBIDDEN,
+    detail="Max file size is 10MB",
+    headers={"WWW-Authenticate": "Bearer"},
+)
+
 exception_limit = HTTPException(
     status_code=status.HTTP_403_FORBIDDEN,
     detail="Year limit reached",
