@@ -39,6 +39,9 @@ class S3:
             return int(e.response['Error']['Code']) != 404
         return True
 
+    def delete_object(self, key: str):
+        self.s3.Object(self.bucket, key).delete()
+
 s3 = S3()
 
 if __name__ == '__main__':

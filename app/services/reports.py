@@ -246,6 +246,21 @@ class ReportsService:
         return count
 
     async def delete_files(self, report_id: str):
+        files = await self.session.execute(
+            select(tables.Files).
+                filter_by(report_id=report_id)
+        )
+        files = files.scalars().all()
+
+        if not files:
+            return
+
+        for file in files:
+            try:
+                s3.delete_object(f"georeport/files/{report_id}-{file.filename}")
+            except Exception as err:
+                print(err)
+
         q = delete(tables.Files).where(tables.Files.report_id == report_id)
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
