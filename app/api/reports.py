@@ -167,7 +167,7 @@ async def activate_deactivate_object(
     return {"massage": f"{len(reports)} reports from object {object_number} is {'activate' if active else 'deactivate'}"}
 
 
-@router.post("/count")
+@router.get("/count")
 async def count(
         service: ReportsService = Depends(get_report_service)
 ):
