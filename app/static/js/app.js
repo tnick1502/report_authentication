@@ -160,7 +160,7 @@ cookieConsent()
 const reportsCounter = document.getElementById('reportsCounter')
 if (reportsCounter) {
 	fetch(' ../reports/count', {
-		method: 'POST', // *GET, POST, PUT, DELETE, etc.
+		method: 'GET', // *GET, POST, PUT, DELETE, etc.
 		//credentials: 'include', // include, *same-origin, omit
 	}).then((response) => {
 		if (!response.ok) {
