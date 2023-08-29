@@ -187,9 +187,19 @@ async def show_report(
 
     try:
        get_test_type_files = await service.get_test_type_files(test_type=data["test_type"], user_id=data["user_id"])
-       test_type_files = {f.filename: f.link for f in get_test_type_files}
+       test_type_files_uncut = {f.filename: f.link for f in get_test_type_files}
+
+       test_type_files = {}
+       for filename in test_type_files_uncut:
+           if len(filename) >= 37:
+               filename_without_format, format = filename.split('.')
+               test_type_files[f'{filename_without_format[:35]}...{format}'] = test_type_files_uncut[filename]
+           else:
+               test_type_files[filename] = test_type_files_uncut[filename]
     except:
         test_type_files = {}
+
+
 
     context = {
         "request": request,
