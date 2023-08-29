@@ -11,7 +11,7 @@
 * fastapi + postgresql + sqlalchemy
 * html + CSS + js
 
-#### [Схема БД](https://dbdiagram.io/d/63088a2bf1a9b01b0feae726)
+#### [Схема БД](https://dbdiagram.io/d/64edcb6a02bd1c4a5e99ec69)
 
 ## Для разработки:
 1. Скопировать файл .env в корень проекта

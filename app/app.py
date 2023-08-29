@@ -34,7 +34,7 @@ def create_ip_ports_array(ip: str, *ports):
 app = FastAPI(
     title="Georeport MDGT",
     description="Сервис аутентификации протоколов испытаний",
-    version="1.1.1")
+    version="1.2.1")
 
 
 origins = [
@@ -185,6 +185,12 @@ async def show_report(
     except:
         files = {}
 
+    try:
+       get_test_type_files = await service.get_test_type_files(test_type=data["test_type"], user_id=data["user_id"])
+       test_type_files = {f.filename: f.link for f in get_test_type_files}
+    except:
+        test_type_files = {}
+
     context = {
         "request": request,
         "title": user_data["organization"],
@@ -196,6 +202,7 @@ async def show_report(
             "Лабораторный номер": data["laboratory_number"],
             "Тип опыта": data["test_type"],
             **data["data"]},
+        "test_type_files": test_type_files,
         "files": files
     }
 

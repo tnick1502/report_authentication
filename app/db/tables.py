@@ -51,6 +51,17 @@ class Files(Base):
     link = Column(String)
 
 
+class TestTypeFiles(Base):
+    __tablename__ = "test_type_files"
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'), index=True)
+    test_type = Column(String(100))
+    filename = Column(String)
+    link = Column(String)
+
+
+
 ix_create_date = Index('ix_create_date', Reports.datetime, postgresql_using='btree')
 ix_object_number = Index('ix_object_number', Reports.object_number, postgresql_using='btree')
 ix_files_report_id = Index('files_report_id', Files.report_id, postgresql_using='btree')

@@ -8,7 +8,7 @@ import sys
 from services.qr_generator import gen_qr_code
 
 from models.reports import Report, ReportCreate, ReportUpdate
-from models.files import FileCreate, File
+from models.files import FileCreate, File, TestTypeFile, TestTypeFileCreate
 from models.users import User, LicenseLevel
 from services.users import get_current_user, UsersService
 from services.depends import get_report_service, get_users_service
@@ -230,4 +230,44 @@ async def delete_files(
         raise exception_right
 
     await service.delete_files(report_id=report_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+@router.post("/test_type_files/")
+async def upload_test_type_file(
+        test_type: str,
+        filename: str,
+        file: UploadFile,
+        user: User = Depends(get_current_user),
+        service: ReportsService = Depends(get_report_service)
+):
+    """Добавление файла"""
+
+    contents = await file.read()
+    if sys.getsizeof(contents) / (1024 * 1024) > 100:
+        raise exception_file_size
+
+    format = file.filename.split(".")[-1].lower()
+
+    return await service.create_test_type_files(user.id, test_type, f"{filename}.{format}", contents)
+
+
+@router.get("/test_type_files/{report_id}", response_model=Optional[List[TestTypeFile]])
+async def get_test_type_files(
+        report_id: str,
+        service: ReportsService = Depends(get_report_service)
+):
+    """Просмотр отчетов по объекту"""
+    report = await service.get(report_id)
+    print(report)
+    return await service.get_test_type_files(test_type=report.test_type, user_id=report.user_id)
+
+
+@router.delete('/test_type_files/', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_test_type_files(
+        test_type: str,
+        user: User = Depends(get_current_user),
+        service: ReportsService = Depends(get_report_service)
+):
+    """Удаление всех файлов"""
+    await service.delete_test_type_files(test_type=test_type, user_id=user.id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

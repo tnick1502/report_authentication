@@ -178,7 +178,7 @@ class ReportsService:
         await self.session.execute(q)
         await self.session.commit()
 
-    async def create(self, user_id: str, report_id: str, report_data: ReportCreate) -> tables.Reports:
+    async def create(self, user_id: int, report_id: str, report_data: ReportCreate) -> tables.Reports:
         report = tables.Reports(
             **report_data.dict(),
             id=report_id,
@@ -268,6 +268,73 @@ class ReportsService:
 
     async def delete_file(self, file_id: int):
         q = delete(tables.Files).where(tables.Files.report_id == file_id)
+        q.execution_options(synchronize_session="fetch")
+        await self.session.execute(q)
+        await self.session.commit()
+
+
+    async def get_test_type_files(self, test_type: str, user_id: int) -> Optional[tables.TestTypeFiles]:
+        test_type = test_type.replace(' ', '_')
+        files = await self.session.execute(
+            select(tables.TestTypeFiles).
+                filter_by(
+                test_type=test_type,
+                user_id=user_id
+            )
+        )
+        files = files.scalars().all()
+
+        if not files:
+            raise exception_not_found
+
+        return files
+
+    async def create_test_type_files(self, user_id: int, test_type: str, filename: str, file: bytes) -> tables.TestTypeFiles:
+
+        filename = filename.replace(' ', '_')
+        test_type = test_type.replace(' ', '_')
+
+        try:
+            s3.put_object(data=file, key=f"georeport/test_type_files/{user_id}-{test_type}-{filename}")
+        except Exception as err:
+            print(err)
+            raise exception_file
+
+        file = tables.TestTypeFiles(
+            link=f"https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/test_type_files/{user_id}-{test_type}-{filename}",
+            test_type=test_type,
+            user_id=user_id,
+            filename=filename
+        )
+        self.session.add(file)
+        await self.session.commit()
+
+        return file
+
+    async def delete_test_type_files(self, test_type: str, user_id: int):
+        test_type = test_type.replace(' ', '_')
+        files = await self.session.execute(
+            select(tables.TestTypeFiles).
+                filter_by(
+                test_type=test_type,
+                user_id=user_id
+            )
+        )
+        files = files.scalars().all()
+
+        if not files:
+            return
+
+        for file in files:
+            try:
+                s3.delete_object(f"georeport/test_type_files/{user_id}-{test_type}-{file.filename}")
+            except Exception as err:
+                print(err)
+
+        q = delete(tables.TestTypeFiles).where(
+            tables.TestTypeFiles.test_type == test_type,
+            tables.TestTypeFiles.user_id == user_id,
+        )
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
         await self.session.commit()

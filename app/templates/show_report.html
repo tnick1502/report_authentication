@@ -57,5 +57,36 @@
     {% else %}
     <div></div>
     {% endif %}
+
+  {% if test_type_files.items()|length > 0 %}
+  <div class="table__container table__container-additional">
+    <div class="table-header">
+      <div class="table-header__wrapper">
+        <div class="table-header__title-wrapper">
+          <div class="table-header__title_main">Справочные файлы</div>
+        </div>
+    </div>
+    </div>
+    <table class="table__table table__table-additional">
+        <tbody class="table__tbody">
+          {% for key, value in test_type_files.items() %}
+          <tr class="table__tr table__tr-additional">
+            <td class="table__td">
+              {% if value.split('.')[-1] in ['png', 'jpg'] %}<a href="{{value}}" target="_blank"
+                >{{ key }}</a
+              >
+              <img src="{{value}}" alt="" />{% else %}<a href="{{value}}" target="_blank"
+                >{{ key }}</a
+              >
+              {% endif%}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div></div>
+    {% endif %}
   </div>
   {% endblock %}
