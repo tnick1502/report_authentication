@@ -1,7 +1,7 @@
 from db.database import async_session
 from services.reports import ReportsService
 from services.users import UsersService
-
+from services.statistics import StatisticsService
 
 async def get_report_service():
     async with async_session() as session:
