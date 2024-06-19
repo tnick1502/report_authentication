@@ -201,7 +201,7 @@ async def show_report(
     except:
         test_type_files = {}
 
-    if id != '4c795fb5002852b5af5df9e5de1e44b11b920d6f':
+    if id not in ['4c795fb5002852b5af5df9e5de1e44b11b920d6f', '95465771a6f399bf52cd57db2cf640f8624fd868']:
         await stat_service.create(client_ip=request.headers.get("X-Real-IP") or request.client.host, report_id=id)
 
     context = {
