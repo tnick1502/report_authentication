@@ -12,3 +12,8 @@ async def get_users_service():
     async with async_session() as session:
         async with session.begin():
             yield UsersService(session)
+
+async def get_statistics_service():
+    async with async_session() as session:
+        async with session.begin():
+            yield StatisticsService(session)

@@ -18,9 +18,10 @@ from db import tables
 from db.database import Base, engine
 from api import router
 from models.users import User
-from services.depends import get_report_service, get_users_service
+from services.depends import get_report_service, get_users_service, get_statistics_service
 from services.reports import ReportsService
 from services.users import UsersService
+from services.statistics import StatisticsService
 from config import configs
 from db.tables import LicenseLevel
 
@@ -165,7 +166,8 @@ async def show_report(
         request: Request,
         id: str = '',
         service: ReportsService = Depends(get_report_service),
-        users: UsersService = Depends(get_users_service)
+        users: UsersService = Depends(get_users_service),
+        stat_service: StatisticsService = Depends(get_statistics_service),
 ):
     """Просмотр данных отчета по id"""
     if len(id) != 40:
@@ -199,7 +201,8 @@ async def show_report(
     except:
         test_type_files = {}
 
-
+    if id != '4c795fb5002852b5af5df9e5de1e44b11b920d6f':
+        await stat_service.create(client_ip=request.headers.get("X-Real-IP") or request.client.host, report_id=id)
 
     context = {
         "request": request,
