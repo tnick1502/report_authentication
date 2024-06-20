@@ -308,7 +308,7 @@ const requestTokenDialogBtn = document.getElementById('request-token-dialog-btn'
 if (getTokenBtn) {
 	getTokenBtn.addEventListener('click', ()=>{
 		// console.log(getTokenBtn);
-		fetch('../authorization/token/', {
+		fetch('../auth/token/', {
 			method: 'POST', // *GET, POST, PUT, DELETE, etc.
 			credentials: 'include', // include, *same-origin, omit
 		}).then((response) => {

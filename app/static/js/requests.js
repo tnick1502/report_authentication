@@ -7,7 +7,7 @@ function checkForm(username, password) {
 }
 
 function login(username, password, gotoUrl = null) {
-	fetch('../authorization/sign-in/', {
+	fetch('../auth/sign-in/', {
 		method: 'POST', // *GET, POST, PUT, DELETE, etc.
 		credentials: 'include', // include, *same-origin, omit
 		headers: {
@@ -61,7 +61,7 @@ const btnOut = document.getElementById('btn-out')
 if (btnOut) {
 	btnOut.addEventListener('click', (event) => {
 		event.preventDefault()
-		fetch('../authorization/sign-out/', {
+		fetch('../auth/sign-out/', {
 			method: 'GET', // *GET, POST, PUT, DELETE, etc.
 			credentials: 'include', // include, *same-origin, omit
 		}).then(() => {

@@ -10,6 +10,9 @@ from typing import Optional
 from starlette.exceptions import HTTPException as StarletteHTTPException
 import humanize
 import os
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from redis import asyncio as aioredis
 
 from db.database import async_session
 from fastapi.security.utils import get_authorization_scheme_param
@@ -35,7 +38,7 @@ def create_ip_ports_array(ip: str, *ports):
 app = FastAPI(
     title="Georeport MDGT",
     description="Сервис аутентификации протоколов испытаний",
-    version="1.2.1")
+    version="2.0.1")
 
 
 origins = [
@@ -237,6 +240,9 @@ async def my_custom_exception_handler(request: Request, exc: StarletteHTTPExcept
 
 @app.on_event("startup")
 async def startup_event():
+    redis = aioredis.from_url("redis://localhost:6379", encoding="utf8", decode_responses=True)
+    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+
     async with engine.begin() as conn:
         #await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)

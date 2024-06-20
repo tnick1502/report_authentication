@@ -6,7 +6,7 @@ from sqlalchemy import update, delete, func
 from sqlalchemy.orm import Session
 
 import db.tables as tables
-from exceptions import exception_not_found
+from modules.exceptions import exception_not_found
 
 
 class StatisticsService:

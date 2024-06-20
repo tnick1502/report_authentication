@@ -1,19 +1,19 @@
-from fastapi import APIRouter, Depends, status, Response, HTTPException
+from fastapi import APIRouter, Depends, status, Response
+from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import JSONResponse
 from typing import List
+
 from models.users import UserCreate, Token, User, UserUpdate, LicenseUpdate, LicenseLevel
 from services.users import UsersService, get_current_user
 from services.depends import get_report_service
 from services.reports import ReportsService
-from fastapi.security import OAuth2PasswordRequestForm
 from services.depends import get_users_service
-from exceptions import exception_right
+from modules.exceptions import exception_right
 
 router = APIRouter(
-    prefix='/authorization',
-    tags=['authorization'],
+    prefix='/auth',
+    tags=['auth'],
 )
-
 
 @router.get('/', response_model=List[User])
 async def get_all(
@@ -24,7 +24,6 @@ async def get_all(
     if not current_user.is_superuser:
         raise exception_right
     return await auth_service.get_all()
-
 
 @router.post('/', response_model=User)
 async def sign_up(
@@ -37,19 +36,17 @@ async def sign_up(
         raise exception_right
     return await auth_service.register_new_user(user_data)
 
-
 @router.post('/sign-in/')
 async def sign_in(
+        response: Response,
         auth_data: OAuth2PasswordRequestForm = Depends(),
-        auth_service: UsersService = Depends(get_users_service)
+        auth_service: UsersService = Depends(get_users_service),
 ):
     """Получение токена (токен зранится в куки)"""
     token = await auth_service.authenticate_user(auth_data.username, auth_data.password)
-    content = {"message": "True"}
-    response = JSONResponse(content=content)
-    response.set_cookie("Authorization", value=f"Bearer {token.access_token}", httponly=True)
-    return response
-
+    response.set_cookie("Authorization", value=f"Bearer {token.access_token}") #, httponly=True, secure=False, samesite='lax') #, max_age=3600, secure=True, httponly=True, samesite="None")
+    #response.headers["Access-Control-Allow-Credentials"] = "true"
+    return {"message": "successfully"}
 
 @router.post('/token/', response_model=Token)
 async def get_token(
@@ -62,14 +59,12 @@ async def get_token(
     else:
         raise exception_right
 
-
 @router.get('/user/', response_model=User)
 async def get_user(
         user: User = Depends(get_current_user)
 ):
     """Просмотр авторизованного пользователя"""
     return user
-
 
 @router.get("/sign-out/")
 async def sign_out_and_remove_cookie(
@@ -92,7 +87,6 @@ async def delete_user(
     await auth_service.delete(id=id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-
 @router.put('/')
 async def update_user(
         id: int, user_data: UserUpdate,
@@ -104,8 +98,7 @@ async def update_user(
         raise exception_right
     return await auth_service.update(id=id, user_data=user_data)
 
-
-@router.get('/report_counts')
+@router.get('/report_counts/')
 async def get_counts(
         month: int,
         year: int,
@@ -124,8 +117,7 @@ async def get_counts(
         reports_data[user.id] = data
     return reports_data
 
-
-@router.put("/license", response_model=LicenseUpdate)
+@router.put("/license/", response_model=LicenseUpdate)
 async def update_license(
         user_id: int,
         license_data: LicenseUpdate,

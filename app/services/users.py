@@ -5,7 +5,6 @@ from sqlalchemy.future import select
 from sqlalchemy import update, delete
 from jose import jwt, JWTError
 from typing import List
-from config import configs
 from typing import Optional, Dict
 from fastapi import Depends, Request
 from fastapi.security import OAuth2
@@ -13,8 +12,9 @@ from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from fastapi.security.utils import get_authorization_scheme_param
 from sqlalchemy.orm import Session
 
+from config import configs
 from models.users import LicenseUpdate
-from exceptions import exception_token, exception_registration_data, exception_user_form
+from modules.exceptions import exception_token, exception_registration_data, exception_user_form
 from db import tables
 from models.users import User, Token, UserCreate, UserUpdate
 
@@ -40,6 +40,7 @@ class OAuth2PasswordBearerWithCookie(OAuth2):
         authorization = authorization_cookies if authorization_cookies else authorization_headers
 
         scheme, param = get_authorization_scheme_param(authorization)
+
         if not authorization or scheme.lower() != "bearer":
             raise exception_token
 
