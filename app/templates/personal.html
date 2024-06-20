@@ -421,6 +421,41 @@
 	</div>
 	
 	<br />
+
+    <canvas id="myChart" width="400" height="200"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_data_x | tojson }},
+                datasets: [{
+                    label: 'Число просмотров по месяцам',
+                    data: {{ chart_data_y | tojson }},
+                    backgroundColor: '#73893d',
+                    borderColor: '#73893d',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+					x: {
+						ticks: {
+							maxRotation: 45,
+							minRotation: 45
+						}
+					},
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+
 	<script src="/static/js/requestReport.js"></script>
 	
 	{% endblock %}

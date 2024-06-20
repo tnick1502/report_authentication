@@ -13,6 +13,7 @@ import os
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
+from dateutil.relativedelta import relativedelta
 
 from db.database import async_session
 from fastapi.security.utils import get_authorization_scheme_param
@@ -82,7 +83,8 @@ async def login(
         request: Request,
         page: Optional[int] = 1,
         object_number: Optional[str] = None,
-        report_service: ReportsService = Depends(get_report_service)
+        report_service: ReportsService = Depends(get_report_service),
+        stat_service: StatisticsService = Depends(get_statistics_service),
 ):
     try:
         authorization: str = request.cookies.get("Authorization")
@@ -119,6 +121,22 @@ async def login(
 
             pages = int((reports_count - 1) / limit) + 1
 
+            x = []
+            y = []
+            current_date = datetime.date.today()
+
+            # Заданная дата в прошлом
+            past_date = datetime.date(2024, 5, 1)
+
+            # Вычисление числа месяцев между датами
+            months_diff = (current_date.year - past_date.year) * 12 + current_date.month - past_date.month
+
+            for i in range(months_diff + 1):
+                date = datetime.date.today() - relativedelta(months=i)
+                count_seen = await stat_service.count(user_id=user.id, month=date.month, year=date.year)
+                x.append(datetime.date(year=date.year, month=date.month, day=1).strftime('%B %Y'))
+                y.append(count_seen)
+
             return templates.TemplateResponse(
                 "personal.html",
                 context={
@@ -131,7 +149,9 @@ async def login(
                     "reports": reports,
                     "objects": objects,
                     "pages_reports": pages,
-                    "object_number": object_number
+                    "object_number": object_number,
+                    "chart_data_x": x[::-1],
+                    "chart_data_y": y[::-1]
                 }
             )
         else:
