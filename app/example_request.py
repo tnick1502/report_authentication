@@ -5,7 +5,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def request_qr(data):
     with requests.Session() as sess:
-        sess.post('https://georeport.ru/authorization/sign-in/',
+        sess.post('https://georeport.ru/auth/sign-in/',
                   data={
                       "username": "trial",
                       "password": "trial",

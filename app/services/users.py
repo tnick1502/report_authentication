@@ -47,7 +47,7 @@ class OAuth2PasswordBearerWithCookie(OAuth2):
         return param
 
 
-oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl='/authorization/sign-in/')
+oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl='/auth/sign-in/')
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)) -> User:

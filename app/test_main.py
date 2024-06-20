@@ -22,7 +22,7 @@ def main_page():
     assert response.status_code == 200, 'Main page error'
 
     '''response = client.post(
-        "authorization/sign-in/",
+        "auth/sign-in/",
         data={
             "username": "ytv",
             "password": "lijuh",
