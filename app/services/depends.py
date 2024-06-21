@@ -54,7 +54,4 @@ async def get_s3_service():
         try:
             yield S3Service(client)
         except Exception as e:
-            await session.rollback()
             raise e
-        finally:
-            await session.close()
