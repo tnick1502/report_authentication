@@ -159,7 +159,7 @@ cookieConsent()
 // ===================== СТАТИСТИКА ПРОТОКОЛОВ =====================
 const reportsCounter = document.getElementById('reportsCounter')
 if (reportsCounter) {
-	fetch(' ../reports/count', {
+	fetch(' ../reports/count/', {
 		method: 'GET', // *GET, POST, PUT, DELETE, etc.
 		//credentials: 'include', // include, *same-origin, omit
 	}).then((response) => {
