@@ -12,17 +12,29 @@ from services.s3 import S3Service
 async def get_report_service():
     async with async_session() as session:
         async with session.begin():
-            yield ReportsService(session)
+            try:
+                yield ReportsService(session)
+            except Exception as e:
+                await session.rollback()
+                print(e)
 
 async def get_users_service():
     async with async_session() as session:
         async with session.begin():
-            yield UsersService(session)
+            try:
+                yield UsersService(session)
+            except Exception as e:
+                await session.rollback()
+                print(e)
 
 async def get_statistics_service():
     async with async_session() as session:
         async with session.begin():
-            yield StatisticsService(session)
+            try:
+                yield StatisticsService(session)
+            except Exception as e:
+                await session.rollback()
+                print(e)
 
 async def get_s3_service():
     bucket = configs.bucket
@@ -34,4 +46,8 @@ async def get_s3_service():
             aws_secret_access_key=configs.aws_secret_access_key,
             aws_access_key_id=configs.aws_access_key_id
     ) as client:
-        yield S3Service(client)
+        try:
+            yield S3Service(client)
+        except Exception as e:
+            await session.rollback()
+            print(e)
