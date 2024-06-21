@@ -8,7 +8,6 @@ from services.users import UsersService
 from services.statistics import StatisticsService
 from services.s3 import S3Service
 
-
 async def get_report_service():
     async with async_session() as session:
         async with session.begin():
@@ -16,7 +15,9 @@ async def get_report_service():
                 yield ReportsService(session)
             except Exception as e:
                 await session.rollback()
-                print(e)
+                raise e
+            finally:
+                await session.close()
 
 async def get_users_service():
     async with async_session() as session:
@@ -25,7 +26,9 @@ async def get_users_service():
                 yield UsersService(session)
             except Exception as e:
                 await session.rollback()
-                print(e)
+                raise e
+            finally:
+                await session.close()
 
 async def get_statistics_service():
     async with async_session() as session:
@@ -34,7 +37,9 @@ async def get_statistics_service():
                 yield StatisticsService(session)
             except Exception as e:
                 await session.rollback()
-                print(e)
+                raise e
+            finally:
+                await session.close()
 
 async def get_s3_service():
     bucket = configs.bucket
@@ -50,4 +55,6 @@ async def get_s3_service():
             yield S3Service(client)
         except Exception as e:
             await session.rollback()
-            print(e)
+            raise e
+        finally:
+            await session.close()
