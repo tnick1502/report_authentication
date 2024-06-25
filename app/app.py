@@ -73,7 +73,7 @@ async def index(request: Request):
         "index.html",
         context={
             "request": request,
-            "template_report_link": f'https://georeport.ru/reports/?id=95465771a6f399bf52cd57db2cf640f8624fd868'
+            "template_report_link": f'https://georeport.ru/reports/?id=4c795fb5002852b5af5df9e5de1e44b11b920d6f'
         }
     )
 
@@ -206,7 +206,7 @@ async def show_report(
 
     try:
        get_files = await service.get_files(id)
-       files = {f.filename: f.link for f in get_files}
+       files = {f.filename: f'https://georeport.ru/s3?key={f.link}' for f in get_files}
     except:
         files = {}
 
