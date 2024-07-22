@@ -163,7 +163,7 @@
 					>
 						<img class="footer__img" src="https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/static/images/mdgt.png" />
 					</a>
-					<span class="text-muted_mdgt">&copy; Мостдоргеотрест 2022</span>
+					<span class="text-muted_mdgt">&copy; Мостдоргеотрест <span id="currentYear"></span></span>
 				</div>
 			</footer>
 		</div>
@@ -222,5 +222,11 @@
 		<script src="/static/js/bootstrap.bundle.min.js"></script>
 		<script src="/static/js/app.js"></script>
 		<script src="/static/js/requests.js"></script>
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				var currentYear = new Date().getFullYear();
+				document.getElementById("currentYear").textContent = currentYear;
+			});
+		</script>
 	</body>
 </html>
