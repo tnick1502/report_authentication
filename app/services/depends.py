@@ -8,42 +8,36 @@ from services.users import UsersService
 from services.statistics import StatisticsService
 from services.s3 import S3Service
 
+# Универсальная функция для работы с асинхронной сессией
+async def get_service(service_class):
+    async with async_session() as session:
+        async with session.begin():
+            try:
+                yield service_class(session)
+            except Exception as e:
+                await session.rollback()  # Откатываем транзакцию при ошибке
+                raise e
+            finally:
+                await session.close()  # Закрываем сессию
+
+# Получение сервиса отчетов
 async def get_report_service():
-    async with async_session() as session:
-        async with session.begin():
-            try:
-                yield ReportsService(session)
-            except Exception as e:
-                await session.rollback()
-                raise e
-            finally:
-                await session.close()
+    async for service in get_service(ReportsService):
+        yield service
 
+# Получение сервиса пользователей
 async def get_users_service():
-    async with async_session() as session:
-        async with session.begin():
-            try:
-                yield UsersService(session)
-            except Exception as e:
-                await session.rollback()
-                raise e
-            finally:
-                await session.close()
+    async for service in get_service(UsersService):
+        yield service
 
+# Получение сервиса статистики
 async def get_statistics_service():
-    async with async_session() as session:
-        async with session.begin():
-            try:
-                yield StatisticsService(session)
-            except Exception as e:
-                await session.rollback()
-                raise e
-            finally:
-                await session.close()
+    async for service in get_service(StatisticsService):
+        yield service
 
+# Работа с S3 через aiobotocore
 async def get_s3_service():
-    bucket = configs.bucket
-    session = get_session()
+    session = get_session()  # Создаем сессию для работы с AWS S3
     async with session.create_client(
             's3',
             endpoint_url=configs.endpoint_url,
@@ -55,3 +49,5 @@ async def get_s3_service():
             yield S3Service(client)
         except Exception as e:
             raise e
+        finally:
+            await client.close()

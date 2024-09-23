@@ -24,21 +24,21 @@ router = APIRouter(
     prefix="/reports",
     tags=['reports'])
 
-#@router.get("/", response_model=Report)
-#@cache(expire=60)
-#async def get_report(
-#        id: str,
-#        request: Request,
-#        service: ReportsService = Depends(get_report_service),
-#        stat_service: StatisticsService = Depends(get_statistics_service),
-#):
-#    """Просмотр данных отчета по id"""
-#    report = await service.get(id)
-#
-#    if id != '4c795fb5002852b5af5df9e5de1e44b11b920d6f':
-#        await stat_service.create(client_ip=request.headers.get("X-Real-IP") or request.client.host, report_id=id)
-#
-#    return report
+@router.get("/get/", response_model=Report)
+@cache(expire=60)
+async def get_report(
+        id: str,
+        request: Request,
+        service: ReportsService = Depends(get_report_service),
+        stat_service: StatisticsService = Depends(get_statistics_service),
+):
+    """Просмотр данных отчета по id"""
+    report = await service.get(id)
+
+    if id != '4c795fb5002852b5af5df9e5de1e44b11b920d6f':
+        await stat_service.create(client_ip=request.headers.get("X-Real-IP") or request.client.host, report_id=id)
+
+    return report
 
 
 
@@ -58,7 +58,8 @@ async def create_report(
         raise exception_limit
 
     id = hashlib.sha1(
-        f"{report_data.object_number} {report_data.laboratory_number} {report_data.test_type} {user.id}".encode("utf-8")).hexdigest()
+        f"{report_data.object_number} {report_data.laboratory_number} {report_data.test_type} {user.id}".encode("utf-8")
+    ).hexdigest()
 
     return await service.create(report_id=id, user_id=user.id, report_data=report_data)
 

@@ -28,19 +28,14 @@ class OAuth2PasswordBearerWithCookie(OAuth2):
         scopes: Optional[Dict[str, str]] = None,
         auto_error: bool = True,
     ):
-        if not scopes:
-            scopes = {}
+        scopes = scopes or {}
         flows = OAuthFlowsModel(password={"tokenUrl": tokenUrl, "scopes": scopes})
         super().__init__(flows=flows, scheme_name=scheme_name, auto_error=auto_error)
 
     async def __call__(self, request: Request) -> Optional[Token]:
-        authorization_headers = request.headers.get("Authorization")
-        authorization_cookies = request.cookies.get("Authorization")
-
-        authorization = authorization_cookies if authorization_cookies else authorization_headers
+        authorization = request.cookies.get("Authorization") or request.headers.get("Authorization")
 
         scheme, param = get_authorization_scheme_param(authorization)
-
         if not authorization or scheme.lower() != "bearer":
             raise exception_token
 
