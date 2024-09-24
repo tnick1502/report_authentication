@@ -153,7 +153,6 @@ class UsersService:
         )
 
         self.session.add(user)
-        await self.session.commit()
         return user
 
     async def authenticate_user(self, username: str, password: str) -> Token:
@@ -211,7 +210,6 @@ class UsersService:
 
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
-        await self.session.commit()
         return user_data
 
     async def delete(self, id: int):
@@ -230,7 +228,6 @@ class UsersService:
         )
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
-        await self.session.commit()
 
         return license_data
 

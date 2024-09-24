@@ -3,18 +3,12 @@ from fastapi.responses import StreamingResponse
 from datetime import date
 from typing import Optional, List
 import hashlib
-import os
 from fastapi_cache.decorator import cache
-from fastapi.concurrency import run_in_threadpool
-import concurrent
-import functools
-import asyncio
 
-from services.qr_generator import gen_qr_code
 from models.reports import Report, ReportCreate, ReportUpdate
 from models.users import User
 from services.users import get_current_user
-from services.depends import get_report_service
+from services.depends import get_report_service, get_statistics_service, get_unit_of_work
 from services.depends import get_statistics_service
 from services.reports import ReportsService
 from services.statistics import StatisticsService
@@ -39,8 +33,6 @@ async def get_report(
         await stat_service.create(client_ip=request.headers.get("X-Real-IP") or request.client.host, report_id=id)
 
     return report
-
-
 
 @router.post("/")
 async def create_report(
@@ -124,15 +116,31 @@ async def update_report(
 @router.delete('/', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_report(
         id: str, user: User = Depends(get_current_user),
-        service: ReportsService = Depends(get_report_service)
+        uow: dict = Depends(get_unit_of_work)
 ):
     """Удаление отчета"""
-    report = await service.get(id)
+    service = uow['report_service']
+    s3_service = uow['s3_service']
+    statistics_service = uow['statistics_service']
 
+    # Проверка существования отчета
+    report = await service.get(id)
 
     if report.user_id != user.id and not user.is_superuser:
         raise exception_right
+
+    # Удаление всех связанных файлов из таблицы в БД
+    files = await service.delete_files(report_id=id)
+
+    # Удаление файлов из S3 в рамках одной транзакции
+    for file in files:
+        resp = await s3_service.delete(f"georeport/files/{id}-{file.filename}")
+
+    # Удаление статистики
+    await statistics_service.delete(report_id=id)
+
     await service.delete(id=id)
+
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 @router.get("/objects/{object_number}/", response_model=Optional[List[Report]])

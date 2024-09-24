@@ -22,7 +22,5 @@ async def get(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Key have a wrong format"
         )
-    file =  await s3_service.get(key)
-    #['ResponseMetadata', 'AcceptRanges', 'LastModified', 'ContentLength', 'ETag', 'CacheControl', 'ContentType',
-    # 'Expires', 'Metadata', 'Body']
+    file = await s3_service.get(key)
     return StreamingResponse(file["Body"], media_type=file['ContentType'])

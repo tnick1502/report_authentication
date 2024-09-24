@@ -96,7 +96,6 @@ class StatisticsService:
         delete_query = delete(tables.Statistics).where(tables.Statistics.report_id == report_id)
         delete_query.execution_options(synchronize_session="fetch")
         await self.session.execute(delete_query)
-        await self.session.commit()
 
     async def create(self, client_ip: str, report_id: str):
         """Создание записи по статистике"""
@@ -106,5 +105,4 @@ class StatisticsService:
             datetime=datetime.datetime.now()
         )
         self.session.add(new_statistic)
-        await self.session.commit()
 

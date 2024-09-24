@@ -14,6 +14,7 @@ async def get_service(service_class):
         async with session.begin():
             try:
                 yield service_class(session)
+                await session.commit()
             except Exception as e:
                 await session.rollback()  # Откатываем транзакцию при ошибке
                 raise e
@@ -51,3 +52,40 @@ async def get_s3_service():
             raise e
         finally:
             await client.close()
+
+# Объединяем все сервисы в единый паттерн
+async def get_unit_of_work():
+    async with async_session() as session:
+        async with session.begin():
+            try:
+                report_service = ReportsService(session)
+                user_service = UsersService(session)
+                statistics_service = StatisticsService(session)
+
+                s3_session = get_session()  # Создаем сессию для работы с AWS S3
+                s3_client = None
+                async with s3_session.create_client(
+                        's3',
+                        endpoint_url=configs.endpoint_url,
+                        region_name=configs.region_name,
+                        aws_secret_access_key=configs.aws_secret_access_key,
+                        aws_access_key_id=configs.aws_access_key_id
+                ) as s3_client:
+                    s3_service = S3Service(s3_client)
+
+                    yield {
+                        'report_service': report_service,
+                        'user_service': user_service,
+                        'statistics_service': statistics_service,
+                        's3_service': s3_service
+                    }
+
+                    await session.commit()
+
+            except Exception as e:
+                await session.rollback()  # Откатываем транзакцию при ошибке
+                raise e
+            finally:
+                if s3_client is not None:
+                    await s3_client.close()
+                await session.close()

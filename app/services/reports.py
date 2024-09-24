@@ -139,7 +139,6 @@ class ReportsService:
         )
         query.execution_options(synchronize_session="fetch")
         await self.session.execute(query)
-        await self.session.commit()
 
         return ReportUpdate(
             datetime=datetime.datetime.now(),
@@ -148,17 +147,9 @@ class ReportsService:
 
     async def delete(self, id: str):
         """Удаление отчета по ID и связанных данных"""
-        # Удаление статистики отчета
-        delete_query = delete(tables.Statistics).where(tables.Statistics.report_id == id)
-        delete_query.execution_options(synchronize_session="fetch")
-        await self.session.execute(delete_query)
-
-        # Удаление самого отчета
         q = delete(tables.Reports).where(tables.Reports.id == id)
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
-
-        await self.session.commit()
 
     async def create(self, user_id: int, report_id: str, report_data: ReportCreate) -> tables.Reports:
         """Создание нового отчета"""
@@ -174,7 +165,6 @@ class ReportsService:
             set_=update_query.excluded
         )
         await self.session.execute(update_query)
-        await self.session.commit()
 
         return tables.Reports(
             **report_data.dict(),
@@ -211,7 +201,6 @@ class ReportsService:
             filename=filename
         )
         self.session.add(file)
-        await self.session.commit()
 
         return file
 
@@ -232,12 +221,11 @@ class ReportsService:
         files = result.scalars().all()
 
         if not files:
-            return  # Если файлов нет, ничего не делаем
+            return []# Если файлов нет, ничего не делаем
 
         delete_query = delete(tables.Files).where(tables.Files.report_id == report_id)
         delete_query.execution_options(synchronize_session="fetch")
         await self.session.execute(delete_query)
-        await self.session.commit()
         return files
 
     async def delete_file(self, file_id: int):
@@ -245,7 +233,6 @@ class ReportsService:
         delete_query = delete(tables.Files).where(tables.Files.id == file_id)
         delete_query.execution_options(synchronize_session="fetch")
         await self.session.execute(delete_query)
-        await self.session.commit()
 
     async def get_test_type_files(self, test_type: str, user_id: int) -> Optional[tables.TestTypeFiles]:
         """Получение файлов типов отчета"""
@@ -273,7 +260,6 @@ class ReportsService:
             filename=filename
         )
         self.session.add(file)
-        await self.session.commit()
 
         return file
 
@@ -298,7 +284,6 @@ class ReportsService:
         )
         delete_query.execution_options(synchronize_session="fetch")
         await self.session.execute(delete_query)
-        await self.session.commit()
 
         return files
 
