@@ -8,17 +8,20 @@ from fastapi_cache.decorator import cache
 from models.reports import Report, ReportCreate, ReportUpdate
 from models.users import User
 from services.users import get_current_user
-from services.depends import get_report_service, get_statistics_service, get_unit_of_work
+from services.depends import get_report_service, get_unit_of_work
 from services.depends import get_statistics_service
 from services.reports import ReportsService
 from services.statistics import StatisticsService
 from modules.exceptions import exception_active, exception_license, exception_limit, exception_right
+from config import configs
 
 router = APIRouter(
     prefix="/reports",
     tags=['reports'])
 
-@router.get("/get/", response_model=Report)
+endpoint_report = "/get/" if configs.work_type == 'FULL' else '/'
+
+@router.get(endpoint_report, response_model=Report)
 @cache(expire=60)
 async def get_report(
         id: str,
