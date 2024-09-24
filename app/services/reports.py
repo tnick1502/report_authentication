@@ -94,7 +94,7 @@ class ReportsService:
 
     async def get_object(self, user_id: str, object_number: str, is_superuser: bool = False) -> List[tables.Reports]:
         """Асинхронное получение списка отчетов по объекту"""
-        query = select(tables.Reports.id).filter_by(object_number=object_number)
+        query = select(tables.Reports).filter_by(object_number=object_number)
 
         if not is_superuser:
             query = query.filter_by(user_id=user_id)
@@ -157,6 +157,7 @@ class ReportsService:
         q = delete(tables.Reports).where(tables.Reports.id == id)
         q.execution_options(synchronize_session="fetch")
         await self.session.execute(q)
+
         await self.session.commit()
 
     async def create(self, user_id: int, report_id: str, report_data: ReportCreate) -> tables.Reports:

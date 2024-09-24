@@ -128,6 +128,8 @@ async def delete_report(
 ):
     """Удаление отчета"""
     report = await service.get(id)
+
+
     if report.user_id != user.id and not user.is_superuser:
         raise exception_right
     await service.delete(id=id)
