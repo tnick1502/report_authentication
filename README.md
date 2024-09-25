@@ -44,3 +44,9 @@
     `docker rm $(docker ps -a -q) -f`\
     `docker rmi $(docker images -a -q) -f`
 
+Для миграции:\
+1. Прописать в alembic.ini параметр sqlalchemy.url
+2. Перейти в папку app
+3. Запускать скрипт:
+    `poetry run alembic upgrade head`
+

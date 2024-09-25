@@ -1,4 +1,4 @@
-from pydantic import BaseSettings, Field, ValidationError
+from pydantic import BaseSettings
 import os
 from dotenv import load_dotenv
 import http.client
