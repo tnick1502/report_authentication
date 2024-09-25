@@ -132,17 +132,17 @@ async def delete_report(
     if report.user_id != user.id and not user.is_superuser:
         raise exception_right
 
+    # Удаление статистики
+    await statistics_service.delete(report_id=id)
+
+    await service.delete(id=id)
+
     # Удаление всех связанных файлов из таблицы в БД
     files = await service.delete_files(report_id=id)
 
     # Удаление файлов из S3 в рамках одной транзакции
     for file in files:
-        resp = await s3_service.delete(f"georeport/files/{id}-{file.filename}")
-
-    # Удаление статистики
-    await statistics_service.delete(report_id=id)
-
-    await service.delete(id=id)
+        await s3_service.delete(f"georeport/files/{id}-{file.filename}")
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 

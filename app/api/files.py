@@ -44,9 +44,11 @@ async def upload_file(
     #format = file.filename.split(".")[-1].lower()
     filename = file.filename.replace(' ', '_')
 
+    created_file = await service.create_file(report_id, filename)
+
     await s3_service.upload(data=contents, key=f"georeport/files/{report_id}-{filename}")
 
-    return await service.create_file(report_id, filename)
+    return created_file
 
 @router.get("/", response_model=Optional[List[File]])
 async def get_files(
