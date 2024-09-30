@@ -12,14 +12,13 @@ EXPOSE 8555
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/etc/poetry python3 - \
     && ln -s /etc/poetry/bin/poetry /usr/local/bin/poetry
 
-COPY ./poetry.lock /code/poetry.lock
-COPY ./pyproject.toml /code/pyproject.toml
+COPY poetry.lock /code/poetry.lock
+COPY pyproject.toml /code/pyproject.toml
 
 RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi
 
-COPY ./app /code/app
-COPY ./.env /code/app/.env
+COPY app /code/app
 
 RUN apt-get update
 RUN apt-get install -y libzbar-dev

@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   web:
-    build: ./
+    build: ./src
     command: bash -c 'poetry run uvicorn main:app --host 0.0.0.0'
     environment:
       - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_NAME}
