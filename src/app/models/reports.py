@@ -15,7 +15,7 @@ class Report(ReportBase):
     datetime: datetime
 
     class Config:
-        orm_mode = True  # Обеспечивает совместимость с ORM моделями.
+        from_attributes = True  # Обеспечивает совместимость с ORM моделями.
 
 class ReportCreate(ReportBase):
     """Модель для создания нового отчета."""

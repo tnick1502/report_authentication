@@ -9,7 +9,7 @@ class File(FileBase):
     link: str = Field(..., description="URL-ссылка на файл")
 
     class Config:
-        orm_mode = True  # Обеспечивает совместимость с ORM моделями.
+        from_attributes = True  # Обеспечивает совместимость с ORM моделями.
 
 class FileCreate(FileBase):
     link: str = Field(..., description="URL-ссылка на файл, который нужно создать")
@@ -23,7 +23,7 @@ class TestTypeFile(TestTypeFileBase):
     user_id: int = Field(..., description="Идентификатор пользователя, связанного с типом теста.")
 
     class Config:
-        orm_mode = True  # Обеспечивает совместимость с ORM моделями.
+        from_attributes = True  # Обеспечивает совместимость с ORM моделями.
 
 class TestTypeFileCreate(TestTypeFileBase):
     link: str = Field(..., description="URL-ссылка на файл типа теста, который нужно создать.")

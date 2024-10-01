@@ -29,6 +29,8 @@ from services.statistics import StatisticsService
 from config import configs
 from db.tables import LicenseLevel
 
+from starlette_exporter import PrometheusMiddleware, handle_metrics
+
 def create_ip_ports_array(ip: str, *ports):
     array = []
     for port in ports:
@@ -84,6 +86,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+app.add_middleware(PrometheusMiddleware)
+app.add_route("/metrics", handle_metrics)
 
 #@app.middleware("http")
 #async def log_incoming_request(request: Request, call_next):
