@@ -1,0 +1,311 @@
+/* ======== НАВИГАЦИЯ ======== */
+
+/* весь блок навигации (по сути header) */
+.navbar-mdgt {
+  width: 100%;
+  background-color: var(--body-color);
+  position: fixed;
+
+  top: 0;
+  left: 0;
+  z-index: var(--z-fixed);
+
+  transition: 0.4s;
+  box-shadow: 0 1px 4px hsla(var(--hue), 4%, 15%, 0.1);
+}
+
+/* Сюда помещается весь контент хедера включая логотип и значки */
+.container-fluid-mdgt {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* логотип */
+.navbar-brand {
+  color: var(--title-color);
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+/* сначала мобильная версия */
+
+@media screen and (max-width: 968px) {
+  /* оболочка для создания затемненной части */
+  .navbar-collapse-wrapper {
+    background-color: hsla(var(--hue), 24%, 15%, 0.5);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* right: 0; */
+    right: -100%;
+    z-index: calc(var(--z-fixed) - 1);
+    overflow-y: auto;
+  }
+
+  /* сам список ссылок + кнопка "закрыть" */
+  .navbar-collapse {
+    position: absolute;
+    background-color: var(--container-color);
+    width: 50%;
+    height: 100%;
+    /* top: 0; */
+    /* right: 0; */
+    right: -100%;
+    box-shadow: -2px 0 4px hsla(var(--hue), 24%, 15%, 0.1);
+    padding: 4rem 0 0 3rem;
+    border-radius: 1rem 0 0 1rem;
+    transition: 0.3s;
+    z-index: var(--z-fixed);
+    overflow: auto;
+  }
+
+  .nav-link:last-child {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* далее свойства которые будут отменяться по мере необходимости для больших экранов */
+
+.navbar-nav {
+  padding: 5px, 0;
+}
+
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  column-gap: 0.25rem;
+
+  font-family: "Fifaks", sans-serif;
+}
+
+.navbar-brand:hover {
+  color: var(--green_logo);
+}
+
+.navbar-brand__icon {
+  width: auto;
+  height: 60px;
+}
+
+.navbar-brand__line {
+  display: inline-block;
+  width: 0.3px;
+  height: 2rem;
+  border-radius: 2rem;
+  background-color: var(--text-color-super-light);
+  /* box-shadow: 1px 1px 1px 1px var(--text-color-super-light); */
+}
+
+.navbar-brand__title-sub {
+  font-size: var(--smaller-font-size);
+  font-weight: var(--font-lighter);
+}
+
+.nav__toggle,
+.nav__close {
+  color: var(--title-color);
+}
+
+/* открыть */
+.nav__toggle {
+  display: inline-flex;
+  font-size: 1.15rem;
+  cursor: pointer;
+}
+
+/* закрыть */
+.nav__close {
+  font-size: 1.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  cursor: pointer;
+}
+
+/* ссылки */
+.navbar-nav {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5rem;
+
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.nav-link {
+  color: var(--title-color);
+  font-weight: var(--font-medium);
+}
+.nav-link:hover {
+  color: var(--green_logo);
+}
+
+/* КЛАССЫ ОТКРЫТИЯ-ЗАКРЫТИЯ МЕНЮ */
+
+.navbar-collapse-wrapper.navbar-collapse-wrapper-show,
+.navbar-collapse.navbar-collapse-show {
+  right: 0;
+}
+
+.body.body-hidden {
+  touch-action: none;
+  -webkit-overflow-scrolling: none;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* ======== БРЕЙКПОИНТЫ ДЛЯ РАЗНЫХ РАЗМЕРОВ ЭКРАНОВ ======== */
+@media screen and (min-width: 969px) {
+  .container-fluid-mdgt {
+    height: calc(var(--header-height) + 1.5rem);
+    column-gap: 3rem;
+    justify-content: flex-start;
+  }
+
+  .nav__toggle,
+  .nav__close {
+    display: none;
+  }
+
+  .navbar-nav {
+    flex-direction: row;
+    column-gap: 3rem;
+  }
+
+  .navbar-collapse-wrapper,
+  .navbar-collapse {
+    margin-left: 0;
+
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  /* оболочка для создания затемненной части */
+  .navbar-collapse-wrapper-personal {
+    background-color: hsla(var(--hue), 24%, 15%, 0.5);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* right: 0; */
+    right: -100%;
+    z-index: calc(var(--z-fixed) - 1);
+    overflow-y: auto;
+  }
+
+  /* сам список ссылок + кнопка "закрыть" */
+  .navbar-collapse-personal {
+    position: absolute;
+    background-color: var(--container-color);
+    width: 50%;
+    height: 100%;
+    /* top: 0; */
+    /* right: 0; */
+    right: -100%;
+    box-shadow: -2px 0 4px hsla(var(--hue), 24%, 15%, 0.1);
+    padding: 4rem 0 0 3rem;
+    border-radius: 1rem 0 0 1rem;
+    transition: 0.3s;
+    z-index: var(--z-fixed);
+    overflow: auto;
+  }
+
+  .nav-item-personal:last-child {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.navbar-nav-personal {
+  padding: 5px, 0;
+}
+
+.nav__toggle-personal,
+.nav__close-personal {
+  color: var(--title-color);
+}
+
+.nav__toggle-personal {
+  display: inline-flex;
+  font-size: 1.15rem;
+  cursor: pointer;
+}
+
+.nav__close-personal {
+  font-size: 1.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  cursor: pointer;
+}
+
+.navbar-nav-personal {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5rem;
+
+  flex-wrap: wrap;
+}
+
+.nav-link-personal {
+  color: var(--title-color);
+  font-weight: var(--font-medium);
+}
+.nav-link-personal:hover {
+  color: var(--green_logo);
+}
+
+button.nav-link-personal {
+  background-color: transparent;
+  font-weight: inherit;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.navbar-collapse-wrapper-personal.navbar-collapse-wrapper-show,
+.navbar-collapse-personal.navbar-collapse-show {
+  right: 0;
+}
+
+/* ======== БРЕЙКПОИНТЫ ДЛЯ РАЗНЫХ РАЗМЕРОВ ЭКРАНОВ ======== */
+@media screen and (min-width: 461px) {
+  .container-fluid-mdgt.container-fluid-mdgt-personal {
+    height: calc(var(--header-height) + 1.5rem);
+    column-gap: 3rem;
+    justify-content: flex-start;
+  }
+
+  .nav__toggle-personal,
+  .nav__close-personal {
+    display: none;
+  }
+
+  .navbar-nav-personal {
+    flex-direction: row;
+  }
+
+  .navbar-collapse-wrapper-personal,
+  .navbar-collapse-personal {
+    margin-left: 0;
+  }
+  /* ========== Шапка для личного кабинета ==========*/
+
+  .navbar-collapse-personal {
+    width: 100%;
+  }
+
+  .navbar-nav-personal {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .navbar-collapse-wrapper-personal {
+    width: 100%;
+  }
+
+  .nav-link-personal {
+    padding-right: 2rem;
+  }
+}

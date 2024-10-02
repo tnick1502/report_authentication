@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  nodejs:
+    build: ./
+    container_name: nodejs
+    environment:
+      - REACT_APP_SERVER_IP=http://176.57.217.229/
+      - DISABLE_ESLINT_PLUGIN=true npm start
+    ports:
+      - 80:3000
+    restart: unless-stopped
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+  #server:
+  #  restart: always
+  #  image: nginx
+  #  container_name: nginx_server
+  #  volumes:
+  #    - ./cert/key.key:/etc/ssl/key.key
+  #    - ./cert/crt.crt:/etc/ssl/crt.crt
+  #    - ./server/conf.d:/etc/nginx/conf.d
+  #    - ./frontend/build:/usr/share/nginx/html
+  #  links:
+  #    - nodejs:nodejs
+  #  ports:
+  #    - "80:80"
+  #    - "443:443"
+  #  depends_on:
+  #    - nodejs

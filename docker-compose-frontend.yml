@@ -1,0 +1,12 @@
+services:
+  frontend:
+    build: ./frontend/
+    environment:
+      - REACT_APP_SERVER_IP=http://localhost:8555/
+      - DISABLE_ESLINT_PLUGIN=true npm start
+    ports:
+      - 80:3000
+    restart: unless-stopped
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro

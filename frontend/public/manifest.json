@@ -1,0 +1,8 @@
+{
+	"short_name": "Georeport",
+	"name": "Georeport",
+	"start_url": "/",
+	"display": "standalone",
+	"theme_color": "#ecf3f2",
+	"background_color": "#ecf3f2"
+}

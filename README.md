@@ -46,7 +46,7 @@
 
 Для миграции:\
 1. Прописать в alembic.ini параметр sqlalchemy.url
-2. Перейти в папку app
+2. Перейти в папку backend
 3. Запускать скрипт:
     `poetry run alembic upgrade head`
 

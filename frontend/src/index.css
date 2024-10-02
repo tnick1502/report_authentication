@@ -1,0 +1,321 @@
+@font-face {
+  font-family: "Quicksand Light";
+  src: url("./fonts/Quicksand.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Fifaks";
+  src: url("./fonts/Robo.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
+
+/* ======== ПЕРЕМЕННЫЕ ======== */
+:root {
+  --header-height: 4rem;
+
+  /* ЦВЕТА */
+  /* --hue: 221;
+	--first-color: hsl(var(--hue), 24%, 32%);
+	--first-color-alt: hsl(var(--hue), 24%, 28%);
+	--first-color-light: hsl(var(--hue), 24%, 66%);
+	--first-color-lighten: hsl(var(--hue), 24%, 92%);
+	--title-color: hsl(var(--hue), 4%, 15%);
+	--text-color: hsl(var(--hue), 4%, 35%);
+	--text-color-light: hsl(var(--hue), 4%, 55%);
+	--text-color-super-light: hsla(var(--hue), 4%, 35%, 0.5);
+	--body-color: hsl(var(--hue), 0%, 100%);
+	--container-color: #fff;
+	--mdgt-green: rgb(2, 128, 1); */
+
+  --hue: 221;
+  --first-color: hsl(107, 68%, 16%);
+
+  --first-color-lighten: hsla(212, 11%, 50%, 0.2);
+  --title-color: hsl(210, 2%, 18%);
+  --text-color: hsl(212, 11%, 23%);
+  --text-color-super-light: hsl(212, 11%, 33%);
+  --body-color: hsl(var(--hue), 0%, 100%);
+  --container-color: #fff;
+  --mdgt-green: rgb(2, 128, 1);
+  --brown_logo: #897460;
+  --beige_logo: #d3a462;
+  --green_logo: #73893d;
+  --green_logo_hover: #596a2f;
+  --green_logo_shadow: #90a165;
+  --green_logo_form: #c7d0b2;
+
+  /* ШРИФТЫ */
+  /* .5 rem = 8px; 1rem = 16px */
+  --body-font: "Quicksand Light", sans-serif;
+  --big-font-size: 2rem;
+  --h1-font-size: 1.5rem;
+  --h2-font-size: 1.25rem;
+  --h3-font-size: 1rem;
+  --normal-font-size: 0.938rem;
+  --small-font-size: 0.813rem;
+  --smaller-font-size: 0.75rem;
+
+  --report-main-font-size: 1rem;
+  --report-big-font-size: 2rem;
+  --report-medium-font-size: 1.15rem;
+  --report-smaller-font-size: 0.85rem;
+
+  --font-lighter: 500;
+  --font-base: 600;
+  --font-medium: 700;
+  --font-semi-bold: 800;
+
+  /* ОТСТУПЫ */
+  --mb-0-5: 0.5rem;
+  --mb-0-75: 0.75rem;
+  --mb-1: 1rem;
+  --mb-1-5: 1.5rem;
+  --mb-2: 2rem;
+  --mb-2-5: 2.5rem;
+
+  /* ПОЛОЖЕНИЯ */
+
+  --z-tooltip: 10;
+  --z-fixed: 100;
+}
+
+/* АДАПТИВНЫЕ РАЗМЕРЫ */
+
+@media screen and (min-width: 968px) {
+  :root {
+    --big-font-size: 3.5rem;
+    --h1-font-size: 2.25rem;
+    --h2-font-size: 1.5rem;
+    --h3-font-size: 1.25rem;
+    --normal-font-size: 1rem;
+    --small-font-size: 0.875rem;
+    --smaller-font-size: 0.813rem;
+  }
+}
+
+/* ======== ОСНОВНЫЕ ПАРАМЕТРЫ ======== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body,
+button,
+input,
+textarea {
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+  font-weight: var(--font-base);
+}
+
+body {
+  /* margin: var(--header-height) 0 0 0; */
+  height: 100%;
+  margin: 0;
+  padding: var(--header-height) 0 0 0;
+  background-color: var(--body-color);
+  color: var(--text-color);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--title-color);
+  font-weight: var(--font-semi-bold);
+  line-height: initial;
+}
+
+h1 {
+  font-size: var(--h1-font-size);
+}
+
+h2 {
+  font-size: var(--h2-font-size);
+  list-style: none;
+}
+
+h3 {
+  font-size: var(--h3-font-size);
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+}
+
+p {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+/* Модальное окно */
+.itd_play {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ======== ПОВТОРЯЮЩИЕСЯ ЭЛЕМЕНТЫ ======== */
+
+.container-mdgt {
+  max-width: 968px;
+  margin-left: var(--mb-1-5);
+  margin-right: var(--mb-1-5);
+}
+
+@media screen and (max-width: 968px) {
+  .container-mdgt {
+    max-width: 100vw;
+  }
+}
+
+.container-mdgt > .row {
+  row-gap: 1.5rem;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  align-items: center;
+}
+
+.grid {
+  display: grid;
+}
+
+.content__container {
+  margin: 0;
+  padding: 0 1.5rem;
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  padding-top: 1.2rem;
+  align-items: center;
+}
+
+.container__title {
+  align-self: center;
+  margin-bottom: 1.25rem;
+  white-space: nowrap;
+}
+
+.container_contact {
+  width: 100%;
+}
+
+.text-start_check {
+  width: auto;
+  height: 17px;
+}
+
+.text-start_close {
+  width: auto;
+  height: 13px;
+}
+
+.btn-buy {
+  border-color: var(--green_logo);
+  background-color: var(--green_logo);
+}
+
+.btn-test:hover,
+.btn-test:focus,
+.btn-buy:hover,
+.btn-buy:focus,
+.btn-out:hover,
+.btn-out:focus {
+  border-color: var(--green_logo_hover);
+  background-color: var(--green_logo_hover);
+}
+
+.btn-test:focus,
+.btn-buy:focus,
+.btn-out:focus {
+  box-shadow: 0 0 0 0.25rem var(--green_logo_shadow);
+}
+
+.btn-success.disabled,
+.btn-success:disabled {
+  border-color: var(--green_logo);
+  background-color: var(--green_logo);
+  opacity: 0.6;
+}
+
+.btn-test {
+  font-style: normal;
+  border-color: var(--green_logo);
+  background-color: var(--green_logo);
+}
+
+.btn-out {
+  border-color: var(--green_logo);
+  background-color: var(--green_logo);
+}
+
+.form-control:focus {
+  border-color: var(--green_logo_hover);
+  box-shadow: 0 0 0 0.25rem var(--green_logo_form);
+}
+
+/* ========== КУКИ ==========*/
+.toast:not(.showing):not(.show) {
+  opacity: 0;
+  display: none !important;
+}
+
+/* ======== БРЕЙКПОИНТЫ ДЛЯ РАЗНЫХ РАЗМЕРОВ ЭКРАНОВ ======== */
+@media screen and (min-width: 969px) {
+  body {
+    /* margin: calc(var(--header-height) + 1.5rem) 0 0 0; */
+    padding: calc(var(--header-height) + 1.5rem) 0 0 0;
+  }
+
+  .container-mdgt {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .content__container {
+    padding-right: 2rem;
+    padding-left: 2rem;
+  }
+}
+
+
+
+.fixed-bottom.p-4 {
+  padding: 0px !important;
+}
+
+.fixed-bottom.p-4 .toast.text-white.w-100.mw-100 {
+  padding: 1.5rem !important;
+
+  background-color: transparent !important;
+  background-clip: initial !important;
+  border: none !important;
+}
