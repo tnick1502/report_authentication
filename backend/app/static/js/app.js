@@ -273,19 +273,22 @@ if (updateReportBtns.length > 0) {
 	})
 
 	function onUpdateReportClick(event) {
-		event.preventDefault()
-
+		event.preventDefault();
+	
 		const _requestReport = document.getElementById('request-report'),
-			_inputObj = document.getElementById('inputObj'),
-			_inputLabNo = document.getElementById('inputLabNo'),
-			_inputType = document.getElementById('inputType')
-
+			  _inputObj = document.getElementById('inputObj'),
+			  _inputLabNo = document.getElementById('inputLabNo'),
+			  _inputType = document.getElementById('inputType');
+	
 		if (_requestReport && _inputObj && _inputLabNo && _inputType) {
-			_inputObj.value = event.currentTarget.dataset.object_number
+			_inputObj.value = event.currentTarget.dataset.object_number;
 			_inputLabNo.value = event.currentTarget.dataset.laboratory_number
-			_inputType.value = event.currentTarget.dataset.test_type
+			_inputType.value = event.currentTarget.dataset.test_type;
+	
+			// Call fillTableData with the object_data attribute
+			fillTableData(event.currentTarget.dataset.object_data);
 		}
-
+	
 		const gotoBlockValue =
 			_requestReport.parentNode.getBoundingClientRect().top +
 			pageYOffset -
@@ -293,11 +296,88 @@ if (updateReportBtns.length > 0) {
 		window.scrollTo({
 			top: gotoBlockValue,
 			behavior: 'smooth',
-		})
-
-		requiredChange()
+		});
+	
+		requiredChange();
 	}
 }
+
+
+function fillTableData(data) {
+    let dataRows = 3;
+    const maxDataRows = 10;
+
+    // Define the addRequestFormRow function
+    const addRequestFormRow = () => {
+        if (dataRows >= maxDataRows) return;
+
+        const lastRow = document.getElementById(`inputParam_${dataRows}_val`).parentNode;
+
+        if (!lastRow) return;
+
+        dataRows = dataRows + 1;
+
+        const newRow = `
+            <div class="form-group col-6">
+                <input
+                    type="text"
+                    class="form-control"
+                    id="inputParam_${dataRows}"
+                    name="inputParam_${dataRows}"
+                    placeholder=""
+                    aria-describedby="validationFeedback"
+                />
+                <div class="invalid-feedback" id="validationFeedback">
+                    Пожалуйста, заполните это поле.
+                </div>
+            </div>
+            <div class="form-group col-6">
+                <input
+                    type="text"
+                    class="form-control"
+                    id="inputParam_${dataRows}_val"
+                    name="inputParam_${dataRows}"
+                    placeholder=""
+                    aria-describedby="validationFeedback"
+                />
+                <div class="invalid-feedback" id="validationFeedback">
+                    Пожалуйста, заполните это поле.
+                </div>
+            </div>`;
+
+        lastRow.insertAdjacentHTML('afterend', newRow);
+    };
+
+    // Define the fillInputTable function
+    const fillInputTable = (_data) => {
+
+        const keys = Object.keys(_data);
+
+        const dataLength = keys.length;
+
+        while (dataRows < dataLength && dataRows < maxDataRows) {
+            addRequestFormRow();
+        }
+
+        if (dataRows < keys.length) return;
+
+        for (let row = 0; row < keys.length; row++) {
+            let inputRow = document.getElementById(`inputParam_${row + 1}`);
+            let inputRowVal = document.getElementById(`inputParam_${row + 1}_val`);
+
+            if (!inputRow || !inputRowVal) continue;
+
+            inputRow.value = keys[row];
+            inputRowVal.value = _data[keys[row]];
+        }
+    };
+
+    // Call the fillInputTable function with the data argument
+	const data_frmt = data.replace(/'/g, '"');
+	const obj = JSON.parse(data_frmt)
+    fillInputTable(obj);
+}
+
 
 
 // ПОЛУЧЕНИЕ ТОКЕНА

@@ -356,12 +356,15 @@
 							data-object_number="{{ value['object_number'] }}"
 							data-laboratory_number="{{ value['laboratory_number'] }}"
 							data-test_type="{{ value['test_type'] }}"
-								><img
-									src="https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/static/images/update.png"
-									class="img-fluid"
-									width="30"
-									height="30"
-							/></a>
+							data-object_data="{{ value['data'] }}"
+						 >
+							<img
+							   src="https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/static/images/update.png"
+							   class="img-fluid"
+							   width="30"
+							   height="30"
+							/>
+						 </a>
 							<a href="#" class="delete-report-btn" data-id="{{ key }}"
 								><img
 									src="https://s3.timeweb.com/cw78444-3db3e634-248a-495a-8c38-9f7322725c84/georeport/static/images/trash.png"
