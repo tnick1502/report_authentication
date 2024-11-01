@@ -196,6 +196,7 @@ img {
 
 .container-mdgt > .row {
 	row-gap: 1.5rem;
+	justify-content: center;
 }
 
 .wrapper {
@@ -423,6 +424,11 @@ img {
 	box-shadow: 0 -1px 4px hsla(var(--hue), 4%, 15%, 0.1);
 }
 
+.footer__container .copy {
+	padding-bottom: 1rem;
+	text-align: center;
+}
+
 .footer__logo {
 	display: flex;
 	align-items: baseline;
@@ -528,6 +534,12 @@ img {
 	display: flex;
 	flex-direction: column;
 	row-gap: 1.5rem;
+}
+
+.contacts__double-contact div {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .contacts__link_tel {

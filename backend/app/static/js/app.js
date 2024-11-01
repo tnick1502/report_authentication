@@ -157,22 +157,22 @@ cookieConsent()
 
 
 // ===================== СТАТИСТИКА ПРОТОКОЛОВ =====================
-const reportsCounter = document.getElementById('reportsCounter')
-if (reportsCounter) {
-	fetch(' ../reports/count/', {
-		method: 'GET', // *GET, POST, PUT, DELETE, etc.
-		//credentials: 'include', // include, *same-origin, omit
-	}).then((response) => {
-		if (!response.ok) {
-			return
-		}
-		response.json().then((data) => {
-			if (typeof data != 'undefined') {
-				reportsCounter.innerText = `${data}`
-				}
-			})
-		})
-}
+// const reportsCounter = document.getElementById('reportsCounter')
+// if (reportsCounter) {
+// 	fetch(' ../reports/count/', {
+// 		method: 'GET', // *GET, POST, PUT, DELETE, etc.
+// 		//credentials: 'include', // include, *same-origin, omit
+// 	}).then((response) => {
+// 		if (!response.ok) {
+// 			return
+// 		}
+// 		response.json().then((data) => {
+// 			if (typeof data != 'undefined') {
+// 				reportsCounter.innerText = `${data}`
+// 				}
+// 			})
+// 		})
+// }
 
 // ===================== РАБОТА С ОТЧЕТАМИ =====================
 
