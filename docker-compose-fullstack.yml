@@ -25,9 +25,9 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 
-server:
-    restart: always
+  server:
     image: nginx
+    restart: always
     volumes:
       - ./app/key.key:/etc/ssl/key.key
       - ./app/crt.crt:/etc/ssl/crt.crt
