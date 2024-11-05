@@ -240,7 +240,7 @@ window.addEventListener('load', function () {
 })
 
 function sendRequestReport(info, tableData) {
-	fetch('../reports/report_and_qr', {
+	fetch('/reports/report_and_qr', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
