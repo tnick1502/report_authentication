@@ -94,6 +94,8 @@ async def create_report_and_qr(
     id = hashlib.sha1(
         f"{report_data.object_number} {report_data.laboratory_number} {report_data.test_type} {user.id}".encode("utf-8")).hexdigest()
 
+    await service.create(report_id=id, user_id=user.id, report_data=report_data)
+
     file = await service.create_qr(id)
 
     return StreamingResponse(file, media_type="image/png")
