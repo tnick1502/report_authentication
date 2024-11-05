@@ -159,7 +159,7 @@ cookieConsent()
 // ===================== СТАТИСТИКА ПРОТОКОЛОВ =====================
 // const reportsCounter = document.getElementById('reportsCounter')
 // if (reportsCounter) {
-// 	fetch(' ../reports/count/', {
+// 	fetch(' /reports/count/', {
 // 		method: 'GET', // *GET, POST, PUT, DELETE, etc.
 // 		//credentials: 'include', // include, *same-origin, omit
 // 	}).then((response) => {
@@ -215,7 +215,7 @@ if (deleteReportBtns.length > 0) {
 
 			if (!delReportId) return
 
-			fetch(`../reports/${delReportId}`, {
+			fetch(`/reports/?id=${delReportId}`, {
 				method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
 			}).then(() => {
 				// console.log(delReportId)
@@ -248,7 +248,7 @@ if (downloadReportBtns.length > 0) {
 				if (!downlReportId) return
 
 				// console.log(downlReportId)
-				fetch(`../reports/qr?id=${downlReportId}`, {
+				fetch(`/reports/qr?id=${downlReportId}`, {
 					method: 'POST',
 				})
 					.then((response) => {
