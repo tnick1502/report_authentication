@@ -58,6 +58,7 @@ async def get_files(
     """Просмотр отчетов по объекту"""
     return await service.get_files(report_id=report_id)
 
+@router.delete('/', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_files(
         report_id: str,
         user: User = Depends(get_current_user),
