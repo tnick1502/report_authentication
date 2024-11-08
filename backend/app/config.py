@@ -26,7 +26,7 @@ class Configs:
     aws_secret_access_key: str = os.environ.get('AWS_SECRET_KEY')
     region_name: str = os.environ.get('AWS_REGION')
     bucket: str = os.environ.get('AWS_BUCKET')
-    file_count: int = os.environ.get('FILE_COUNT')
-    file_size: int = os.environ.get('FILE_SIZE')
+    file_count: int = int(os.environ.get('FILE_COUNT'))
+    file_size: int = int(os.environ.get('FILE_SIZE'))
 
 configs = Configs()

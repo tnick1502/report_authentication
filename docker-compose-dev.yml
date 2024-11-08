@@ -19,6 +19,8 @@ services:
       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
       - AWS_REGION=${AWS_REGION}
       - AWS_BUCKET=${AWS_BUCKET}
+      - FILE_COUNT=${FILE_COUNT}
+      - FILE_SIZE=${FILE_SIZE}
     ports:
       - 8555:8000
     restart: always
