@@ -11,6 +11,7 @@ from fastapi.security import OAuth2
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from fastapi.security.utils import get_authorization_scheme_param
 from sqlalchemy.orm import Session
+from sqlalchemy import select, func
 
 from config import configs
 from models.users import LicenseUpdate
@@ -137,7 +138,11 @@ class UsersService:
         if user_names or mails or phones:
             raise exception_registration_data
 
+        result = await self.session.execute(select(func.max(tables.Users.id)))
+        max_id = int(result.scalar())
+
         user = tables.Users(
+            id=max_id + 1,
             username=user_data.username,
             active=user_data.active,
             password_hash=self.hash_password(user_data.password),
