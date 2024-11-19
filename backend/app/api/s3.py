@@ -23,4 +23,12 @@ async def get(
             detail="Key have a wrong format"
         )
     file = await s3_service.get(key)
-    return StreamingResponse(file["Body"], media_type=file['ContentType'])
+    content_type = file['ContentType']
+    body = file['Body']  # StreamingBody
+
+    # Создаем генератор для корректного чтения потоковых данных
+    def iterfile():
+        for chunk in body.iter_chunks(chunk_size=8192):  # Читаем кусками
+            yield chunk
+
+    return StreamingResponse(iterfile(), media_type=content_type)
