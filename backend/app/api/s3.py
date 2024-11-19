@@ -26,9 +26,11 @@ async def get(
     content_type = file['ContentType']
     body = file['Body']  # StreamingBody
 
-    # Создаем генератор для корректного чтения потоковых данных
-    def iterfile():
-        for chunk in body.iter_chunks(chunk_size=8192):  # Читаем кусками
+    # Генератор для чтения данных из потока
+    async def stream_file():
+        async for chunk in body.iter_chunks(chunk_size=8192):  # Читаем порциями
             yield chunk
+        await body.close()  # Закрываем поток после чтения
 
-    return StreamingResponse(iterfile(), media_type=content_type)
+    # Возвращаем поток в StreamingResponse
+    return StreamingResponse(stream_file(), media_type=content_type)
