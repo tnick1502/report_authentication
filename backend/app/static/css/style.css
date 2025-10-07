@@ -441,6 +441,7 @@ img {
 	padding: 0.5rem;
 
 	width: 100%;
+	column-gap: 0.25rem;
 }
 
 .text-muted_mdgt {
