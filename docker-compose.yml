@@ -3,6 +3,8 @@ services:
     build: ./backend/
     command: bash -c 'poetry run uvicorn main:app --host 0.0.0.0'
     environment:
+      - FILE_COUNT=10
+      - FILE_SIZE=1024
       - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_NAME}
       - WORK_TYPE=${WORK_TYPE}
       - JWT_SECRET=${JWT_SECRET}
