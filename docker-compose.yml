@@ -37,14 +37,20 @@ services:
 
   server:
     restart: always
-    image: nginx
+    build: ./server
+    environment:
+      - ACME_EMAIL=sheepdolly2023@gmail.com
+      - ACME_DOMAINS=${ACME_DOMAINS:-georeport.ru}
+      - ACME_CERT_NAME=${ACME_CERT_NAME:-georeport.ru}
+      - ACME_CHECK_INTERVAL=${ACME_CHECK_INTERVAL:-43200}
+      - ACME_STAGING=${ACME_STAGING:-false}
     volumes:
-      - ./app/key.key:/etc/ssl/key.key
-      - ./app/crt.crt:/etc/ssl/crt.crt
-      - ./server/conf.d:/etc/nginx/conf.d
-      - ./app:/app
-    links:
-      - web:web
+      - ./app:/certs
+      - ./acme/letsencrypt:/etc/letsencrypt
+      - ./acme/lib:/var/lib/letsencrypt
+      - ./acme/log:/var/log/letsencrypt
+      - ./acme/www:/var/www/certbot
+      - ./server/conf.d:/etc/nginx/conf.d:ro
     ports:
       - "80:80"
       - "443:443"

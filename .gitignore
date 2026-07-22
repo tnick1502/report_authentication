@@ -8,3 +8,5 @@ crt.crt
 **/.pytest_cache
 **/.idea
 **/__pycache__
+/app/
+/acme/
